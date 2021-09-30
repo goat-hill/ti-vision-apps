@@ -43,3 +43,45 @@ endif
 include $(FINALE)
 
 endif
+
+ifeq ($(TARGET_PLATFORM),J721S2)
+
+ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), C7120))
+
+include $(PRELUDE)
+TARGET      := vx_target_kernels_img_proc_c66
+TARGETTYPE  := library
+
+CSOURCES    := vx_kernels_img_proc_target.c
+CSOURCES    += vx_oc_pre_proc_target.c
+CSOURCES    += vx_oc_post_proc_target.c
+CSOURCES    += vx_pose_visualization_target.c
+CSOURCES    += vx_draw_keypoint_detections_target.c
+CSOURCES    += vx_draw_box_detections_target.c
+CSOURCES    += vx_dl_pre_proc_target.c
+CSOURCES    += vx_dl_color_blend_target.c
+CSOURCES    += vx_dl_draw_box_target.c
+CSOURCES    += vx_image_preprocessing_target_no_dma.c
+CSOURCES    += vx_pixel_visualization_target.c
+
+IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/include
+IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/host
+IDIRS       += $(TIADALG_PATH)/include
+IDIRS       += $(IVISION_PATH)
+IDIRS       += $(TIDL_PATH)/inc
+IDIRS       += $(TIOVX_PATH)/kernels/ivision/include
+IDIRS       += $(VXLIB_PATH)/packages
+
+ifeq ($(BUILD_BAM),yes)
+DEFS += BUILD_BAM
+endif
+
+ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), C7120))
+DEFS += C6X_MIGRATION _TMS320C6600 __C7120__
+endif
+
+include $(FINALE)
+
+endif
+
+endif
