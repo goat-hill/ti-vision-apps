@@ -182,11 +182,15 @@ void appDssConfigurePm(app_dss_default_prm_t *prm)
      * XXX Is it still required to have VP3 enabled in Linux for GPU
      *     driver issues?
      */
+        #if defined (SOC_J721E)
         SET_CLOCK_PARENT(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_18_HSDIVOUT0_CLK);
         SET_CLOCK_PARENT(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_3_IN_2X_CLK, TISCI_DEV_DSS0_DSS_INST0_DPI_3_IN_2X_CLK_PARENT_DPI1_EXT_CLKSEL_OUT0);
         SET_CLOCK_PARENT(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK);
         SET_CLOCK_FREQ (TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, prm->timings.pixelClock);
         SET_CLOCK_STATE(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, 0, TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ);
+        #else
+        //TODO
+        #endif
     }
     else if(prm->display_type==APP_DSS_DEFAULT_DISPLAY_TYPE_DPI_HDMI)
     {
@@ -206,9 +210,13 @@ void appDssConfigurePm(app_dss_default_prm_t *prm)
     }
     else if (prm->display_type==APP_DSS_DEFAULT_DISPLAY_TYPE_DSI)
     {
+        #if defined (SOC_J721E)
         SET_CLOCK_PARENT(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_18_HSDIVOUT0_CLK);
         SET_CLOCK_FREQ (TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, prm->timings.pixelClock);
         SET_CLOCK_STATE(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, 0, TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ);
+        #else
+        //TODO
+        #endif
     }
 
     appLogPrintf("DSS: SoC init ... Done !!!\n");
@@ -289,7 +297,6 @@ void appDssConfigureUB941AndUB925(app_dss_default_prm_t *prm)
                 status = Board_i2c8BitRegWr(
                     gI2cHandle, clientAddr, Ub941Ub925Config[cnt][1],
                     &Ub941Ub925Config[cnt][2], 1U, BOARD_I2C_TRANSACTION_TIMEOUT);
-
                 appLogWaitMsecs((uint32_t)Ub941Ub925Config[cnt][3]);
 
                 if (0 != status)
@@ -352,6 +359,7 @@ static int32_t appDssDsiSetBoardMux()
 static int32_t appDssDsiInitI2c()
 {
     int32_t status = FVID2_SOK;
+    #if defined(SOC_J721E)
     uint8_t domain, i2cInst, slaveAddr;
     I2C_Params i2cParams;
 
@@ -368,7 +376,9 @@ static int32_t appDssDsiInitI2c()
         appLogPrintf("DSS: I2C Open failed!\n");
         status = FVID2_EFAIL;
     }
-
+    #else
+    /* Not supported on J721S2 */
+    #endif
     return (status);
 }
 
