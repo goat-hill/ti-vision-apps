@@ -123,7 +123,11 @@ int32_t appCsi2RxInit(void)
 
     appLogPrintf("CSI2RX: Init ... !!!\n");
 
+    #if defined(SOC_J721S2)
+    SET_DEVICE_STATE_ON(TISCI_DEV_J7AM_CSI_PSILSS0);
+    #else
     SET_DEVICE_STATE_ON(TISCI_DEV_CSI_PSILSS0);
+    #endif
     SET_DEVICE_STATE_ON(TISCI_DEV_CSI_RX_IF0);
     SET_DEVICE_STATE_ON(TISCI_DEV_CSI_RX_IF1);
     SET_DEVICE_STATE_ON(TISCI_DEV_DPHY_RX0);
@@ -149,8 +153,14 @@ int32_t appCsi2TxInit(void)
 
     appLogPrintf("CSI2TX: Init ... !!!\n");
 
+    #if defined(SOC_J721S2)
+    SET_DEVICE_STATE_ON(TISCI_DEV_J7AM_CSI_PSILSS0);
+    SET_DEVICE_STATE_ON(TISCI_DEV_CSI_TX_IF_V2_0);
+    SET_DEVICE_STATE_ON(TISCI_DEV_CSI_TX_IF_V2_1);
+    #else
     SET_DEVICE_STATE_ON(TISCI_DEV_CSI_PSILSS0);
     SET_DEVICE_STATE_ON(TISCI_DEV_CSI_TX_IF0);
+    #endif
     SET_DEVICE_STATE_ON(TISCI_DEV_DPHY_TX0);
 
     regVal = CSL_REG32_RD(CSL_CTRL_MMR0_CFG0_BASE +
@@ -335,7 +345,11 @@ int32_t appVhwaVpacInit()
     appLogPrintf("VHWA: VPAC Init ... !!!\n");
 
     #if defined(ENABLE_LDC) || defined(ENABLE_MSC) || defined(ENABLE_NF) || defined(ENABLE_VISS)
+    #if defined(SOC_J721S2)
+    SET_DEVICE_STATE_ON(TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK);
+    #else
     SET_DEVICE_STATE_ON(TISCI_DEV_VPAC0);
+    #endif
     #endif
 
 #ifdef ENABLE_LDC
@@ -616,15 +630,31 @@ int32_t appVhwaHandler(char *service_name, uint32_t cmd, void *prm, uint32_t prm
                 break;
 
             case APP_VPAC_720_DMPAC_480:
+                #if defined(SOC_J721S2)
+                #if 0
+                SET_CLOCK_FREQ (TISCI_DEV_DMPAC0, TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK, 480000000);
+                SET_CLOCK_FREQ (TISCI_DEV_VPAC0, TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK,   720000000);
+                #endif
+                status = -1;
+                #else
                 SET_CLOCK_FREQ (TISCI_DEV_DMPAC0, TISCI_DEV_DMPAC0_CLK, 480000000);
                 SET_CLOCK_FREQ (TISCI_DEV_VPAC0, TISCI_DEV_VPAC0_CLK,   720000000);
                 status = 0;
+                #endif
                 break;
 
             case APP_VPAC_650_DMPAC_520:
-                SET_CLOCK_FREQ (TISCI_DEV_VPAC0, TISCI_DEV_VPAC0_CLK,   650000000);
+                #if defined(SOC_J721S2)
+                #if 0 // TODO: Re-enable based on what the correct clk should be--the below is now correct 
+                SET_CLOCK_FREQ (TISCI_DEV_DMPAC0, TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK, 520000000);
+                SET_CLOCK_FREQ (TISCI_DEV_VPAC0, TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK,   650000000);
+                #endif
+                status = -1;
+                #else
                 SET_CLOCK_FREQ (TISCI_DEV_DMPAC0, TISCI_DEV_DMPAC0_CLK, 520000000);
+                SET_CLOCK_FREQ (TISCI_DEV_VPAC0, TISCI_DEV_VPAC0_CLK,   650000000);
                 status = 0;
+                #endif
                 break;
         }
 
