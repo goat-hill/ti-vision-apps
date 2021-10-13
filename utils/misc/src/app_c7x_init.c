@@ -66,7 +66,11 @@
 void appC7xClecInitForNonSecAccess(void)
 {
     CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    #if defined(SOC_J721S2)
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+    #else
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    #endif
 
     uint32_t i;
     uint32_t max_inputs      = 2048;
@@ -86,9 +90,12 @@ void appC7xClecInitForNonSecAccess(void)
 
 void appC7xClecInitDru(void)
 {
-    #if 1
     CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs     *clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    #if defined(SOC_J721S2)
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+    #else
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    #endif
 
     uint32_t i;
     uint32_t dru_input_start = 192;
@@ -106,5 +113,4 @@ void appC7xClecInitDru(void)
         cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
         CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
     }
-    #endif
 }
