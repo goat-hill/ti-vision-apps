@@ -188,7 +188,7 @@ void appDssConfigurePm(app_dss_default_prm_t *prm)
         SET_CLOCK_PARENT(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK);
         SET_CLOCK_FREQ (TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, prm->timings.pixelClock);
         SET_CLOCK_STATE(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, 0, TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ);
-        #else
+        #elif defined (SOC_J721S2)
         //TODO
         #endif
     }
@@ -214,7 +214,7 @@ void appDssConfigurePm(app_dss_default_prm_t *prm)
         SET_CLOCK_PARENT(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_18_HSDIVOUT0_CLK);
         SET_CLOCK_FREQ (TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, prm->timings.pixelClock);
         SET_CLOCK_STATE(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_2_IN_2X_CLK, 0, TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ);
-        #else
+        #elif defined (SOC_J721S2)
         //TODO
         #endif
     }
@@ -376,7 +376,7 @@ static int32_t appDssDsiInitI2c()
         appLogPrintf("DSS: I2C Open failed!\n");
         status = FVID2_EFAIL;
     }
-    #else
+    #elif defined (SOC_J721S2)
     /* Not supported on J721S2 */
     #endif
     return (status);

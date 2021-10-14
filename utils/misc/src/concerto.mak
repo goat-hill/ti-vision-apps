@@ -20,7 +20,7 @@ IDIRS    += $(PDK_PATH)/packages/ti/kernel/freertos/FreeRTOS-LTS/FreeRTOS-Kernel
 CSOURCES += app_cpu_hz_freertos.c
 endif
 
-ifeq ($(TARGET_CPU),C71)
+ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU),C71 C7120))
 IDIRS    += $(PDK_PATH)/packages/ti/kernel/freertos/portable/TI_CGT/c7x
 IDIRS    += $(PDK_PATH)/packages/ti/kernel/freertos/config/$(SOC)/c7x
 endif
