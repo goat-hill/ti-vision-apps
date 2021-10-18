@@ -183,31 +183,31 @@ void appMmuMap(Bool is_secure)
     attrs.attrIndx = Mmu_AttrIndx_MAIR0;
     attrs.ns = ns;
 
-    retVal = Mmu_map(0x00000000, 0x00000000, 0x20000000, &attrs, is_secure);
+    retVal = Mmu_map(0x00000000U, 0x00000000U, 0x20000000U, &attrs, is_secure);
     if(retVal==FALSE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x20000000, 0x20000000, 0x20000000, &attrs, is_secure);
+    retVal = Mmu_map(0x20000000U, 0x20000000U, 0x20000000U, &attrs, is_secure);
     if(retVal==FALSE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x40000000, 0x40000000, 0x20000000, &attrs, is_secure);
+    retVal = Mmu_map(0x40000000U, 0x40000000U, 0x20000000U, &attrs, is_secure);
     if(retVal==FALSE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x60000000, 0x60000000, 0x10000000, &attrs, is_secure);
+    retVal = Mmu_map(0x60000000U, 0x60000000U, 0x10000000U, &attrs, is_secure);
     if(retVal==FALSE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x78000000, 0x78000000, 0x08000000, &attrs, is_secure); /* CLEC */
+    retVal = Mmu_map(0x78000000U, 0x78000000U, 0x08000000U, &attrs, is_secure); /* CLEC */
     if(retVal==FALSE)
     {
         goto mmu_exit;
@@ -251,7 +251,7 @@ void appMmuMap(Bool is_secure)
     Mmu_initMapAttrs(&attrs);
     attrs.attrIndx = Mmu_AttrIndx_MAIR7;
     attrs.ns = ns;
-    retVal = Mmu_map(0x70000000, 0x70000000, 0x00400000, &attrs, is_secure); /* MSMC - 4MB */
+    retVal = Mmu_map(0x70000000U, 0x70000000U, 0x00400000U, &attrs, is_secure); /* MSMC - 4MB */
     if(retVal == FALSE)
     {
         goto mmu_exit;
@@ -260,22 +260,11 @@ void appMmuMap(Bool is_secure)
     Mmu_initMapAttrs(&attrs);
     attrs.attrIndx = Mmu_AttrIndx_MAIR7;
     attrs.ns = ns;
-    retVal = Mmu_map(0x64800000, 0x64800000, 0x00200000, &attrs, is_secure); /* L2 sram 448KB        */
+    retVal = Mmu_map(0x64800000U, 0x64800000U, 0x00200000U, &attrs, is_secure); /* L2 sram 448KB        */
     if(retVal == FALSE)
     {
         goto mmu_exit;
     }
-
-    #if 0
-    Mmu_initMapAttrs(&attrs);
-    attrs.attrIndx = Mmu_AttrIndx_MAIR0;
-    attrs.ns = ns;
-    retVal = Mmu_map(0x64E00000, 0x64E00000, 0x00200000, &attrs, is_secure); /* L1D sram 16KB        */
-    if(retVal == FALSE)
-    {
-        goto mmu_exit;
-    }
-    #endif
 
     Mmu_initMapAttrs(&attrs);
     attrs.attrIndx = Mmu_AttrIndx_MAIR7;
