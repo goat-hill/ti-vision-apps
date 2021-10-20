@@ -707,4 +707,4 @@ HtmlMmapTable(html_mmap, "./system_memory_map.html").export();
 
 CHeaderFile(c_header_mmap, "./app_mem_map.h").export();
 
-DtsFile(dts_mmap, "./k3-j721e-rtos-memory-map.dtsi").export();
+DtsFile(dts_mmap, "./k3-j721s2-rtos-memory-map.dtsi").export();
