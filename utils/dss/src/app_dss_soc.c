@@ -50,10 +50,18 @@
 #include <ti/board/src/devices/board_devices.h>
 #include <ti/board/board.h>
 #include <ti/board/board_cfg.h>
+
+#if defined (SOC_J721E)
 #include <ti/board/src/j721e_evm/include/board_control.h>
 #include <ti/board/src/j721e_evm/include/board_cfg.h>
 #include <ti/board/src/j721e_evm/include/board_pinmux.h>
 #include <ti/board/src/j721e_evm/include/board_i2c_io_exp.h>
+#elif defined (SOC_J721S2)
+#include <ti/board/src/j721s2_evm/include/board_control.h>
+#include <ti/board/src/j721s2_evm/include/board_cfg.h>
+#include <ti/board/src/j721s2_evm/include/board_pinmux.h>
+#include <ti/board/src/j721s2_evm/include/board_i2c_io_exp.h>
+#endif
 
 /* ========================================================================== */
 /*                             Global Variables                               */
