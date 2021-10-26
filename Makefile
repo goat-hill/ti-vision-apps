@@ -194,7 +194,7 @@ ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot_clean
 endif
 else ifeq ($(SOC),j721s2)
-sdk: sdk_check_paths pdk imaging ptk vxlib tiovx tiadalg qnx
+sdk: sdk_check_paths linux_copy_fs_files pdk imaging ptk vxlib tiovx tiadalg qnx
 	$(MAKE) vision_apps
 ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot
