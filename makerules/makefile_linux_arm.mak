@@ -21,6 +21,11 @@ FIRMWARE_SUBFOLDER?=vision_apps_evm
 UENV_NAME?=uEnv_$(SOC)_vision_apps.txt
 LINUX_FS_STAGE_PATH?=/tmp/tivision_apps_targetfs_stage
 
+linux_copy_fs_files:
+	cp -r $(VISION_APPS_PATH)/platform/j721s2/linux/linux_fs_files/include/* $(LINUX_FS_PATH)/usr/include/.
+	cp -r $(VISION_APPS_PATH)/platform/j721s2/linux/linux_fs_files/lib/* $(LINUX_FS_PATH)/usr/lib/.
+	sync
+
 linux_fs_stage:
 	@rm -rf $(LINUX_FS_STAGE_PATH)
 	@mkdir -p $(LINUX_FS_STAGE_PATH)
