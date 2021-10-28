@@ -740,18 +740,22 @@ static void appRegisterOpenVXTargetKernels()
         tivxRegisterHwaTargetDisplayM2MKernels();
         #endif
         #ifdef C7120
+        #ifdef CPU_c7x_1
         {
             void app_c7x_target_kernel_img_add_register(void);
 
             app_c7x_target_kernel_img_add_register();
         }
         tivxRegisterTIDLTargetKernels();
+        #endif
+        #ifdef CPU_c7x_2
         tivxRegisterParkAssistTargetKernels();
         tivxRegisterStereoTargetKernels();
         tivxRegisterImgProcTargetC71Kernels();
         tivxRegisterSrvTargetC66Kernels();
         tivxRegisterHwaTargetArmKernels();
         tivxRegisterImgProcTargetC66Kernels();
+        #endif
         #endif
         #ifdef ENABLE_VHWA_VPAC
         tivxRegisterImgProcTargetR5FKernels();
@@ -787,18 +791,22 @@ static void appUnRegisterOpenVXTargetKernels()
         tivxUnRegisterHwaTargetCsitxKernels();
         #endif
         #ifdef C7120
+        #ifdef CPU_c7x_1
         {
             void app_c7x_target_kernel_img_add_unregister(void);
 
             app_c7x_target_kernel_img_add_unregister();
         }
         tivxUnRegisterTIDLTargetKernels();
+        #endif
+        #ifdef CPU_c7x_2
         tivxUnRegisterParkAssistTargetKernels();
         tivxUnRegisterStereoTargetKernels();
         tivxUnRegisterImgProcTargetC71Kernels();
         tivxUnRegisterSrvTargetC66Kernels();
         tivxUnRegisterHwaTargetArmKernels();
         tivxUnRegisterImgProcTargetC66Kernels();
+        #endif
         #endif
         #ifdef ENABLE_VHWA_VPAC
         tivxUnRegisterImgProcTargetR5FKernels();
