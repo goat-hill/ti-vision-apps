@@ -27,6 +27,8 @@ BUILD_OS ?= Linux
 export PSDK_QNX_PATH ?= $(PSDK_PATH)/psdkqa
 ifeq ($(SOC),j721e)
   export PSDK_LINUX_PATH ?= /home/$(USER)/ti-processor-sdk-linux-j7-evm-08_00_01_13
+else ifeq ($(SOC),j721s2)
+  export PSDK_LINUX_PATH ?= /home/$(USER)/ti-processor-sdk-linux-j7-evm-08_00_03_02
 endif
 export QNX_SDP_VERSION ?= 710
 ifeq ($(QNX_SDP_VERSION),700)
