@@ -220,7 +220,7 @@ c7x_1_ddr_vecs_size = 16*KB;
 c7x_1_ddr_secure_vecs_addr = c7x_1_ddr_resource_table_addr + 5*MB;
 c7x_1_ddr_secure_vecs_size = 16*KB;
 c7x_1_ddr_addr = c7x_1_ddr_secure_vecs_addr + c7x_1_ddr_secure_vecs_size;
-c7x_1_ddr_size = 80*MB - (c7x_1_ddr_addr-c7x_1_ddr_ipc_addr);
+c7x_1_ddr_size = 112*MB - (c7x_1_ddr_addr-c7x_1_ddr_ipc_addr);
 
 #
 # DDR memory allocation for various shared memories
