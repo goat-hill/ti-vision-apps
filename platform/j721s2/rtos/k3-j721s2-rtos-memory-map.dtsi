@@ -107,30 +107,30 @@
         
         vision_apps_c71_0_memory_region: vision-apps-c71_0-memory@aa100000 {
             compatible = "shared-dma-pool";
-            reg = <0x00 0xaa100000 0x00 0x04f00000>;
+            reg = <0x00 0xaa100000 0x00 0x06f00000>;
             no-map;
         };
         
-        vision_apps_rtos_ipc_memory_region: vision-apps-ipc-memories@b0000000 {
+        vision_apps_rtos_ipc_memory_region: vision-apps-ipc-memories@b2000000 {
             compatible = "shared-dma-pool";
-            reg = <0x00 0xb0000000 0x00 0x02000000>;
+            reg = <0x00 0xb2000000 0x00 0x02000000>;
             no-map;
         };
         
-        vision_apps_memory_region: vision-apps-dma-memory@b2000000 {
+        vision_apps_memory_region: vision-apps-dma-memory@b4000000 {
             compatible = "shared-dma-pool";
-            reg = <0x00 0xb2000000 0x00 0x05fe0000>;
+            reg = <0x00 0xb4000000 0x00 0x05fe0000>;
             no-map;
         };
         
         vision_apps_shared_region: vision-apps-shared-memories {
             compatible = "dma-heap-carveout";
-            reg = <0x00 0xb7fe0000 0x00 0x20000000>;
+            reg = <0x00 0xb9fe0000 0x00 0x20000000>;
         };
         
-        vision_apps_core_heaps_lo: vision-apps-core-heap-memory-lo@d7fe0000 {
+        vision_apps_core_heaps_lo: vision-apps-core-heap-memory-lo@d9fe0000 {
             compatible = "shared-dma-pool";
-            reg = <0x00 0xd7fe0000 0x00 0x24020000>;
+            reg = <0x00 0xd9fe0000 0x00 0x22020000>;
             no-map;
         };
         
