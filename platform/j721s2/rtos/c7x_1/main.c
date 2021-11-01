@@ -131,12 +131,14 @@ __attribute__ ((aligned(8192)))
 
 void setup_dru_qos(void)
 {
+    #if 0
 	unsigned int channel;
 
 	for (channel = 0; channel < J7ES_DRU_NUM_CH; ++channel) 
 	{
 		writel((J721E_DDR_QOS_EXP_DRU_QUEUE_ORDER_ID << 4) | J721E_DDR_QOS_EXP_DRU_QUEUE_PRIORITY, J7ES_DRU_CFG_y(channel));
 	}
+    #endif
 }
 
 int main(void)
@@ -146,7 +148,7 @@ int main(void)
 
     OS_init();
 
-    appC7xClecInitDru();
+    //appC7xClecInitDru();
 
     setup_dru_qos();
 
