@@ -65,7 +65,7 @@
 
 #include <app_cfg.h>
 
-#define L3_MEM_SIZE (MAIN_OCRAM_MCU2_0_SIZE)
+//#define L3_MEM_SIZE (MAIN_OCRAM_MCU2_0_SIZE)
 
 #define DDR_HEAP_MEM_SIZE               (DDR_MCU2_0_LOCAL_HEAP_SIZE)
 
@@ -84,12 +84,12 @@
      * - When ENABLE_DSS_SINGLE is defined, only one of ENABLE_DSS_HDMI or ENABLE_DSS_EDP should be defined
      * - When ENABLE_DSS_DUAL is defined, ENABLE_DSS_HDMI and ENABLE_DSS_EDP are not used, both EDP and HDMI are enabled unconditionally
      */
-    #define ENABLE_DSS_SINGLE
+    #undef ENABLE_DSS_SINGLE
     #undef  ENABLE_DSS_DUAL
 
     /* define below to enable eDP display,
        make sure to undef ENABLE_DSS_HDMI & ENABLE_DSS_DSI as well */
-    #define ENABLE_DSS_EDP
+    #undef ENABLE_DSS_EDP
     /* define below to enable HDMI display,
        make sure to undef ENABLE_DSS_EDP & ENABLE_DSS_DSI as well */
     #undef ENABLE_DSS_HDMI
