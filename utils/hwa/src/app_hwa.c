@@ -345,11 +345,7 @@ int32_t appVhwaVpacInit()
     appLogPrintf("VHWA: VPAC Init ... !!!\n");
 
     #if defined(ENABLE_LDC) || defined(ENABLE_MSC) || defined(ENABLE_NF) || defined(ENABLE_VISS)
-    #if defined(SOC_J721S2)
-    SET_DEVICE_STATE_ON(TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK);
-    #else
     SET_DEVICE_STATE_ON(TISCI_DEV_VPAC0);
-    #endif
     #endif
 
 #ifdef ENABLE_LDC
