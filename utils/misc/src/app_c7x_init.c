@@ -74,6 +74,8 @@ void appC7xClecInitForNonSecAccess(void)
 
     uint32_t i;
     uint32_t max_inputs      = 2048;
+    uint32_t            secureClaim = 0U;
+
     /* make secure claim bit to FALSE so that after we switch to non-secure mode
      * we can program the CLEC MMRs
      */
@@ -84,7 +86,14 @@ void appC7xClecInitForNonSecAccess(void)
         cfgClec.rtMap             = CSL_CLEC_RTMAP_DISABLE;
         cfgClec.extEvtNum         = 0;
         cfgClec.c7xEvtNum         = 0;
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+        /* Since the CLEC module is shared b/w c7x_1 and c7x_2,
+         * Before reseting the events and disabling secure claim,
+         * check if its already done by other C7x. */
+        CSL_clecGetSecureClaimStatus(clecBaseAddr, i, &secureClaim);
+        if(secureClaim)
+        {
+            CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+        }
     }
 }
 
