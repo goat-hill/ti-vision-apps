@@ -167,53 +167,53 @@
 #define APP_LOG_MEM_ADDR (0xB4000000u)
 #define APP_LOG_MEM_SIZE (0x00040000u)
 
-/* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 63.62 MB ] */
+/* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 63.75 MB ] */
 #define TIOVX_OBJ_DESC_MEM_ADDR (0xB4040000u)
-#define TIOVX_OBJ_DESC_MEM_SIZE (0x03FA0000u)
+#define TIOVX_OBJ_DESC_MEM_SIZE (0x03FC0000u)
 
 /* Memory for TI OpenVX shared memory for Run-time logging. MUST be non-cached or cache-coherent [ size 32.00 MB ] */
-#define TIOVX_LOG_RT_MEM_ADDR (0xB7FE0000u)
+#define TIOVX_LOG_RT_MEM_ADDR (0xB8000000u)
 #define TIOVX_LOG_RT_MEM_SIZE (0x02000000u)
 
 /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
-#define DDR_SHARED_MEM_ADDR (0xB9FE0000u)
+#define DDR_SHARED_MEM_ADDR (0xBA000000u)
 #define DDR_SHARED_MEM_SIZE (0x20000000u)
 
 /* DDR for MCU1_0 for local heap [ size  8.00 MB ] */
-#define DDR_MCU1_0_LOCAL_HEAP_ADDR (0xD9FE0000u)
+#define DDR_MCU1_0_LOCAL_HEAP_ADDR (0xDA000000u)
 #define DDR_MCU1_0_LOCAL_HEAP_SIZE (0x00800000u)
 
 /* DDR for MCU1_1 for local heap [ size  8.00 MB ] */
-#define DDR_MCU1_1_LOCAL_HEAP_ADDR (0xDA7E0000u)
+#define DDR_MCU1_1_LOCAL_HEAP_ADDR (0xDA800000u)
 #define DDR_MCU1_1_LOCAL_HEAP_SIZE (0x00800000u)
 
 /* DDR for MCU2_0 for local heap [ size 16.00 MB ] */
-#define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xDAFE0000u)
+#define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xDB000000u)
 #define DDR_MCU2_0_LOCAL_HEAP_SIZE (0x01000000u)
 
 /* DDR for MCU2_1 for local heap [ size 16.00 MB ] */
-#define DDR_MCU2_1_LOCAL_HEAP_ADDR (0xDBFE0000u)
+#define DDR_MCU2_1_LOCAL_HEAP_ADDR (0xDC000000u)
 #define DDR_MCU2_1_LOCAL_HEAP_SIZE (0x01000000u)
 
 /* DDR for MCU3_0 for local heap [ size  8.00 MB ] */
-#define DDR_MCU3_0_LOCAL_HEAP_ADDR (0xDCFE0000u)
+#define DDR_MCU3_0_LOCAL_HEAP_ADDR (0xDD000000u)
 #define DDR_MCU3_0_LOCAL_HEAP_SIZE (0x00800000u)
 
 /* DDR for MCU3_1 for local heap [ size  8.00 MB ] */
-#define DDR_MCU3_1_LOCAL_HEAP_ADDR (0xDD7E0000u)
+#define DDR_MCU3_1_LOCAL_HEAP_ADDR (0xDD800000u)
 #define DDR_MCU3_1_LOCAL_HEAP_SIZE (0x00800000u)
 
 /* DDR for c7x_2 for local heap [ size 16.00 MB ] */
-#define DDR_C7X_2_LOCAL_HEAP_ADDR (0xDDFE0000u)
+#define DDR_C7X_2_LOCAL_HEAP_ADDR (0xDE000000u)
 #define DDR_C7X_2_LOCAL_HEAP_SIZE (0x01000000u)
 
 /* DDR for c7x_2 for Scratch Memory [ size 64.00 MB ] */
-#define DDR_C7X_2_SCRATCH_ADDR (0xDEFE0000u)
+#define DDR_C7X_2_SCRATCH_ADDR (0xDF000000u)
 #define DDR_C7X_2_SCRATCH_SIZE (0x04000000u)
 
-/* DDR for c7x_1 for Scratch Memory [ size 400.12 MB ] */
-#define DDR_C7X_1_SCRATCH_ADDR (0xE2FE0000u)
-#define DDR_C7X_1_SCRATCH_SIZE (0x19020000u)
+/* DDR for c7x_1 for Scratch Memory [ size 400.00 MB ] */
+#define DDR_C7X_1_SCRATCH_ADDR (0xE3000000u)
+#define DDR_C7X_1_SCRATCH_SIZE (0x19000000u)
 
 /* DDR for c7x_1 for local heap [ size 256.00 MB ] */
 #define DDR_C7X_1_LOCAL_HEAP_ADDR (0x100000000u)
