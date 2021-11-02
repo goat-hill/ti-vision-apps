@@ -235,7 +235,7 @@ ipc_vring_mem_size      = 32*MB;
 app_log_mem_addr        = ipc_vring_mem_addr + ipc_vring_mem_size;
 app_log_mem_size        = 256*KB;
 tiovx_obj_desc_mem_addr = app_log_mem_addr + app_log_mem_size;
-tiovx_obj_desc_mem_size = 64*MB - 128*KB - app_log_mem_size;
+tiovx_obj_desc_mem_size = 64*MB - app_log_mem_size;
 
 tiovx_log_rt_mem_addr   = tiovx_obj_desc_mem_addr + tiovx_obj_desc_mem_size;
 tiovx_log_rt_mem_size   = 32*MB;
