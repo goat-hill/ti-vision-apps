@@ -185,6 +185,8 @@ int32_t appInit()
     void *ipc_resource_table = NULL;
     #endif
 
+    appLogWaitMsecs(10000);
+
     /* Init and start GTC timer */
     status = appLogGlobalTimeInit();
     APP_ASSERT_SUCCESS(status);
