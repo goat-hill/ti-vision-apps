@@ -84,11 +84,6 @@
 #include <ti/sysbios/family/c7x/Mmu.h>
 #endif
 
-/* For J7ES/J721E/TDA4VM the upper 2GB DDR starts from 0x0008_8000_0000 */
-/* This address is mapped to a virtual address of 0x0001_0000_0000 */
-#define DDR_C7X_1_LOCAL_HEAP_VADDR (DDR_C7X_1_LOCAL_HEAP_ADDR)
-#define DDR_C7X_1_LOCAL_HEAP_PADDR (0x880000000u)
-
 static void appMain(void* arg0, void* arg1)
 {
     appInit();
@@ -273,6 +268,12 @@ void appMmuMap(Bool is_secure)
     attrs.ns = ns;
 
     retVal = Mmu_map(DDR_C7x_2_DTS_ADDR, DDR_C7x_2_DTS_ADDR, DDR_C7x_2_DTS_SIZE, &attrs, is_secure); /* ddr            */
+    if(retVal == FALSE)
+    {
+        goto mmu_exit;
+    }
+
+    retVal = Mmu_map(DDR_C7X_2_LOCAL_HEAP_ADDR, DDR_C7X_2_LOCAL_HEAP_ADDR, DDR_C7X_2_LOCAL_HEAP_SIZE, &attrs, is_secure); /* ddr            */
     if(retVal == FALSE)
     {
         goto mmu_exit;
