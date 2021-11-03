@@ -152,7 +152,7 @@ int main(void)
     StartupEmulatorWaitFxn1();
     OS_init();
 
-    //appC7xClecInitDru();
+    appC7xClecInitDru();
 
     setup_dru_qos();
 
