@@ -17,6 +17,24 @@ ifeq ($(RTOS),FREERTOS)
 	LDIRS += $(PDK_PATH)/packages/ti/kernel/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 endif
 
+LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
+LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
+LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
+LDIRS += $(TIDL_PATH)/lib/$(SOC)/dsp/algo/release
+
+
+TIDL_LIBS =
+TIDL_LIBS += common_C7120
+TIDL_LIBS += mmalib_C7120
+TIDL_LIBS += mmalib_cn_C7120
+TIDL_LIBS += tidl_algo
+TIDL_LIBS += tidl_priv_algo
+TIDL_LIBS += tidl_obj_algo
+TIDL_LIBS += tidl_custom
+
+SYS_STATIC_LIBS += $(TIDL_LIBS)
+
+ADDITIONAL_STATIC_LIBS += dmautils.ae71
 
 include $($(_MODULE)_SDIR)/../concerto_c7x_inc.mak
 

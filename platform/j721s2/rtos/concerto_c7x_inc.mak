@@ -17,15 +17,11 @@ ifeq ($(RTOS),FREERTOS)
 	LDIRS += $(PDK_PATH)/packages/ti/osal/lib/freertos/$(SOC)/c7x/$(TARGET_BUILD)/
 endif
 LDIRS += $(PDK_PATH)/packages/ti/csl/lib/$(SOC)/c7x/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 LDIRS += $(TIOVX_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(PTK_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(VXLIB_PATH)/lib/$(TARGET_PLATFORM)/C7120/NO_OS/$(TARGET_BUILD)
 LDIRS += $(VISION_APPS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(MMALIB_PATH)/lib/release
-LDIRS += $(TIDL_PATH)/lib/$(SOC)/dsp/algo/release
 LDIRS += $(TIADALG_PATH)/lib/$(TARGET_CPU)/$(TARGET_BUILD)
 
 STATIC_LIBS += app_utils_mem
@@ -61,16 +57,7 @@ TIOVX_LIBS += vx_target_kernels_openvx_core
 TIOVX_LIBS += vx_target_kernels_dsp
 TIOVX_LIBS += vx_target_kernels_j7_arm
 
-TIDL_LIBS =
-TIDL_LIBS += common_C7120
-TIDL_LIBS += mmalib_C7120
-TIDL_LIBS += mmalib_cn_C7120
-TIDL_LIBS += tidl_algo
-TIDL_LIBS += tidl_priv_algo
-TIDL_LIBS += tidl_obj_algo
-TIDL_LIBS += tidl_custom
-
-SYS_STATIC_LIBS += $(TIOVX_LIBS) $(TIDL_LIBS)
+SYS_STATIC_LIBS += $(TIOVX_LIBS)
 
 ADDITIONAL_STATIC_LIBS += vxlib_C7120.lib
 
