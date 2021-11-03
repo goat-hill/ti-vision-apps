@@ -14,9 +14,23 @@ LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos
 
 ifeq ($(RTOS),FREERTOS)
-	LDIRS += $(PDK_PATH)/packages/ti/kernel/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
+	LDIRS += $(PDK_PATH)/packages/ti/kernel/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
 endif
 
+LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
+LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
+LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
+
+STATIC_LIBS += vx_target_kernels_img_proc_c71
+STATIC_LIBS += vx_target_kernels_srv_c66
+STATIC_LIBS += vx_target_kernels_img_proc_c66
+STATIC_LIBS += vx_target_kernels_park_assist
+STATIC_LIBS += vx_target_kernels_stereo
+STATIC_LIBS += vx_app_ptk_demo_common
+
+ADDITIONAL_STATIC_LIBS += libtiadalg_structure_from_motion.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_image_preprocessing.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_image_color_blending.a
 
 include $($(_MODULE)_SDIR)/../concerto_c7x_inc.mak
 
