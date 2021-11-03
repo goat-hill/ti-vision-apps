@@ -262,7 +262,13 @@ void appMmuMap(Bool is_secure)
     Mmu_initMapAttrs(&attrs);
     attrs.attrIndx = Mmu_AttrIndx_MAIR7;
     attrs.ns = ns;
-    retVal = Mmu_map(0x64800000U, 0x64800000U, 0x00200000U, &attrs, is_secure); /* L2 sram 448KB        */
+    retVal = Mmu_map(L2RAM_C7x_1_ADDR, L2RAM_C7x_1_ADDR, L2RAM_C7x_1_SIZE, &attrs, is_secure); /* L2 sram 448KB        */
+    if(retVal == FALSE)
+    {
+        goto mmu_exit;
+    }
+
+    retVal = Mmu_map(0x41C00000U, 0x41C00000U, 0x00100000U, &attrs, is_secure); /* OCMC - 1MB */
     if(retVal == FALSE)
     {
         goto mmu_exit;

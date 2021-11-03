@@ -106,6 +106,14 @@ void StartupEmulatorWaitFxn (void)
     }while (enableDebug);
 }
 
+void StartupEmulatorWaitFxn1 (void)
+{
+    volatile uint32_t enableDebug = 0;
+    do
+    {
+    }while (enableDebug);
+}
+
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 16KB
@@ -140,7 +148,8 @@ int main(void)
 {
     TaskP_Params tskParams;
     TaskP_Handle task;
-
+    /* This is for debug purpose - see the description of function header */
+    StartupEmulatorWaitFxn1();
     OS_init();
 
     //appC7xClecInitDru();
@@ -257,7 +266,13 @@ void appMmuMap(Bool is_secure)
     Mmu_initMapAttrs(&attrs);
     attrs.attrIndx = Mmu_AttrIndx_MAIR7;
     attrs.ns = ns;
-    retVal = Mmu_map(0x64800000U, 0x64800000U, 0x00200000U, &attrs, is_secure); /* L2 sram 448KB        */
+    retVal = Mmu_map(L2RAM_C7x_2_ADDR, L2RAM_C7x_2_ADDR, L2RAM_C7x_2_SIZE, &attrs, is_secure); /* L2 sram 448KB        */
+    if(retVal == FALSE)
+    {
+        goto mmu_exit;
+    }
+
+    retVal = Mmu_map(0x41C00000U, 0x41C00000U, 0x00100000U, &attrs, is_secure); /* OCMC - 1MB */
     if(retVal == FALSE)
     {
         goto mmu_exit;
