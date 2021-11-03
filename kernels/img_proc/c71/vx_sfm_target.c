@@ -514,7 +514,7 @@ static vx_status VX_CALLBACK tivxKernelSFMCreate
             {
                 sfmObj->algHandle = tivxAlgiVisionCreate
                                     (
-                                        &SFM_TI_VISION_FXNS,
+                                        NULL, //&SFM_TI_VISION_FXNS,
                                         (IALG_Params *)(&sfmObj->createParams)
                                     );
 
