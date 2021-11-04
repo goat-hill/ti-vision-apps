@@ -396,7 +396,7 @@ int32_t appVhwaVpacInit()
     /* MSC */
     if (0 == status)
     {
-        uint32_t cnt;
+        uint32_t cnt, idx;
 
         Vhwa_M2mMscInitParams initPrms;
         Vhwa_M2mMscSl2AllocPrms sl2Prms;
@@ -413,11 +413,14 @@ int32_t appVhwaVpacInit()
 
         if (0 == status)
         {
-            for(cnt = 0; cnt < VHWA_M2M_MSC_MAX_INPUT_BUFF; cnt++)
+            for(cnt = 0; cnt < VHWA_M2M_MSC_MAX_INST; cnt++)
             {
-                sl2Prms.maxInWidth[cnt]    = APP_UTILS_VHWA_MAX_IN_IMG_WIDTH;
-                sl2Prms.inCcsf[cnt]        = APP_UTILS_VHWA_IN_IMG_CCSF;
-                sl2Prms.inBuffDepth[cnt]   = APP_UTILS_VHWA_MAX_IN_IMG_BUFF_DEPTH;
+                for(idx = 0; idx < VHWA_M2M_MSC_MAX_IN_CHANNEL; idx++)
+                {
+                    sl2Prms.maxInWidth[cnt][idx]    = APP_UTILS_VHWA_MAX_IN_IMG_WIDTH;
+                    sl2Prms.inCcsf[cnt][idx]        = APP_UTILS_VHWA_IN_IMG_CCSF;
+                    sl2Prms.inBuffDepth[cnt][idx]   = APP_UTILS_VHWA_MAX_IN_IMG_BUFF_DEPTH;
+                }
             }
 
             for(cnt = 0; cnt < MSC_MAX_OUTPUT; cnt++)
@@ -509,7 +512,7 @@ int32_t appVhwaVpacInit()
         initPrms.udmaDrvHndl = appUdmaGetObj();
 
         /* Set configThroughUDMA to true to support multi handle */
-        initPrms.configThroughUdmaFlag = true;
+        initPrms.configThroughUdmaFlag = false;
 
         status = Vhwa_m2mVissInit(&initPrms);
         if (0 != status)
@@ -641,7 +644,7 @@ int32_t appVhwaHandler(char *service_name, uint32_t cmd, void *prm, uint32_t prm
 
             case APP_VPAC_650_DMPAC_520:
                 #if defined(SOC_J721S2)
-                #if 0 // TODO: Re-enable based on what the correct clk should be--the below is now correct 
+                #if 0 // TODO: Re-enable based on what the correct clk should be--the below is now correct
                 SET_CLOCK_FREQ (TISCI_DEV_DMPAC0, TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK, 520000000);
                 SET_CLOCK_FREQ (TISCI_DEV_VPAC0, TISCI_DEV_J7AM_DMPAC_VPAC_PSILSS0_MAIN_CLK,   650000000);
                 #endif
