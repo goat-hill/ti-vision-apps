@@ -73,14 +73,14 @@ extern "C" {
  * Sizes of the virtqueues (expressed in number of buffers supported,
  * and must be power of 2)
  */
-#define R5F_RPMSG_VQ0_SIZE      256
-#define R5F_RPMSG_VQ1_SIZE      256
-#define C7X_RPMSG_VQ0_SIZE      256
-#define C7X_RPMSG_VQ1_SIZE      256
+#define R5F_RPMSG_VQ0_SIZE      256U
+#define R5F_RPMSG_VQ1_SIZE      256U
+#define C7X_RPMSG_VQ0_SIZE      256U
+#define C7X_RPMSG_VQ1_SIZE      256U
 
 /* flip up bits whose indices represent features we support */
-#define RPMSG_R5F_C0_FEATURES   1
-#define RPMSG_C7X_DSP_FEATURES  1
+#define RPMSG_R5F_C0_FEATURES   1U
+#define RPMSG_C7X_DSP_FEATURES  1U
 
 #ifdef SYSBIOS
   extern __T1_xdc_runtime_SysMin_Module_State__outbuf xdc_runtime_SysMin_Module_State_0_outbuf__A[];
@@ -91,9 +91,9 @@ extern "C" {
 
 const Ipc_ResourceTable ti_ipc_remoteproc_ResourceTable __attribute__ ((section (".resource_table"), aligned (4096))) = 
 {
-    1,                   /* we're the first version that implements this */
+    1U,                   /* we're the first version that implements this */
     NUM_ENTRIES,         /* number of entries in the table */
-    0, 0,                /* reserved, must be zero */
+    0U, 0U,                /* reserved, must be zero */
 
     /* offsets to entries */
     {
@@ -103,39 +103,39 @@ const Ipc_ResourceTable ti_ipc_remoteproc_ResourceTable __attribute__ ((section 
 
     /* rpmsg vdev entry */
     {
-        TYPE_VDEV, VIRTIO_ID_RPMSG, 0,
+        TYPE_VDEV, VIRTIO_ID_RPMSG, 0U,
 #if defined (CPU_c7x_1) || defined (CPU_c7x_2)
-        RPMSG_C7X_DSP_FEATURES, 0, 0, 0, 2, { 0, 0 },
+        RPMSG_C7X_DSP_FEATURES, 0U, 0U, 0U, 2U, { 0U, 0U },
 #else
-        RPMSG_R5F_C0_FEATURES, 0, 0, 0, 2, { 0, 0 },
+        RPMSG_R5F_C0_FEATURES, 0U, 0U, 0U, 2U, { 0U, 0U },
 #endif
         /* no config data */
     },
     /* the two vrings */
 #if defined (CPU_mcu1_0)
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_mcu1_1)
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_mcu2_0)
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_mcu2_1)
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_mcu3_0)
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_mcu3_1)
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, R5F_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, R5F_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_c7x_1)
-    { RPMSG_VRING_ADDR_ANY, 4096, C7X_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, C7X_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, C7X_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, C7X_RPMSG_VQ1_SIZE, 2U, 0U },
 #elif defined (CPU_c7x_2)
-    { RPMSG_VRING_ADDR_ANY, 4096, C7X_RPMSG_VQ0_SIZE, 1, 0 },
-    { RPMSG_VRING_ADDR_ANY, 4096, C7X_RPMSG_VQ1_SIZE, 2, 0 },
+    { RPMSG_VRING_ADDR_ANY, 4096U, C7X_RPMSG_VQ0_SIZE, 1U, 0U },
+    { RPMSG_VRING_ADDR_ANY, 4096U, C7X_RPMSG_VQ1_SIZE, 2U, 0U },
 #else
     #error CPU_<cpu name> not defined
 #endif 
