@@ -67,9 +67,9 @@
 MEMORY
 {
     /* L2 for C7x_2 [ size 448.00 KB ] */
-    L2RAM_C7x_2              ( RWIX ) : ORIGIN = 0x64800000 , LENGTH = 0x00070000
+    L2RAM_C7x_2              ( RWIX ) : ORIGIN = 0x65800000 , LENGTH = 0x00070000
     /* L1 for C7x_2 [ size 16.00 KB ] */
-    L1RAM_C7x_2              ( RWIX ) : ORIGIN = 0x64E00000 , LENGTH = 0x00004000
+    L1RAM_C7x_2              ( RWIX ) : ORIGIN = 0x65E00000 , LENGTH = 0x00004000
     /* DDR for C7x_2 for Linux IPC [ size 1024.00 KB ] */
     DDR_C7x_2_IPC            ( RWIX ) : ORIGIN = 0xA8000000 , LENGTH = 0x00100000
     /* DDR for C7x_2 for Linux resource table [ size 1024 B ] */
