@@ -79,16 +79,16 @@
 #define L2RAM_C7x_1_ADDR (0x64800000u)
 #define L2RAM_C7x_1_SIZE (0x00070000u)
 
-/* L2 for C7x_2 [ size 448.00 KB ] */
-#define L2RAM_C7x_2_ADDR (0x64800000u)
-#define L2RAM_C7x_2_SIZE (0x00070000u)
-
 /* L1 for C7x_1 [ size 16.00 KB ] */
 #define L1RAM_C7x_1_ADDR (0x64E00000u)
 #define L1RAM_C7x_1_SIZE (0x00004000u)
 
+/* L2 for C7x_2 [ size 448.00 KB ] */
+#define L2RAM_C7x_2_ADDR (0x65800000u)
+#define L2RAM_C7x_2_SIZE (0x00070000u)
+
 /* L1 for C7x_2 [ size 16.00 KB ] */
-#define L1RAM_C7x_2_ADDR (0x64E00000u)
+#define L1RAM_C7x_2_ADDR (0x65E00000u)
 #define L1RAM_C7x_2_SIZE (0x00004000u)
 
 /* MSMC for C7x_1 [ size  3.78 MB ] */

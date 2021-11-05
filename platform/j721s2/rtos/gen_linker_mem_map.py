@@ -153,9 +153,9 @@ c7x_1_l1_size  = 16*KB;
 # C7x L1, L2 memory allocation
 # L1 - 32KB $, 16KB SRAM
 # L2 - 64KB $, 448KB SRAM
-c7x_2_l2_addr  = 0x64800000;
+c7x_2_l2_addr  = 0x65800000;
 c7x_2_l2_size  = (512 - 64)*KB;
-c7x_2_l1_addr  = 0x64E00000;
+c7x_2_l1_addr  = 0x65E00000;
 c7x_2_l1_size  = 16*KB;
 
 #
