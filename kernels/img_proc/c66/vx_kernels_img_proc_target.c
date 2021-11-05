@@ -75,12 +75,9 @@ void tivxAddTargetKernelDLColorBlend(void);
 void tivxAddTargetKernelDLDrawBox(void);
 void tivxAddTargetKernelImgPreProc(void);
 void tivxAddTargetKernelPixelViz(void);
-
-#if defined(x86_64) || defined(C66)
 void tivxAddTargetKernelDofPlaneSep(void);
 void tivxAddTargetKernelODPostProc(void);
 void tivxAddTargetKernelVisualLocalization(void);
-#endif
 
 void tivxRemoveTargetKernelOCPreProc(void);
 void tivxRemoveTargetKernelOCPostProc(void);
@@ -92,12 +89,9 @@ void tivxRemoveTargetKernelDLColorBlend(void);
 void tivxRemoveTargetKernelDLDrawBox(void);
 void tivxRemoveTargetKernelImgPreProc(void);
 void tivxRemoveTargetKernelPixelViz(void);
-
-#if defined(x86_64) || defined(C66)
 void tivxRemoveTargetKernelDofPlaneSep(void);
 void tivxRemoveTargetKernelODPostProc(void);
 void tivxRemoveTargetKernelVisualLocalization(void);
-#endif
 
 static Tivx_Target_Kernel_List  gTivx_target_kernel_list[] = {
     {&tivxAddTargetKernelOCPreProc, &tivxRemoveTargetKernelOCPreProc},
@@ -110,11 +104,9 @@ static Tivx_Target_Kernel_List  gTivx_target_kernel_list[] = {
     {&tivxAddTargetKernelDLDrawBox, &tivxRemoveTargetKernelDLDrawBox},
     {&tivxAddTargetKernelImgPreProc, &tivxRemoveTargetKernelImgPreProc},
     {&tivxAddTargetKernelPixelViz, &tivxRemoveTargetKernelPixelViz},
-#if defined(x86_64) || defined(C66)
     {&tivxAddTargetKernelODPostProc, &tivxRemoveTargetKernelODPostProc},
     {&tivxAddTargetKernelDofPlaneSep, &tivxRemoveTargetKernelDofPlaneSep},
     {&tivxAddTargetKernelVisualLocalization, &tivxRemoveTargetKernelVisualLocalization},
-#endif
 };
 
 void tivxRegisterImgProcTargetC66Kernels(void)
