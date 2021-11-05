@@ -71,9 +71,6 @@ ifeq ($(RTOS),FREERTOS)
 endif
 ADDITIONAL_STATIC_LIBS += ti.csl.ae71
 
-ADDITIONAL_STATIC_LIBS += libtiadalg_structure_from_motion.a
-ADDITIONAL_STATIC_LIBS += libtiadalg_image_preprocessing.a
-ADDITIONAL_STATIC_LIBS += libtiadalg_image_color_blending.a
 ADDITIONAL_STATIC_LIBS += libc.a
 
 endif

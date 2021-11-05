@@ -29,8 +29,15 @@ STATIC_LIBS += vx_target_kernels_stereo
 STATIC_LIBS += vx_app_ptk_demo_common
 
 #ADDITIONAL_STATIC_LIBS += libtiadalg_structure_from_motion.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_fisheye_transformation.a
 ADDITIONAL_STATIC_LIBS += libtiadalg_image_preprocessing.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_dof_plane_seperation.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_select_top_feature.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_sparse_upsampling.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_visual_localization.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_solve_pnp.a
 ADDITIONAL_STATIC_LIBS += libtiadalg_image_color_blending.a
+ADDITIONAL_STATIC_LIBS += libtiadalg_image_recursive_nms.a
 
 include $($(_MODULE)_SDIR)/../concerto_c7x_inc.mak
 
