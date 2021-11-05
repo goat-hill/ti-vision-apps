@@ -7,7 +7,6 @@
 tiadalg:
 ifeq ($(SOC),j721e)
 	$(MAKE) -C $(TIADALG_PATH) all -s
-	$(MAKE) -C $(TIADALG_PATH) tiadalg_structure_from_motion_lib TARGET_CPU=$(C7X_TARGET) -s
 endif
 ifeq ($(SOC),j721s2)
 	$(MAKE) -C $(TIADALG_PATH) TARGET_CPU=$(C7X_TARGET) all -s
