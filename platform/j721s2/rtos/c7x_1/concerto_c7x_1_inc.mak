@@ -20,7 +20,7 @@ endif
 LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-LDIRS += $(TIDL_PATH)/lib/$(SOC)/dsp/algo/release
+LDIRS += $(TIDL_PATH)/lib/$(SOC)/dsp/algo/$(TARGET_BUILD)
 
 
 TIDL_LIBS =
