@@ -231,6 +231,7 @@ linux_fs_install_sd: linux_fs_install
 
 	$(call MODIFY_FS,$(LINUX_SD_FS_ROOT_PATH),$(LINUX_SD_FS_BOOT_PATH))
 	sudo cp $(VISION_APPS_PATH)/apps/basic_demos/app_linux_fs_files/k3-j721s2-vision-apps.dtbo $(LINUX_SD_FS_ROOT_PATH)/boot/.
+	sync
 ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot_linux_install_sd
 endif
