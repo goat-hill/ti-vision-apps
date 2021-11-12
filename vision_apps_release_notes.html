@@ -73,13 +73,9 @@
 <li>
 <a href="#Validation">Validation Information</a> </li>
 <li>
-<a href="#Fixed_Issues">Fixed Issues</a> </li>
-<li>
 <a href="#Open_Defects">Open Defects</a> </li>
 <li>
 <a href="#Known_Issues">Known Issues</a> </li>
-<li>
-<a href="#Change_Requests">Change Requests</a> </li>
 <li>
 <a href="#Support">Technical Support</a> </li>
 <li>
@@ -131,11 +127,10 @@ Refer to following documentation for further details:<p>
 <p>
 <h2><a class="anchor" name="Whats_New"></a>What's New</h2>
 
-New features in this release are highlighted in <strong>bold</strong>
-
 <ul>
 <li>OpenVX based demos for ADAS, Vision, deep learning applications
     <ul>
+<<<<<<< HEAD
     <li> Free RTOS on C7x, C6x on R5F and Linux or QNX on A72</li>
     <li>Integrates all major PSDK RTOS and PSDK Linux SW components like TIDL, MMALIB, PDK, OpenVX, ETHFW, OpenGL, C6x algorithms, imaging/sensors, IPC, Linux, TI-RTOS, SPL/uboot.</li>
     <li>Integrates all major HW components like CSI2 camera, eDP/HDMI display, UART, I2C, ethernet, SD card</li>
@@ -211,18 +206,14 @@ New features in this release are highlighted in <strong>bold</strong>
 
 <li>OpenVX target nodes
     <ul>
-    <li>image pre-processing (YUV 2 RGB) nodes for DL demos</li>
-    <li>image post-processing and visualization nodes for deep learning, DOF, Stereo demos</li>
-    <li>lidar, radar, camera SFM nodes for PTK demos</li>
-    <li>OpenGL nodes for surround view</li>
-    <li>Multi-threading support in MSC mosaic node</li>
-    <li>Block based processing example kernel on C66x using UDMA/DRU</li>
+    <li>Free RTOS on R5F and C7x and Linux on A72</li>
+    <li>Integrates all major PSDK RTOS and PSDK Linux SW components like TIDL, MMALIB, PDK, OpenVX, imaging/sensors, IPC, Linux, Free RTOS, SPL/uboot.</li>
+    <li>Integrates all major HW components like UART, I2C, SD card</li>
     </ul>
 </li>
 
 <li>Profiling, logging and other utility APIs</li>
-<li>General stability, performance, documentation improvements</li>
-<li>All included MCU tasks are split between MCU2_0 (ETHFW, VPAC HWA) and MCU2_1 (DMPAC HWA), leaving MCU3_0 and MCU3_1 free on main island</li>
+<li>All included MCU tasks are split between MCU2_0 (VPAC HWA) and MCU2_1 (DMPAC HWA), leaving MCU3_0 and MCU3_1 free on main island</li>
 </ul>
 
 <p>
@@ -311,6 +302,7 @@ The tools used to validate this package are listed in top level user guide <a hr
 <tr class="header">
 <th align="center">ID</th>
 <th align="left">Summary</th>
+<th align="left">Details</th>
 </tr>
 </thead>
 <tbody>
@@ -319,24 +311,29 @@ The tools used to validate this package are listed in top level user guide <a hr
 <td align="left"><span>AVP4 freezes in first second of running on QNX</span></td>
 </tr>
 <tr class="odd">
-<td align="center"><a href="https://sir.ext.ti.com/jira/browse/EXT_EP-10716">ADASVISION-5100</a></td>
-<td align="left"><span>Peak DDR BW numbers seem too high for some demos</span></td>
-</tr>
-<tr class="even">
-<td align="center"><a href="https://sir.ext.ti.com/jira/browse/EXT_EP-10505">ADASVISION-4923</a></td>
-<td align="left"><span>Frozen frame running OpenVX graphs back to back </span></td>
+<td align="center">ADASVISION-5064</a></td>
+<td align="left"><span>Instability on MCU2-1 seen on cold boot requiring a reboot</span></td>
+<td align="left"><span>VERY IMPORTANT NOTE: If the MCU2-1 logs do not appear after running "source ./vision_apps_init.sh", please run "reboot" from the console and see that the MCU2-1 logs appear</span></td>
 </tr>
 <tr class="odd">
-<td align="center"><a href="https://sir.ext.ti.com/jira/browse/EXT_EP-10510">ADASVISION-4876</a></td>
-<td align="left"><span>Performance degradation observed on some vision apps demos</span></td>
-</tr>
-<tr class="even">
-<td align="center"><a href="https://sir.ext.ti.com/jira/browse/EXT_EP-10512">ADASVISION-4873</a></td>
-<td align="left"><span>[IMGPreProcNode]: BT601 limited range CSC coefficients causes clipping</span></td>
+<td align="center">ADASVISION-5067</a></td>
+<td align="left"><span>C7X-2 requires a 10s delay during init</span></td>
+<td align="left"><span>The C7X-2 init sequence saw corruption of the MMU table.  A 10 second delay has been added as a temporary workaround to the init sequence which prevents this corruption from occurring</span></td>
 </tr>
 <tr class="odd">
-<td align="center"><a href="https://sir.ext.ti.com/jira/browse/EXT_EP-10514">ADASVISION-4799</a></td>
-<td align="left"><span>Broadcast Mode Unreliable</span></td>
+<td align="center">ADASVISION-5065</a></td>
+<td align="left"><span>OCMC RAM Init fails on MCU2-0/MCU2-1</span></td>
+<td align="left"><span>The OCMC RAM init has been temporarily disabled as a workaround on the MCU2-0/MCU2-1.  It is recommended to use DDR for the time being rather than OCMC RAM</span></td>
+</tr>
+<tr class="odd">
+<td align="center">ADASVISION-5063</a></td>
+<td align="left"><span>A72 cache is disabled due to cache coherency issue between A72 and R5</span></td>
+<td align="left"><span>The main domain R5F's are running in secure mode which causes a cache coherency issue between A72 and R5F in the DDR shared memory.  The temporary workaround for this issue is to disable cache on this region from A72.  Accesses from the A72 to this region will result in a performance degradation</span></td>
+</tr>
+<tr class="odd">
+<td align="center">ADASVISION-4927</a></td>
+<td align="left"><span>CPU Load values in free RTOS is inconsistent</span></td>
+<td align="left"><span></span></td>
 </tr>
 <tr class="even">
 <td align="center"><a href="https://sir.ext.ti.com/jira/browse/EXT_EP-10518">ADASVISION-4422</a></td>
@@ -410,43 +407,6 @@ Send die ID to TI. </span></td>
 </tr>
 </tbody>
 </table>
-</table>
-<h2><a class="anchor" name="Change_Requests"></a>Change Requests</h2>
-<table>
-<thead>
-<tr class="header">
-<th align="center">ID</th>
-<th align="left">Headline</th>
-<th align="left">Original Fix Version</th>
-<th align="left">New Fix Version</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">JACINTOREQ-2446</a></td>
-<td align="left"><span>Descope codecs application from 8.2 release</span></td>
-<td align="left"><span>08.02.00</span></td>
-<td align="left"><span>08.04.00</span></td>
-</tr>
-<tr class="even">
-<td align="center">JACINTOREQ-2446</a></td>
-<td align="left"><span>VPAC TIOVX Scope Change</span></td>
-<td align="left"><span>08.02.00</span></td>
-<td align="left"><span>09.00.00</span></td>
-</tr>
-<tr class="odd">
-<td align="center">JACINTOREQ-2444</a></td>
-<td align="left"><span>SafeRTOS Vision Apps Integration Testing Descope</span></td>
-<td align="left"><span>08.02.00</span></td>
-<td align="left"><span>08.04.00</span></td>
-</tr>
-<tr class="even">
-<td align="center">JACINTOREQ-2347</a></td>
-<td align="left"><span>De-scope BAM enablement on J7 from 8.2</span></td>
-<td align="left"><span>08.02.00</span></td>
-<td align="left"><span>08.05.00</span></td>
-</tr>
-</tbody>
 </table>
 <p>
 <hr>
