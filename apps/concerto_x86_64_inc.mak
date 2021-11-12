@@ -66,7 +66,6 @@ TIADALG_LIBS += tiadalg_sparse_upsampling
 TIADALG_LIBS += tiadalg_image_color_blending
 TIADALG_LIBS += tiadalg_image_recursive_nms
 TIADALG_LIBS += tiadalg_structure_from_motion
-TIADALG_LIBS += c6xsim
 
 VISION_APPS_UTILS_LIBS  =
 VISION_APPS_UTILS_LIBS += app_utils_draw2d
