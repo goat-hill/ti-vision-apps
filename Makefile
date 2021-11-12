@@ -167,7 +167,7 @@ include makerules/makefile_ethfw.mak
 include makerules/makefile_ipk.mak
 include makerules/makefile_uboot.mak
 
-vision_apps: sdk_check_paths
+vision_apps: sdk_check_paths linux_copy_fs_files
 	touch ${PSDK_PATH}/vision_apps/platform/$(SOC)/rtos/mcu2_0/mcu2_0.cfg
 	$(MAKE) all
 vision_apps_clean: sdk_check_paths pdk_emu_clean clean
