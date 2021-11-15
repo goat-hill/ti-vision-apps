@@ -152,7 +152,9 @@ int main(void)
     StartupEmulatorWaitFxn1();
     OS_init();
 
+    #if 0 // TODO: Re-enable once we enable DRU on C7X-2; will need to allocate channels specifically per core
     appC7xClecInitDru();
+    #endif
 
     setup_dru_qos();
 
