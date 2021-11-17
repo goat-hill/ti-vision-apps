@@ -67,6 +67,7 @@
 #include <ti/board/board.h>
 #include <utils/misc/include/app_misc.h>
 #include <ti/board/src/j721s2_evm/include/board_pinmux.h>
+
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
@@ -127,7 +128,8 @@ static pinmuxPerCfg_t gI2c5PinCfg[] =
 
 static pinmuxModuleCfg_t gCaptPinCfg[] =
 {
-    {0, TRUE, gI2c5PinCfg},
+    {0, TRUE, gI2c4PinCfg},
+    {1, TRUE, gI2c5PinCfg},
     {PINMUX_END}
 };
 
