@@ -277,17 +277,10 @@ c7x_1_ddr_local_heap_size  = ddr_mem_size_hi;
 mcu_r5f_tcma_vecs  = MemSection("R5F_TCMA_VECS" , "X"   , 0x00000000, (KB >> 4));
 mcu_r5f_tcma       = MemSection("R5F_TCMA" , "X"   , 0x00000040, (32*KB) - (KB >> 4));
 
-mcu1_0_r5f_tcmb0_vecs   = MemSection("R5F_TCMB0_VECS", "RWIX", 0x41010000, (KB >> 4));
-mcu1_0_r5f_tcmb0        = MemSection("R5F_TCMB0", "RWIX", 0x41010040, (64*KB) - (KB >> 4));
+r5f_tcmb0      = MemSection("R5F_TCMB0", "RWIX", 0x41010000, 32*KB);
 
-mcu1_1_r5f_tcmb0_vecs   = MemSection("R5F_TCMB0_VECS", "RWIX", 0x41010000, (KB >> 4));
-mcu1_1_r5f_tcmb0        = MemSection("R5F_TCMB0", "RWIX", 0x41010040, (32*KB) - (KB >> 4));
-
-mcu2_0_r5f_tcmb0      = MemSection("R5F_TCMB0", "RWIX", 0x41010000, 64*KB);
-mcu3_0_r5f_tcmb0      = MemSection("R5F_TCMB0", "RWIX", 0x41010000, 64*KB);
-
-mcu2_1_r5f_tcmb0      = MemSection("R5F_TCMB0", "RWIX", 0x41010000, 32*KB);
-mcu3_1_r5f_tcmb0      = MemSection("R5F_TCMB0", "RWIX", 0x41010000, 32*KB);
+mcu_r5f_tcmb0_vecs   = MemSection("R5F_TCMB0_VECS", "RWIX", 0x41010000, (KB >> 4));
+mcu_r5f_tcmb0        = MemSection("R5F_TCMB0", "RWIX", 0x41010040, (32*KB) - (KB >> 4));
 
 # MSMC memory sections
 mpu1_msmc   = MemSection("MSMC_MPU1", "RWIX", mpu1_msmc_addr  , mpu1_msmc_size  , "MSMC reserved for MPU1 for ATF");
@@ -446,8 +439,8 @@ vision_apps_core_heaps_hi.splitOrigin(True)
 mcu1_0_mmap = MemoryMap("mcu1_0");
 mcu1_0_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu1_0_mmap.addMemSection( mcu_r5f_tcma      );
-mcu1_0_mmap.addMemSection( mcu1_0_r5f_tcmb0_vecs   );
-mcu1_0_mmap.addMemSection( mcu1_0_r5f_tcmb0        );
+mcu1_0_mmap.addMemSection( mcu_r5f_tcmb0_vecs   );
+mcu1_0_mmap.addMemSection( mcu_r5f_tcmb0        );
 mcu1_0_mmap.addMemSection( mcu1_0_ddr_ipc       );
 mcu1_0_mmap.addMemSection( mcu1_0_ddr_resource_table  );
 mcu1_0_mmap.addMemSection( mcu1_0_ddr           );
@@ -461,8 +454,8 @@ mcu1_0_mmap.checkOverlap();
 mcu1_1_mmap = MemoryMap("mcu1_1");
 mcu1_1_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu1_1_mmap.addMemSection( mcu_r5f_tcma      );
-mcu1_1_mmap.addMemSection( mcu1_1_r5f_tcmb0_vecs );
-mcu1_1_mmap.addMemSection( mcu1_1_r5f_tcmb0      );
+mcu1_1_mmap.addMemSection( mcu_r5f_tcmb0_vecs );
+mcu1_1_mmap.addMemSection( mcu_r5f_tcmb0      );
 mcu1_1_mmap.addMemSection( mcu1_1_ddr_ipc     );
 mcu1_1_mmap.addMemSection( mcu1_1_ddr_resource_table  );
 mcu1_1_mmap.addMemSection( mcu1_1_ddr         );
@@ -477,7 +470,7 @@ mcu1_1_mmap.checkOverlap();
 mcu2_0_mmap = MemoryMap("mcu2_0");
 mcu2_0_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu2_0_mmap.addMemSection( mcu_r5f_tcma      );
-mcu2_0_mmap.addMemSection( mcu2_0_r5f_tcmb0          );
+mcu2_0_mmap.addMemSection( r5f_tcmb0          );
 mcu2_0_mmap.addMemSection( mcu2_0_ddr_ipc     );
 mcu2_0_mmap.addMemSection( mcu2_0_ddr_resource_table  );
 mcu2_0_mmap.addMemSection( mcu2_0_ddr         );
@@ -492,7 +485,7 @@ mcu2_0_mmap.checkOverlap();
 mcu2_1_mmap = MemoryMap("mcu2_1");
 mcu2_1_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu2_1_mmap.addMemSection( mcu_r5f_tcma      );
-mcu2_1_mmap.addMemSection( mcu2_1_r5f_tcmb0          );
+mcu2_1_mmap.addMemSection( r5f_tcmb0          );
 mcu2_1_mmap.addMemSection( mcu2_1_ddr_ipc     );
 mcu2_1_mmap.addMemSection( mcu2_1_ddr_resource_table  );
 mcu2_1_mmap.addMemSection( mcu2_1_ddr         );
@@ -507,7 +500,7 @@ mcu2_1_mmap.checkOverlap();
 mcu3_0_mmap = MemoryMap("mcu3_0");
 mcu3_0_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu3_0_mmap.addMemSection( mcu_r5f_tcma      );
-mcu3_0_mmap.addMemSection( mcu3_0_r5f_tcmb0          );
+mcu3_0_mmap.addMemSection( r5f_tcmb0          );
 mcu3_0_mmap.addMemSection( mcu3_0_ddr_ipc     );
 mcu3_0_mmap.addMemSection( mcu3_0_ddr_resource_table  );
 mcu3_0_mmap.addMemSection( mcu3_0_ddr         );
@@ -521,7 +514,7 @@ mcu3_0_mmap.checkOverlap();
 mcu3_1_mmap = MemoryMap("mcu3_1");
 mcu3_1_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu3_1_mmap.addMemSection( mcu_r5f_tcma      );
-mcu3_1_mmap.addMemSection( mcu3_1_r5f_tcmb0          );
+mcu3_1_mmap.addMemSection( r5f_tcmb0          );
 mcu3_1_mmap.addMemSection( mcu3_1_ddr_ipc     );
 mcu3_1_mmap.addMemSection( mcu3_1_ddr_resource_table  );
 mcu3_1_mmap.addMemSection( mcu3_1_ddr         );
