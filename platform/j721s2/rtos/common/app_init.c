@@ -426,6 +426,11 @@ int32_t appInit()
     #ifdef ENABLE_UDMA
     status = appUdmaInit();
     APP_ASSERT_SUCCESS(status);
+
+    #ifdef CPU_mcu2_0
+    status = appUdmaCsirxCsitxInit();
+    APP_ASSERT_SUCCESS(status);
+    #endif
     #endif
 
     status = appMemInit(&mem_init_prm);

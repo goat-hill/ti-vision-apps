@@ -134,7 +134,7 @@ int32_t appCsi2RxInit(void)
     SET_DEVICE_STATE_ON(TISCI_DEV_DPHY_RX1);
 
     Csirx_initParamsInit(&initPrmsCsirx);
-    initPrmsCsirx.drvHandle = appUdmaGetObj();
+    initPrmsCsirx.drvHandle = appUdmaCsirxCsitxGetObj();
     status = Csirx_init(&initPrmsCsirx);
     if(status!=FVID2_SOK)
     {
@@ -192,7 +192,7 @@ int32_t appCsi2TxInit(void)
     }
 
     Csitx_initParamsInit(&initPrmsCsitx);
-    initPrmsCsitx.drvHandle = appUdmaGetObj();
+    initPrmsCsitx.drvHandle = appUdmaCsirxCsitxGetObj();
     status = Csitx_init(&initPrmsCsitx);
     if(status!=FVID2_SOK)
     {
