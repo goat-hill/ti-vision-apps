@@ -266,6 +266,34 @@ int32_t appUdmaDeInit(void);
  */
 void *appUdmaGetObj(void);
 
+#ifdef SOC_J721S2
+
+/**
+ *  \brief Performs initializations needed for UDMA BCDMA instance
+ *         Required for CSIRX/CSITX on J721S2
+ *
+ *  \return  0 incase of success else returns failure code
+ */
+int32_t appUdmaCsirxCsitxInit(void);
+
+/**
+ *  \brief Performs de-initializations needed for UDMA BCDMA instance
+ *         Required for CSIRX/CSITX on J721S2
+ *
+ *  \return  0 incase of success else returns failure code
+ */
+int32_t appUdmaCsirxCsitxDeInit(void);
+
+/**
+ *  \brief Provides global handle to UDMA Obj BCDMA instance
+ *         Required for CSIRX/CSITX on J721S2
+ *
+ *  \return  0 incase of success else returns failure code
+ */
+void *appUdmaCsirxCsitxGetObj(void);
+
+#endif
+
 /**
  *  \brief DMA copy init function.
  *
