@@ -215,6 +215,10 @@ static int32_t appCommonInitLocal()
         ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_1;
         ipc_init_prm.num_cpus++;
         #endif
+        #ifdef ENABLE_IPC_C7x_2
+        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_2;
+        ipc_init_prm.num_cpus++;
+        #endif
 
         ipc_init_prm.self_cpu_id = APP_IPC_CPU_MPU1_0;
 
