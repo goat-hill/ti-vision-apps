@@ -4,6 +4,12 @@
 # Edit this file to suit your build needs
 #
 
+ifeq ($(SOC),j721e)
+SCICLIENT_VERSION=V1
+else ifeq ($(SOC),j721s2)
+SCICLIENT_VERSION=V4
+endif
+
 #OSPI DATA
 OSPI_LOCATION_SBL_IMAGE=0
 OSPI_LOCATION_SYSFW_BIN=80000
@@ -102,16 +108,16 @@ sbl_pdk_sd:
 	$(MAKE) -C $(PDK_PATH)/packages/ti/build sbl_mmcsd_img DISABLE_RECURSE_DEPS=no BOARD=$(BOARD) CORE=$(SBL_CORE) -s
 	mkdir -p $(VISION_APPS_PATH)/out/sbl_bootfiles
 	cp $(PDK_PATH)/packages/ti/boot/sbl/binary/$(BOARD)/mmcsd/bin/sbl_mmcsd_img_$(SBL_CORE)_release.tiimage $(VISION_APPS_PATH)/out/sbl_bootfiles/tiboot3.bin
-	cp $(PDK_PATH)/packages/ti/drv/sciclient/soc/V1/tifs.bin $(VISION_APPS_PATH)/out/sbl_bootfiles/tifs.bin
+	cp $(PDK_PATH)/packages/ti/drv/sciclient/soc/$(SCICLIENT_VERSION)/tifs.bin $(VISION_APPS_PATH)/out/sbl_bootfiles/tifs.bin
 
 sbl_pdk_sd_hs:
 	$(MAKE) -C $(PDK_PATH)/packages/ti/build sbl_mmcsd_img_hs DISABLE_RECURSE_DEPS=no BOARD=$(BOARD) CORE=$(SBL_CORE) -s
 	mkdir -p $(VISION_APPS_PATH)/out/sbl_bootfiles
 	cp $(PDK_PATH)/packages/ti/boot/sbl/binary/$(BOARD)_hs/mmcsd/bin/sbl_mmcsd_img_$(SBL_CORE)_release.tiimage $(VISION_APPS_PATH)/out/sbl_bootfiles/tiboot3.bin.signed
 ifeq ($(J7ES_SR), 1_1)
-	cp $(PDK_PATH)/packages/ti/drv/sciclient/soc/V1/tifs_sr1.1-hs-enc.bin $(VISION_APPS_PATH)/out/sbl_bootfiles/tifs.bin.signed
+	cp $(PDK_PATH)/packages/ti/drv/sciclient/soc/$(SCICLIENT_VERSION)/tifs_sr1.1-hs-enc.bin $(VISION_APPS_PATH)/out/sbl_bootfiles/tifs.bin.signed
 else
-	cp $(PDK_PATH)/packages/ti/drv/sciclient/soc/V1/tifs-hs-enc.bin $(VISION_APPS_PATH)/out/sbl_bootfiles/tifs.bin.signed
+	cp $(PDK_PATH)/packages/ti/drv/sciclient/soc/$(SCICLIENT_VERSION)/tifs-hs-enc.bin $(VISION_APPS_PATH)/out/sbl_bootfiles/tifs.bin.signed
 endif
 
 sbl_pdk_ospi:
