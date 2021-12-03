@@ -96,35 +96,3 @@ void appC7xClecInitForNonSecAccess(void)
         }
     }
 }
-
-void appC7xClecInitDru(void)
-{
-    CSL_ClecEventConfig   cfgClec;
-    #if defined(SOC_J721S2)
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
-    #else
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
-    #endif
-
-    uint32_t i;
-    uint32_t dru_input_start = 192;
-    uint32_t dru_input_num   = 16;
-    /* program CLEC events from DRU used for polling by TIDL
-     * to map to required events in C7x
-     */
-    for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
-    {
-        /* Configure CLEC */
-        cfgClec.secureClaimEnable = FALSE;
-        cfgClec.evtSendEnable     = TRUE;
-        #if defined (BUILD_C7X_1)
-        cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_4;
-        #endif
-        #if defined (BUILD_C7X_2)
-        cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_5;
-        #endif
-        cfgClec.extEvtNum         = 0;
-        cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
-    }
-}

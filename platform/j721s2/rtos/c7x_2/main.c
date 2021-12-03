@@ -135,14 +135,49 @@ __attribute__ ((aligned(8192)))
 void setup_dru_qos(void)
 {
     #if 0
-	unsigned int channel;
+    unsigned int channel;
 
-	for (channel = 0; channel < J7ES_DRU_NUM_CH; ++channel) 
-	{
-		writel((J721E_DDR_QOS_EXP_DRU_QUEUE_ORDER_ID << 4) | J721E_DDR_QOS_EXP_DRU_QUEUE_PRIORITY, J7ES_DRU_CFG_y(channel));
-	}
+    for (channel = 0; channel < J7ES_DRU_NUM_CH; ++channel)
+    {
+        writel((J721E_DDR_QOS_EXP_DRU_QUEUE_ORDER_ID << 4) | J721E_DDR_QOS_EXP_DRU_QUEUE_PRIORITY, J7ES_DRU_CFG_y(channel));
+    }
     #endif
 }
+
+#define ENABLE_C72_CLEC_INIT 0 // TODO: Re-enable once we enable DRU on C7X-2; will need to allocate channels specifically per core
+
+#if ENABLE_C72_CLEC_INIT
+/* A copy of this function is in both C7 main files, except the cfgClec.rtMap value */
+static void appC7xClecInitDru(void)
+{
+    CSL_ClecEventConfig   cfgClec;
+    #if defined(SOC_J721S2)
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_BASE;
+    #else
+    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
+    #endif
+
+    uint32_t i;
+    uint32_t dru_input_start = 192;
+    uint32_t dru_input_num   = 16;
+    /* program CLEC events from DRU used for polling by TIDL
+     * to map to required events in C7x
+     */
+    for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
+    {
+        /* Configure CLEC */
+        cfgClec.secureClaimEnable = FALSE;
+        cfgClec.evtSendEnable     = TRUE;
+
+        /* cfgClec.rtMap value is different for each C7x */
+        cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_5;
+
+        cfgClec.extEvtNum         = 0;
+        cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
+        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+    }
+}
+#endif
 
 int main(void)
 {
@@ -152,7 +187,7 @@ int main(void)
     StartupEmulatorWaitFxn1();
     OS_init();
 
-    #if 0 // TODO: Re-enable once we enable DRU on C7X-2; will need to allocate channels specifically per core
+    #if ENABLE_C72_CLEC_INIT
     appC7xClecInitDru();
     #endif
 
@@ -291,7 +326,7 @@ void appMmuMap(Bool is_secure)
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_SIZE, &attrs, is_secure); 
+    retVal = Mmu_map(TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_SIZE, &attrs, is_secure);
     if(retVal == FALSE)
     {
         goto mmu_exit;
@@ -320,6 +355,7 @@ void appCacheInit()
     Cache_setSize(&cacheSize);
 }
 
+
 void InitMmu(void)
 {
     /* This is for debug purpose - see the description of function header */
@@ -331,7 +367,7 @@ void InitMmu(void)
 
     appMmuMap(FALSE);
     appMmuMap(TRUE);
-    
+
     appCacheInit();
 }
 
