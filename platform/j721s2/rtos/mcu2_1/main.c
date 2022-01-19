@@ -82,12 +82,6 @@ static void appMain(void* arg0, void* arg1)
     #endif
 }
 
-void WaitFxn (void)
-{
-    volatile uint32_t localCnt = 0xA0000000;
-    while(localCnt--);
-}
-
 void StartupEmulatorWaitFxn (void)
 {
     volatile uint32_t enableDebug = 0;
@@ -108,8 +102,6 @@ int main(void)
 
     /* This is for debug purpose - see the description of function header */
     StartupEmulatorWaitFxn();
-
-    WaitFxn();
 
     OS_init();
 
