@@ -43,6 +43,7 @@
 
 #include "app_dss_defaults_priv.h"
 #include <utils/sciclient/include/app_sciclient_wrapper_api.h>
+#include <ti/drv/pm/pmlib.h>
 
 #include <ti/drv/i2c/I2C.h>
 #include <ti/drv/i2c/soc/I2C_soc.h>
@@ -151,7 +152,9 @@ void appDssConfigurePm(app_dss_default_prm_t *prm)
     appLogPrintf("DSS: SoC init ... !!!\n");
 
     /* power on DSS */
+    #if defined (SOC_J721E)
     SET_DEVICE_STATE_ON(TISCI_DEV_DSS0);
+    #endif
 
     if(prm->display_type==APP_DSS_DEFAULT_DISPLAY_TYPE_EDP)
     {
@@ -197,7 +200,75 @@ void appDssConfigurePm(app_dss_default_prm_t *prm)
         SET_CLOCK_FREQ (TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, prm->timings.pixelClock);
         SET_CLOCK_STATE(TISCI_DEV_DSS0, TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK, 0, TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ);
         #elif defined (SOC_J721S2)
-        //TODO
+        int32_t status = PM_SUCCESS, clockStatus;
+        uint64_t minRate, respClkRate, clkFreq = 0U;
+
+        SET_DEVICE_STATE(TISCI_DEV_DSS0, TISCI_MSG_VALUE_DEVICE_SW_STATE_AUTO_OFF);
+
+        minRate = 148450000;
+        status = Sciclient_pmQueryModuleClkFreq(TISCI_DEV_DSS0,
+                                            TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                            148450000,
+                                            &respClkRate,
+                                            SCICLIENT_SERVICE_WAIT_FOREVER);
+        if(status == PM_SUCCESS)
+        {
+            /* Check if the clock is enabled or not */
+            status = Sciclient_pmModuleGetClkStatus(TISCI_DEV_DSS0,
+                                                    TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                                    &clockStatus,
+                                                    SCICLIENT_SERVICE_WAIT_FOREVER);
+        }
+
+        if ((status == PM_SUCCESS) && (respClkRate >= minRate))
+        {
+             status = Sciclient_pmSetModuleClkFreq(
+                                      TISCI_DEV_DSS0,
+                                      TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                      respClkRate,
+                                      TISCI_MSG_FLAG_CLOCK_ALLOW_FREQ_CHANGE,
+                                      SCICLIENT_SERVICE_WAIT_FOREVER);
+            if (status == PM_SUCCESS)
+            {
+                if (clockStatus == TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ)
+                {
+                    /* Enable the clock */
+                    status = Sciclient_pmModuleClkRequest(
+                                                        TISCI_DEV_DSS0,
+                                                        TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                                        TISCI_MSG_VALUE_CLOCK_SW_STATE_REQ,
+                                                        0U,
+                                                        SCICLIENT_SERVICE_WAIT_FOREVER);
+                }
+            }
+        }
+
+        PMLIBClkRateGet(TISCI_DEV_DSS0,
+            TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+            &clkFreq);
+
+        status = Sciclient_pmModuleClkRequest(TISCI_DEV_DSS0,
+                                              TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                                              TISCI_MSG_VALUE_CLOCK_SW_STATE_UNREQ,
+                                              0U,
+                                              SCICLIENT_SERVICE_WAIT_FOREVER);
+
+        if(PM_SUCCESS == status)
+        {
+            
+            status = Sciclient_pmSetModuleClkFreq(TISCI_DEV_DSS0,
+                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                minRate,
+                0U,
+                SCICLIENT_SERVICE_WAIT_FOREVER);
+
+            PMLIBClkRateGet(TISCI_DEV_DSS0,
+                TISCI_DEV_DSS0_DSS_INST0_DPI_0_IN_2X_CLK_PARENT_HSDIV1_16FFT_MAIN_16_HSDIVOUT0_CLK,
+                &clkFreq);
+        }
+
+        SET_DEVICE_STATE_ON(TISCI_DEV_DSS0);
+
         #endif
     }
     else if(prm->display_type==APP_DSS_DEFAULT_DISPLAY_TYPE_DPI_HDMI)
@@ -243,8 +314,8 @@ void appDssConfigureBoard(app_dss_default_prm_t *prm)
     }
 
     /* ADASVISION-4188 - There seem to be an I2C conflict when ETHFW is enabled, so this is disabled when ETHFW is enabled */
-    /* If customers are not usign ETHFW then below can be enabled to support eDP to HDMI mode */ 
-    
+    /* If customers are not usign ETHFW then below can be enabled to support eDP to HDMI mode */
+
 #ifndef ENABLE_ETHFW
     if(prm->display_type==APP_DSS_DEFAULT_DISPLAY_TYPE_EDP)
     {
@@ -257,7 +328,8 @@ void appDssConfigureBoard(app_dss_default_prm_t *prm)
 
 void appDssConfigureDP(void)
 {
-    Board_STATUS b_status;
+    Board_STATUS b_status = BOARD_SOK;
+#if defined(SOC_J721E)
     Board_IoExpCfg_t ioExpCfg;
 
     appLogPrintf("DSS: Turning on DP_PWR pin for eDP adapters ... !!!\n");
@@ -271,6 +343,7 @@ void appDssConfigureDP(void)
     ioExpCfg.signalLevel = GPIO_SIGNAL_LEVEL_HIGH;
 
     b_status = Board_control(BOARD_CTRL_CMD_SET_IO_EXP_PIN_OUT, (void *)(&ioExpCfg));
+#endif
 
     if (b_status == BOARD_SOK)
     {
