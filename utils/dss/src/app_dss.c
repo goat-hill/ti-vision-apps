@@ -128,11 +128,16 @@ int32_t appDssInit(app_dss_init_params_t *dssParams)
     }
 
     dssInitParams.socParams.dpInitParams.isAvailable = dssParams->isDpAvailable;
+#if defined (SOC_J721S2)
+    dssInitParams.socParams.dpInitParams.isHpdSupported = false;
+#elif defined (SOC_J721E)
     dssInitParams.socParams.dpInitParams.isHpdSupported = true;
+#endif
 
     dssInitParams.socParams.dsiInitParams.isAvailable = dssParams->isDsiAvailable;
 
     retVal = Dss_init(&dssInitParams);
+
     if(0 != retVal)
     {
         appLogPrintf("DSS: ERROR: Dss_init failed !!!\n");
