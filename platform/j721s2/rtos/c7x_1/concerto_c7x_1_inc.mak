@@ -22,6 +22,7 @@ LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 LDIRS += $(TIDL_PATH)/lib/$(SOC)/dsp/algo/$(TARGET_BUILD)
 
+STATIC_LIBS += vx_target_kernels_img_proc_c71
 
 TIDL_LIBS =
 TIDL_LIBS += common_C7120
@@ -35,6 +36,7 @@ TIDL_LIBS += tidl_custom
 SYS_STATIC_LIBS += $(TIDL_LIBS)
 
 ADDITIONAL_STATIC_LIBS += dmautils.ae71
+ADDITIONAL_STATIC_LIBS += libtiadalg_structure_from_motion.a
 
 include $($(_MODULE)_SDIR)/../concerto_c7x_inc.mak
 

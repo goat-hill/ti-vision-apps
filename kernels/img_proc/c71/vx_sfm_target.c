@@ -392,7 +392,7 @@ uint64_t tiadalgVirtToPhyAddrConversion(const void *virtAddr,
                                       uint32_t chNum,
                                       void *appData)
 {
-	return (uint64_t)virtAddr;
+    return (uint64_t)virtAddr;
 }
 void * tiadalgX86UdmaInit( void)
 {
@@ -514,7 +514,7 @@ static vx_status VX_CALLBACK tivxKernelSFMCreate
             {
                 sfmObj->algHandle = tivxAlgiVisionCreate
                                     (
-                                        NULL, //&SFM_TI_VISION_FXNS,
+                                        &SFM_TI_VISION_FXNS,
                                         (IALG_Params *)(&sfmObj->createParams)
                                     );
 
@@ -627,7 +627,7 @@ void tivxAddTargetKernelSFM()
 
     self_cpu = tivxGetSelfCpuId();
 
-    if ((self_cpu == TIVX_CPU_ID_DSP_C7_1))
+    if (self_cpu == TIVX_CPU_ID_DSP_C7_1)
     {
         strncpy(target_name, TIVX_TARGET_DSP_C7_1, TIVX_TARGET_MAX_NAME);
 

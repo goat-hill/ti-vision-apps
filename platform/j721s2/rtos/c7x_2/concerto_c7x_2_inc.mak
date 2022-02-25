@@ -21,7 +21,6 @@ LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
 LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
 LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_2/$(TARGET_BUILD)/
 
-STATIC_LIBS += vx_target_kernels_img_proc_c71
 STATIC_LIBS += vx_target_kernels_srv_c66
 STATIC_LIBS += vx_target_kernels_img_proc_c66
 STATIC_LIBS += vx_target_kernels_park_assist
