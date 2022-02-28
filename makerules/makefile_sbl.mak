@@ -6,8 +6,12 @@
 
 ifeq ($(SOC),j721e)
 SCICLIENT_VERSION=V1
+K3_USART=0
+CFG_CONSOLE_UART=0
 else ifeq ($(SOC),j721s2)
 SCICLIENT_VERSION=V4
+K3_USART=0x8
+CFG_CONSOLE_UART=0x8
 endif
 
 #OSPI DATA
@@ -86,13 +90,13 @@ endif
 sbl_atf_optee:
 ifeq ($(BUILD_QNX_A72), yes)
 	# For ATF, setting HANDLE_EA_EL3_FIRST=0 for QNX so that the all runtime exception to be routed to current exception level (or in EL1 if the current exception level is EL0)
-	$(MAKE) -C $(VISION_APPS_PATH)/../arm-trusted-firmware -s -j32 CROSS_COMPILE=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- PLAT=k3 TARGET_BOARD=generic SPD=opteed  HANDLE_EA_EL3_FIRST=0
+	$(MAKE) -C $(VISION_APPS_PATH)/../arm-trusted-firmware -s -j32 CROSS_COMPILE=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- PLAT=k3 TARGET_BOARD=generic SPD=opteed  HANDLE_EA_EL3_FIRST=0 K3_USART=$(K3_USART)
 endif
 ifeq ($(BUILD_LINUX_A72), yes)
-	$(MAKE) -C $(VISION_APPS_PATH)/../arm-trusted-firmware -s -j32 CROSS_COMPILE=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- PLAT=k3 TARGET_BOARD=generic SPD=opteed
+	$(MAKE) -C $(VISION_APPS_PATH)/../arm-trusted-firmware -s -j32 CROSS_COMPILE=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- PLAT=k3 TARGET_BOARD=generic SPD=opteed K3_USART=$(K3_USART)
 endif
 
-	$(MAKE) -C $(VISION_APPS_PATH)/../ti-optee-os -s -j32 CROSS_COMPILE_core=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- CROSS_COMPILE_ta_arm32=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- CROSS_COMPILE_ta_arm64=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- NOWERROR=1 CFG_TEE_TA_LOG_LEVEL=0 CFG_TEE_CORE_LOG_LEVEL=2 CFG_ARM64_core=y ta-targets=ta_arm64 PLATFORM=k3 PLATFORM_FLAVOR=j7
+	$(MAKE) -C $(VISION_APPS_PATH)/../ti-optee-os -s -j32 CROSS_COMPILE_core=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- CROSS_COMPILE_ta_arm32=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- CROSS_COMPILE_ta_arm64=$(GCC_LINUX_ARM_ROOT)/bin/aarch64-none-linux-gnu- NOWERROR=1 CFG_TEE_TA_LOG_LEVEL=0 CFG_TEE_CORE_LOG_LEVEL=2 CFG_ARM64_core=y ta-targets=ta_arm64 PLATFORM=k3 PLATFORM_FLAVOR=j7 CFG_CONSOLE_UART=$(CFG_CONSOLE_UART)
 	mkdir -p $(ATF_OPTEE_PATH)
 	cp $(VISION_APPS_PATH)/../arm-trusted-firmware/build/k3/generic/release/bl31.bin $(ATF_OPTEE_PATH)/bl31.bin
 	cp $(VISION_APPS_PATH)/../ti-optee-os/out/arm-plat-k3/core/tee-pager_v2.bin $(ATF_OPTEE_PATH)/bl32.bin
