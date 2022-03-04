@@ -201,16 +201,17 @@ endif
 else ifeq ($(SOC),j721s2)
 sdk: sdk_check_paths linux_copy_fs_files pdk imaging ptk vxlib tiovx tiadalg qnx
 	$(MAKE) vision_apps
+	$(MAKE) tidl_rt
 ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot
 endif
 
-sdk_clean: sdk_check_paths pdk_clean imaging_clean ptk_clean tiovx_clean tidl_clean tiadalg_clean vision_apps_clean qnx_clean sbl_bootimage_clean
+sdk_clean: sdk_check_paths pdk_clean imaging_clean ptk_clean vxlib_clean tiovx_clean tidl_clean tiadalg_clean vision_apps_clean qnx_clean sbl_bootimage_clean
 ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot_clean
 endif
 
-sdk_scrub: sdk_check_paths pdk_scrub imaging_scrub ptk_scrub tiovx_scrub tidl_scrub tiadalg_scrub vision_apps_scrub qnx_scrub sbl_bootimage_scrub
+sdk_scrub: sdk_check_paths pdk_scrub imaging_scrub ptk_scrub vxlib_scrub tiovx_scrub tidl_scrub tiadalg_scrub vision_apps_scrub qnx_scrub sbl_bootimage_scrub
 ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot_clean
 endif
