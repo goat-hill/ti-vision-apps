@@ -169,7 +169,6 @@ define MODIFY_FS =
 	cp $(VISION_APPS_PATH)/apps/basic_demos/app_linux_fs_files/uEnv_$(SOC)_edgeai_apps.txt $(2)/
 	cp $(2)/$(UENV_NAME) $(2)/uEnv.txt
 	# update any additional files specific to PSDK RTOS in the filesystem
-	sudo cp $(VISION_APPS_PATH)/apps/basic_demos/app_linux_fs_files/k3-j721s2-vision-apps.dtbo $(1)/boot/.
 	-cp $(VISION_APPS_PATH)/apps/basic_demos/app_linux_fs_files/limits.conf $(1)/etc/security/limits.conf 2> /dev/null
 	sync
 endef
