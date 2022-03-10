@@ -15,15 +15,16 @@ CSOURCES    += vx_pose_visualization_target.c
 CSOURCES    += vx_visual_localization_target.c
 CSOURCES    += vx_draw_keypoint_detections_target.c
 CSOURCES    += vx_draw_box_detections_target.c
-CSOURCES    += vx_dl_pre_proc_target.c
 CSOURCES    += vx_dl_color_blend_target.c
 CSOURCES    += vx_dl_draw_box_target.c
 
 ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), x86_64 C66 ))
+CSOURCES    += vx_dl_pre_proc_target.c
 CSOURCES    += vx_image_preprocessing_target.c
 endif
 
 ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), C7120))
+CSOURCES    += vx_dl_pre_proc_target_no_dma.c
 CSOURCES    += vx_image_preprocessing_target_no_dma.c
 endif
 
