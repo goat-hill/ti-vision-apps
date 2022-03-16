@@ -98,6 +98,8 @@ static void memcpyC66(uint8_t *restrict pOut, uint8_t *restrict pIn, int32_t siz
         }
     }
 }
+#elif defined (__C7100__) || defined (__C7120__)
+#define memcpyC66 memcpy
 #else
 static void memcpyC66(uint8_t *pOut, uint8_t *pIn, int32_t size)
 {
@@ -110,8 +112,6 @@ static void memcpyC66(uint8_t *pOut, uint8_t *pIn, int32_t size)
     appUdmaCopy1D(NULL, &prms_1d);
 }
 #endif
-#else
-#define memcpyC66 memcpy
 #endif
 
 static vx_status VX_CALLBACK tivxKernelDrawKeypointDetectionsCreate
