@@ -112,6 +112,8 @@ static void memcpyC66(uint8_t *pOut, uint8_t *pIn, int32_t size)
     appUdmaCopy1D(NULL, &prms_1d);
 }
 #endif
+#else
+#define memcpyC66 memcpy
 #endif
 
 static vx_status VX_CALLBACK tivxKernelDrawKeypointDetectionsCreate
@@ -404,7 +406,7 @@ static void drawPoints(tivxDrawKeypointDetectionsParams *params, vx_uint8 *data_
         }
     }
 
-    if(draw_lines == 1) 
+    if(draw_lines == 1)
     {
         if(label == 1)
         {
@@ -507,7 +509,7 @@ static void drawJoinedPoints(tivxDrawKeypointDetectionsParams *params, vx_uint8 
         }
     }
 
-    if(draw_lines == 1) 
+    if(draw_lines == 1)
     {
         if(label == 1)
         {
