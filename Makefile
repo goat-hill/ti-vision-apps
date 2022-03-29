@@ -147,6 +147,7 @@ else ifeq ($(SOC),j721s2)
 	$(DOXYGEN) internal_docs/doxy_cfg_user_guide/user_guide_linux_j721s2.cfg 2> internal_docs/doxy_cfg_user_guide/doxy_warnings.txt
 endif
 	-$(Q)$(COPY) internal_docs/doxy_cfg_user_guide/theme/*.png docs/user_guide/
+	$(COPY) vision_apps_release_notes_$(SOC).html vision_apps_release_notes.html
 
 doxy_design_docs:
 	$(DOXYGEN) internal_docs/doxy_cfg_design/design_guide.cfg 2> internal_docs/doxy_cfg_design/doxy_warnings.txt
