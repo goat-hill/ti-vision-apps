@@ -154,7 +154,11 @@ doxy_design_docs:
 
 doxy_datasheet_docs:
 	-$(Q)$(MKDIR) docs/datasheet/ $(QUIET) || true
-	$(DOXYGEN) internal_docs/doxy_cfg_datasheet/datasheet.cfg 2> internal_docs/doxy_cfg_datasheet/doxy_warnings.txt
+ifeq ($(SOC),j721e)
+	$(DOXYGEN) internal_docs/doxy_cfg_datasheet/datasheet_j721e.cfg 2> internal_docs/doxy_cfg_datasheet/doxy_warnings.txt
+else ifeq ($(SOC),j721s2)
+	$(DOXYGEN) internal_docs/doxy_cfg_datasheet/datasheet_j721s2.cfg 2> internal_docs/doxy_cfg_datasheet/doxy_warnings.txt
+endif
 
 # Additional make targets to build various related components
 include makerules/makefile_pdk.mak
