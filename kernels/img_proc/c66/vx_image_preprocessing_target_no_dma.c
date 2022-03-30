@@ -213,7 +213,7 @@ static vx_status VX_CALLBACK tivxKernelImgPreProcProcess
         out_tensor_target_ptr = tivxMemShared2TargetPtr(&out_img_desc->mem_ptr);
         tivxMemBufferMap(out_tensor_target_ptr, out_img_desc->mem_size, VX_MEMORY_TYPE_HOST, VX_WRITE_ONLY);
 
-        if((prms->ip_rgb_or_yuv == 0) || (prms->ip_rgb_or_yuv == 2))
+        if((prms->ip_rgb_or_yuv == 0) || (prms->ip_rgb_or_yuv == 1) || (prms->ip_rgb_or_yuv == 2))
         {
             vx_int32 data_type = TIADALG_DATA_TYPE_U08;
             if(prms->tidl_8bit_16bit_flag == 0){
