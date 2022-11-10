@@ -178,9 +178,13 @@ vision_apps_scrub: sdk_check_paths
 vision_apps_docs: sdk_check_paths doxy_docs
 
 ifeq ($(SOC),j721e)
-sdk: sdk_check_paths pdk ethfw remote_device imaging ptk vxlib tiovx tiadalg qnx
+sdk: sdk_check_paths pdk ethfw remote_device imaging ptk vxlib tiovx tiadalg qnx 
 	$(MAKE) vision_apps
+ifeq ($(BUILD_QNX_A72),yes)
+	$(MAKE) tidl
+else
 	$(MAKE) tidl_rt
+endif
 ifeq ($(BUILD_CPU_MCU1_0),yes)
 	$(MAKE) uboot
 endif

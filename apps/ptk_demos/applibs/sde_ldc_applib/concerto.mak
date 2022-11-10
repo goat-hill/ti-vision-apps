@@ -1,11 +1,13 @@
 ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), x86_64 A72))
-ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX))
+ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX QNX))
 
 include $(PRELUDE)
 TARGET      := vx_applib_sde_ldc
 TARGETTYPE  := library
 CPPSOURCES  := $(call all-cpp-files)
+ifeq ($(TARGET_OS), LINUX)
 CPPFLAGS    := --std=c++11
+endif
 
 IDIRS       += $(VISION_APPS_PATH)/apps/ptk_demos/app_common
 IDIRS       += $(VISION_APPS_PATH)/kernels/stereo/include

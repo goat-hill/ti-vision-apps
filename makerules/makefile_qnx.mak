@@ -59,6 +59,10 @@ ifeq ($(BUILD_CPU_MPU1),yes)
 	sed -i 's/\/opt\//\/ti_fs\//g' $(QNX_FS_PATH)/vision_apps/*.sh
 	# Remove files not needed for QNX
 	rm -rf $(QNX_FS_PATH)/vision_apps/limits.conf
+	# Adding TIDL libraries/binaries
+	cp $(TIDL_PATH)/rt/out/J7/A72/QNX/release/libvx_tidl_rt.so.1.0 $(QNX_FS_PATH)/tilib
+	cp $(TIDL_PATH)/rt/out/J7/A72/QNX/release/TI_DEVICE_a72_test_dl_algo_host_rt.out $(QNX_FS_PATH)/tibin
+	cp $(TIDL_PATH)/tfl_delegate/out/J7/A72/QNX/release/libtidl_tfl_delegate.so.1.0 $(QNX_FS_PATH)/tilib
 
 	chmod +x $(QNX_FS_PATH)/vision_apps/*.sh
 endif

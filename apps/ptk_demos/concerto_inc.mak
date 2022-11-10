@@ -1,7 +1,9 @@
 ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), x86_64 A72))
-ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX))
+ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX QNX))
 
+ifeq ($(TARGET_OS), LINUX)
 CPPFLAGS        := --std=c++11
+endif
 
 IDIRS           += $(VISION_APPS_PATH)/kernels/lidar/include
 IDIRS           += $(VISION_APPS_PATH)/kernels/park_assist/include
@@ -45,9 +47,17 @@ IDIRS           += $(LINUX_FS_PATH)/usr/include/freetype2
 LDIRS           += $(LINUX_FS_PATH)/lib
 LDIRS           += $(LINUX_FS_PATH)/usr/lib/python3.8/site-packages/dlr
 
+ifeq ($(TARGET_OS), LINUX)
 SYS_SHARED_LIBS += pthread
 SYS_SHARED_LIBS += rt GLESv2 EGL gbm
 SYS_SHARED_LIBS += dl dlr
+endif
+
+ifeq ($(TARGET_OS),QNX)
+STATIC_LIBS += c++
+SYS_SHARED_LIBS += screen
+endif
+
 endif
 
 # This section is for apps to link against static libs instead of tivision_apps library

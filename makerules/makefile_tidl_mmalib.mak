@@ -17,7 +17,11 @@ endif
 mmalib_clean:
 	rm -rf $(MMALIB_PATH)/out
 
+ifeq ($(BUILD_QNX_A72),yes)
+tidl: tidl_rt tfl_delegate
+else
 tidl:
+endif
 ifeq ($(BUILD_EMULATION_MODE),yes)
 	$(foreach current_profile, $(PDK_BUILD_PROFILE_LIST_ALL),\
 		$(MAKE) -C $(TIDL_PATH)/algo PSDK_INSTALL_PATH=$(PSDK_PATH) DSP_TOOLS=$(CGT7X_ROOT) TARGET_PLATFORM=PC TARGET_BUILD=$(current_profile); \
@@ -31,11 +35,13 @@ ifeq ($(BUILD_TARGET_MODE),yes)
     )
 endif
 
-tidl_scrub tidl_clean:
+tidl_scrub tidl_clean: tidl_rt_clean tfl_delegate_clean
 ifeq ($(BUILD_LINUX_A72),yes)
 	rm -rf $(TIDL_PATH)/../out
 endif
-
+ifeq ($(BUILD_QNX_A72),yes)
+	rm -rf $(TIDL_PATH)/../out
+endif
 tidl_rt:
 ifeq ($(BUILD_LINUX_A72),yes)
 ifeq ($(BUILD_EMULATION_MODE),yes)
@@ -43,6 +49,13 @@ ifeq ($(BUILD_EMULATION_MODE),yes)
 		$(MAKE) -C $(TIDL_PATH)/../ tidl_rt PSDK_INSTALL_PATH=$(PSDK_PATH) TARGET_PLATFORM=PC TARGET_BUILD=$(current_profile); \
     )
 endif
+ifeq ($(BUILD_TARGET_MODE),yes)
+	$(foreach current_profile, $(PDK_BUILD_PROFILE_LIST_ALL),\
+		$(MAKE) -C $(TIDL_PATH)/../ tidl_rt PSDK_INSTALL_PATH=$(PSDK_PATH) TARGET_BUILD=$(current_profile); \
+    )
+endif
+endif
+ifeq ($(BUILD_QNX_A72),yes)
 ifeq ($(BUILD_TARGET_MODE),yes)
 	$(foreach current_profile, $(PDK_BUILD_PROFILE_LIST_ALL),\
 		$(MAKE) -C $(TIDL_PATH)/../ tidl_rt PSDK_INSTALL_PATH=$(PSDK_PATH) TARGET_BUILD=$(current_profile); \
@@ -63,5 +76,28 @@ ifeq ($(BUILD_TARGET_MODE),yes)
     )
 endif
 endif
+ifeq ($(BUILD_QNX_A72),yes)
+ifeq ($(BUILD_TARGET_MODE),yes)
+	$(foreach current_profile, $(PDK_BUILD_PROFILE_LIST_ALL),\
+		$(MAKE) -C $(TIDL_PATH)/../ tidl_rt_clean PSDK_INSTALL_PATH=$(PSDK_PATH) TARGET_BUILD=$(current_profile); \
+    )
+endif
+endif
+tfl_delegate:
+ifeq ($(BUILD_QNX_A72),yes)
+ifeq ($(BUILD_TARGET_MODE),yes)
+	$(foreach current_profile, $(PDK_BUILD_PROFILE_LIST_ALL),\
+		$(MAKE) -C $(TIDL_PATH)/../ tfl_delegate PSDK_INSTALL_PATH=$(PSDK_PATH) TARGET_BUILD=$(current_profile) TARGET_OS=QNX; \
+    )
+endif
+endif
 
-.PHONY: tidl tidl_clean mmalib mmalib_clean tidl_rt tidl_rt_clean tidl_rt_scrub
+tfl_delegate_clean tfl_delegate_scrub:
+ifeq ($(BUILD_QNX_A72),yes)
+ifeq ($(BUILD_TARGET_MODE),yes)
+	$(foreach current_profile, $(PDK_BUILD_PROFILE_LIST_ALL),\
+	$(MAKE) -C $(TIDL_PATH)/../ tfl_delegate_clean PSDK_INSTALL_PATH=$(PSDK_PATH) TARGET_BUILD=$(current_profile) TARGET_OS=QNX; \
+    )
+endif
+endif
+.PHONY: tidl tidl_clean mmalib mmalib_clean tidl_rt tidl_rt_clean tidl_rt_scrub tfl_delegate

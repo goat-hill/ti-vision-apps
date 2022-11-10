@@ -1,12 +1,14 @@
 ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), x86_64 A72))
-ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX))
+ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX QNX))
 
 include $(PRELUDE)
 TARGET      := vx_applib_common
 TARGETTYPE  := library
 CSOURCES    := $(call all-c-files)
 CPPSOURCES  :=
+ifeq ($(TARGET_OS), LINUX)
 CPPFLAGS    := --std=c++11
+endif
 
 IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/include
 IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/host

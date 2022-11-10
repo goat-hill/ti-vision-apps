@@ -5,7 +5,9 @@ TARGET      := vx_app_ptk_demo_common
 TARGETTYPE  := library
 CSOURCES    := ptk_extdep_impl.c
 CPPSOURCES  := 
+ifeq ($(TARGET_OS), LINUX)
 CPPFLAGS    := --std=c++11
+endif
 
 ifeq ($(TARGET_CPU),x86_64)
 include $(VISION_APPS_PATH)/apps/concerto_x86_64_inc.mak
@@ -15,7 +17,7 @@ CPPSOURCES      += app_ptk_demo_profile.cpp app_ptk_demo_disparity.cpp
 endif #ifeq ($(TARGET_CPU),x86_64)
 
 ifeq ($(TARGET_CPU),A72)
-ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX))
+ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX QNX))
 include $(VISION_APPS_PATH)/apps/concerto_a72_inc.mak
 CPPFLAGS        += -DPLATFORM_EGL
 CSOURCES        += app_ptk_demo_common.c
