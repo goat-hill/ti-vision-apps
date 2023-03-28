@@ -61,6 +61,17 @@
  */
 
 #include <utils/hwa/include/app_hwa_api.h>
+#if defined(SOC_AM62A) && defined(QNX)
+#include <utils/sciclient/include/app_sciclient_wrapper_api.h>
+#include <ti/drv/fvid2/include/fvid2_api.h>
+#include <ti/drv/csirx/csirx.h>
+#include <utils/udma/include/app_udma.h>
+/*
+ * UDMA driver objects
+ */
+extern struct Udma_DrvObj      *gUdmaDrvObj;
+extern struct Udma_ChObj       *gUdmaChObj;
+#endif
 
 int32_t appVhwaConfigureFreq(uint32_t freq_config)
 {
@@ -89,3 +100,69 @@ int32_t appVhwaConfigureFreq(uint32_t freq_config)
     return status;
 }
 
+#if defined(SOC_AM62A) && defined(QNX)
+int32_t appFvid2Init(void)
+{
+    int32_t retVal = FVID2_SOK;
+    Fvid2_InitPrms initPrmsFvid2;
+
+    appLogPrintf("FVID2: Init ... !!!\n");
+
+    Fvid2InitPrms_init(&initPrmsFvid2);
+    initPrmsFvid2.printFxn = appLogPrintf;
+    retVal = Fvid2_init(&initPrmsFvid2);
+    if(retVal!=FVID2_SOK)
+    {
+        appLogPrintf("FVID2: ERROR: Fvid2_init failed !!!\n");
+    }
+    appLogPrintf("FVID2: Init ... Done !!!\n");
+
+    return (retVal);
+}
+
+int32_t appFvid2DeInit(void)
+{
+    int32_t retVal = FVID2_SOK;
+
+    retVal = Fvid2_deInit(NULL);
+    if(retVal!=FVID2_SOK)
+    {
+        appLogPrintf("FVID2: ERROR: Fvid2_deInit failed !!!\n");
+    }
+    return (retVal);
+}
+
+int32_t appCsi2RxInit(void)
+{
+    int32_t status = FVID2_SOK;
+    Csirx_InitParams initPrmsCsirx;
+
+    appLogPrintf("CSI2RX: Init ... !!!\n");
+
+    SET_DEVICE_STATE_ON(TISCI_DEV_CSI_RX_IF0);
+    SET_DEVICE_STATE_ON(TISCI_DEV_DPHY_RX0);
+
+    Csirx_initParamsInit(&initPrmsCsirx);
+    initPrmsCsirx.drvHandle = gUdmaDrvObj;
+    status = Csirx_init(&initPrmsCsirx);
+    if(status!=FVID2_SOK)
+    {
+        appLogPrintf("CSI2RX: ERROR: Csirx_init failed !!!\n");
+    }
+    appLogPrintf("CSI2RX: Init ... Done !!!\n");
+
+    return (status);
+}
+
+int32_t appCsi2RxDeInit(void)
+{
+    int32_t retVal = FVID2_SOK;
+
+    retVal = Csirx_deInit();
+    if(retVal!=FVID2_SOK)
+    {
+        appLogPrintf("CSI2RX: ERROR: Csirx_deInit failed !!!\n");
+    }
+    return (retVal);
+}
+#endif

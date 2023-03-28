@@ -21,4 +21,16 @@ endif
 include $(FINALE)
 
 endif
+
+ifeq ($(SOC),am62a)
+ifeq ($(TARGET_OS),$(filter $(TARGET_OS),QNX))
+include $(PRELUDE)
+TARGET      := app_utils_udma
+TARGETTYPE  := library
+
+CSOURCES    := app_udma.c
+include $(FINALE)
+
+endif
+endif
 endif

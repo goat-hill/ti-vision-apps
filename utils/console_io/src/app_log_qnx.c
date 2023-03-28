@@ -124,11 +124,17 @@ int32_t appLogGlobalTimeInit()
 
     if (0 == status)
     {
+    #if defined (SOC_AM62A)
+        status = Sciclient_pmGetModuleClkFreq(TISCI_DEV_WKUP_GTC0,
+                                       TISCI_DEV_WKUP_GTC0_GTC_CLK,
+                                       &clkFreq,
+                                       SCICLIENT_SERVICE_WAIT_FOREVER);
+    #else
         status = Sciclient_pmGetModuleClkFreq(TISCI_DEV_GTC0,
                                            TISCI_DEV_GTC0_GTC_CLK,
                                            &clkFreq,
                                            SCICLIENT_SERVICE_WAIT_FOREVER);
-
+    #endif
     }
 
     if (0 == status)

@@ -39,6 +39,10 @@ DIRECTORIES += utils/remote_service
 DIRECTORIES += utils/sciclient
 DIRECTORIES += utils/sciserver
 DIRECTORIES += utils/udma
+ifeq ($(BUILD_QNX_MPU),yes)
+DIRECTORIES += utils/sensors
+DIRECTORIES += apps/basic_demos/app_single_cam
+endif
 
 DIRECTORIES += platform/$(SOC)
 
@@ -217,9 +221,9 @@ SOC_VARIABLE_CLEAN=tiadalg_clean qnx_clean
 SOC_VARIABLE_SCRUB=tiadalg_scrub qnx_scrub
 SOC_VARIABLE_DOCS=tiadalg_docs
 else ifeq ($(SOC),am62a)
-SOC_VARIABLE_RULES=
-SOC_VARIABLE_CLEAN=
-SOC_VARIABLE_SCRUB=
+SOC_VARIABLE_RULES=qnx
+SOC_VARIABLE_CLEAN=qnx_clean
+SOC_VARIABLE_SCRUB=qnx_scrub
 SOC_VARIABLE_DOCS=
 endif
 

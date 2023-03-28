@@ -65,7 +65,7 @@
 #include <ti/osal/SemaphoreP.h>
 #include <ti/osal/CacheP.h>
 #include <ti/osal/TaskP.h>
-#if defined(SOC_AM62A)
+#if defined(SOC_AM62A) && !defined(QNX)
 #include <ti/drv/udma/dmautils/udma_standalone/udma.h>
 #else
 #include <ti/drv/udma/udma.h>
@@ -96,7 +96,12 @@
 /*
  * UDMA driver objects
  */
+#if defined(SOC_AM62A) && defined(QNX)
+extern struct Udma_DrvObj      *gUdmaDrvObj;
+extern struct Udma_ChObj       *gUdmaChObj;
+#else
 static struct Udma_DrvObj gAppUdmaDrvObj;
+#endif
 
 /*
  * UDMA driver objects
@@ -147,6 +152,15 @@ extern uint64_t appUdmaVirtToPhyAddrConversion(const void *virtAddr,
                                       void *appData);
 #endif
 
+#if defined(SOC_AM62A) && defined(QNX)
+uint64_t Udma_qnxVirtToPhyFxn(const void *virtAddr,
+                              uint32_t chNum,
+                              void *appData);
+void * Udma_qnxPhyToVirtFxn(uint64_t phyAddr,
+                            uint32_t chNum,
+                            void *appData);
+#endif
+
 int32_t appUdmaInit(void)
 {
     int32_t         retVal = 0;
@@ -154,12 +168,21 @@ int32_t appUdmaInit(void)
     Udma_InitPrms   udmaInitPrms;
 
     appLogPrintf("UDMA: Init ... !!!\n");
-
+#if defined(SOC_AM62A) && defined(QNX)
+    udmaInstId = UDMA_INST_ID_CSI_BCDMA_0;
+#else
     udmaInstId = UDMA_INST_ID_MAIN_0;
+#endif
     UdmaInitPrms_init(udmaInstId, &udmaInitPrms);
     udmaInitPrms.printFxn = (Udma_PrintFxn)appLogPrintf;
     #if defined(SOC_AM62A)
-    udmaInitPrms.virtToPhyFxn = appUdmaVirtToPhyAddrConversion;
+        #if (defined(QNX))
+        /*Set virtToPhy and PhytoVirt to support QNX*/
+        udmaInitPrms.virtToPhyFxn = &Udma_qnxVirtToPhyFxn;
+        udmaInitPrms.phyToVirtFxn = &Udma_qnxPhyToVirtFxn;
+        #else
+        udmaInitPrms.virtToPhyFxn = appUdmaVirtToPhyAddrConversion;
+        #endif
     #else
     udmaInitPrms.skipGlobalEventReg = FALSE;
     #if defined(__C7100__) || defined(__C7120__) || defined(__C7504__)
@@ -168,7 +191,15 @@ int32_t appUdmaInit(void)
     udmaInitPrms.virtToPhyFxn = appUdmaVirtToPhyAddrConversion;
     #endif
     #endif
+
+    #if defined(SOC_AM62A) && defined(QNX)
+    Udma_DrvHandle drvHandle = gUdmaDrvObj;
+    if (drvHandle != NULL)
+       retVal = Udma_init(drvHandle, &udmaInitPrms);
+    #else
     retVal = Udma_init(&gAppUdmaDrvObj, &udmaInitPrms);
+    #endif
+
     if(retVal!=0)
     {
         appLogPrintf("UDMA: ERROR: Udma_init failed !!!\n");
@@ -183,7 +214,11 @@ int32_t appUdmaDeInit(void)
 {
     int32_t     retVal = 0;
 
+    #if defined(SOC_AM62A) && defined(QNX)
+    retVal = Udma_deinit(gUdmaDrvObj);
+    #else
     retVal = Udma_deinit(&gAppUdmaDrvObj);
+    #endif
     if(retVal != 0)
     {
         appLogPrintf("UDMA: ERROR: Udma_deinit failed !!!\n");
@@ -194,7 +229,11 @@ int32_t appUdmaDeInit(void)
 
 void *appUdmaGetObj(void)
 {
+    #if defined(SOC_AM62A) && defined(QNX)
+    return (void *)gUdmaDrvObj;
+    #else
     return (void *)&gAppUdmaDrvObj;
+    #endif
 }
 
 #if !defined(SOC_AM62A)
@@ -243,6 +282,8 @@ void *appUdmaCsirxCsitxGetObj(void)
     return (void *)&gAppUdmaDrvObjCsirxCsitx;
     #elif defined(SOC_J721E)
     return (void *)&gAppUdmaDrvObj;
+    #elif defined(SOC_AM62A) && defined(QNX)
+    return (void *)gUdmaDrvObj;
     #elif defined(SOC_J784S4)
     #endif
 }

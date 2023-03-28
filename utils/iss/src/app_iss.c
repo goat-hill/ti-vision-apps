@@ -67,13 +67,20 @@
 
 #if defined(A72) || defined(A53)
 
-#if !defined (SOC_AM62A)
+#if !(defined (SOC_AM62A) && !defined(QNX))
 static uint8_t  g_cmdPrm[CMD_PARAM_SIZE];
 #endif
 
+#if (defined (SOC_AM62A) && defined(QNX))
+uint32_t remote_cpu_id = APP_IPC_CPU_MPU1_0;
+#else
+uint32_t remote_cpu_id = APP_IPC_CPU_MCU2_0;
+#endif
+
+
 int32_t appEnumerateImageSensor(char *sensor_name_list[], uint8_t  * num_sensors_found)
 {
-#if defined (SOC_AM62A)
+#if defined (SOC_AM62A) && !defined(QNX)
     *num_sensors_found = 0;
     return 0;
 #else
@@ -86,7 +93,7 @@ int32_t appEnumerateImageSensor(char *sensor_name_list[], uint8_t  * num_sensors
 
     memset(g_cmdPrm, 0, CMD_PARAM_SIZE);
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_ENUMERATE,
         (void*)g_cmdPrm,
@@ -123,7 +130,7 @@ Expects sensor properties at cmd_param[0] + ISS_SENSORS_MAX_NAME
 
 int32_t appQueryImageSensor(char* sensor_name, IssSensor_CreateParams* pSensorCreatePrms)
 {
-#if defined (SOC_AM62A)
+#if (defined (SOC_AM62A) && !defined(QNX))
     memset(pSensorCreatePrms, 0, sizeof(IssSensor_CreateParams));
     return 0;
 #else
@@ -134,7 +141,7 @@ int32_t appQueryImageSensor(char* sensor_name, IssSensor_CreateParams* pSensorCr
 
     appLogPrintf("ISS: Querying sensor [%s] ... !!!\n", sensor_name);
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_QUERY,
         (void*)g_cmdPrm,
@@ -158,7 +165,7 @@ int32_t appQueryImageSensor(char* sensor_name, IssSensor_CreateParams* pSensorCr
 
 int32_t appInitImageSensor(char* sensor_name, uint32_t featuresEnabled, uint32_t channel_mask)
 {
-#if defined(SOC_AM62A)
+#if (defined(SOC_AM62A) && !defined(QNX) )
     return 0;
 #else
     int32_t status = -1;
@@ -174,7 +181,7 @@ int32_t appInitImageSensor(char* sensor_name, uint32_t featuresEnabled, uint32_t
     memcpy(g_cmdPrm, sensor_name, ISS_SENSORS_MAX_NAME);
     memcpy(g_cmdPrm+ISS_SENSORS_MAX_NAME, &channel_mask, sizeof(uint32_t));
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_PWRON,
         (void*)g_cmdPrm,
@@ -190,7 +197,7 @@ int32_t appInitImageSensor(char* sensor_name, uint32_t featuresEnabled, uint32_t
         memcpy(g_cmdPrm+ISS_SENSORS_MAX_NAME+sizeof(uint32_t), &channel_mask, sizeof(uint32_t));
 
         status = appRemoteServiceRun(
-            APP_IPC_CPU_MCU2_0 ,
+            remote_cpu_id ,
             IMAGE_SENSOR_REMOTE_SERVICE_NAME,
             IM_SENSOR_CMD_CONFIG,
             (void*)g_cmdPrm,
@@ -210,7 +217,7 @@ int32_t appInitImageSensor(char* sensor_name, uint32_t featuresEnabled, uint32_t
 
 int32_t appDetectImageSensor(uint8_t *sensor_id_list, uint8_t *num_sensors_found, uint32_t channel_mask)
 {
-#if defined (SOC_AM62A)
+#if (defined(SOC_AM62A) && !defined(QNX) )
     return 0;
 #else
     int32_t status = -1;
@@ -223,7 +230,7 @@ int32_t appDetectImageSensor(uint8_t *sensor_id_list, uint8_t *num_sensors_found
     memcpy(g_cmdPrm, &channel_mask, sizeof(uint32_t));
 
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_DETECT,
         (void*)g_cmdPrm,
@@ -262,7 +269,7 @@ int32_t appDetectImageSensor(uint8_t *sensor_id_list, uint8_t *num_sensors_found
 
 int32_t appStartImageSensor(char* sensor_name, uint32_t channel_mask)
 {
-#if defined (SOC_AM62A)
+#if (defined(SOC_AM62A) && !defined(QNX) )
     return 0;
 #else
     int32_t status = -1;
@@ -274,7 +281,7 @@ int32_t appStartImageSensor(char* sensor_name, uint32_t channel_mask)
     memcpy(g_cmdPrm+ISS_SENSORS_MAX_NAME, &channel_mask, sizeof(uint32_t));
 
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_STREAM_ON,
         (void*)g_cmdPrm,
@@ -297,7 +304,7 @@ int32_t appStartImageSensor(char* sensor_name, uint32_t channel_mask)
 
 int32_t appStopImageSensor(char* sensor_name, uint32_t channel_mask)
 {
-#if defined (SOC_AM62A)
+#if (defined(SOC_AM62A) && !defined(QNX) )
     return 0;
 #else
     int32_t status = -1;
@@ -309,7 +316,7 @@ int32_t appStopImageSensor(char* sensor_name, uint32_t channel_mask)
     memcpy(g_cmdPrm+ISS_SENSORS_MAX_NAME, &channel_mask, sizeof(uint32_t));
 
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_STREAM_OFF,
         (void*)g_cmdPrm,
@@ -332,7 +339,7 @@ int32_t appStopImageSensor(char* sensor_name, uint32_t channel_mask)
 
 int32_t appDeInitImageSensor(char* sensor_name)
 {
-#if defined (SOC_AM62A)
+#if (defined(SOC_AM62A) && !defined(QNX) )
     return 0;
 #else
     int32_t status = -1;
@@ -343,7 +350,7 @@ int32_t appDeInitImageSensor(char* sensor_name)
     memcpy(g_cmdPrm, sensor_name, ISS_SENSORS_MAX_NAME);
 
     status = appRemoteServiceRun(
-        APP_IPC_CPU_MCU2_0 ,
+        remote_cpu_id ,
         IMAGE_SENSOR_REMOTE_SERVICE_NAME,
         IM_SENSOR_CMD_PWROFF,
         (void*)g_cmdPrm,
@@ -366,15 +373,14 @@ int32_t appDeInitImageSensor(char* sensor_name)
 
 #endif /*#if defined(A72) || defined(A53)*/
 
-#if defined(R5F) && (defined(SYSBIOS) || defined(FREERTOS) || defined(SAFERTOS))
+#if defined(R5F) && (defined(SYSBIOS) || defined(FREERTOS) || defined(SAFERTOS)) || (defined(QNX) && defined (SOC_AM62A))
 int32_t appIssInit()
 {
-#if defined (SOC_AM62A)
+#if defined (SOC_AM62A) && !defined(QNX)
     return 0;
 #else
     int32_t status;
     int32_t itt_status;
-    int32_t viss_status;
 
     appLogPrintf("ISS: Init ... !!!\n");
 
@@ -406,7 +412,7 @@ int32_t appIssInit()
 
 int32_t appIssDeInit()
 {
-#if defined (SOC_AM62A)
+#if defined (SOC_AM62A) && !defined(QNX)
     return 0;
 #else
     int32_t status;

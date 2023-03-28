@@ -10,7 +10,13 @@ CSOURCES    := $(call all-c-files)
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/qnx
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos
+IDIRS+=$(PSDK_QNX_PATH)/pdk/packages
+IDIRS+=$(PSDK_QNX_PATH)/qnx
+IDIRS+=$(IMAGING_PATH)/kernels/include
 
+IDIRS+=$(VISION_APPS_PATH)/apps/basic_demos/app_single_cam
+
+STATIC_LIBS += vx_app_single_cam
 include $(FINALE)
 
 endif

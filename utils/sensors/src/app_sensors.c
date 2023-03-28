@@ -133,6 +133,8 @@ int32_t appI2cInit()
     SET_DEVICE_STATE_ON(TISCI_DEV_I2C5);
     #endif
 
+    #define I2C_HWIP_MAX_CNT 3
+
     /* Initialize I2C Driver */
     for(index = 0; index < I2C_HWIP_MAX_CNT; index++)
     {

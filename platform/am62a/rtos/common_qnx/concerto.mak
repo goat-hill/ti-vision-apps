@@ -1,4 +1,4 @@
-ifeq ($(TARGET_PLATFORM),J7)
+ifeq ($(TARGET_PLATFORM),AM62A)
 ifeq ($(TARGET_OS), $(filter $(TARGET_OS), SYSBIOS FREERTOS))
 
 

@@ -72,7 +72,7 @@
 
 #define ENABLE_IPC_MPU1_0
 #define ENABLE_IPC_MCU1_0
-#define ENABLE_IPC_C7x_1
+//#define ENABLE_IPC_C7x_1
 
 #define ENABLE_UDMA
 #define ENABLE_UDMA_COPY

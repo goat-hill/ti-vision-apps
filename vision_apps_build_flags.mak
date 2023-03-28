@@ -100,6 +100,10 @@ endif
 # ${PSDK_PATH}/vision_apps/platform/$(SOC)/rtos/mcu2_0/mcu2_0.cfg
 export BUILD_ENABLE_ETHFW
 
+# A72 OS specific Build flag
+BUILD_LINUX_A72?=no
+BUILD_QNX_A72?=yes
+
 # Set to 'yes' to link all .out files against libtivision_apps.so instead of static libs
 # (Only supported on A72, ignored on x86_64)
 LINK_SHARED_OBJ?=yes

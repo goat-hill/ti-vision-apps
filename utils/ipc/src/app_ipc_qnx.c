@@ -100,7 +100,11 @@ static uint8_t g_app_rpmessage_rpmsg_rx_buf[APP_IPC_RPMESSAGE_RPMSG_RX_BUF_SIZE]
 /* HW Spinlock */
 #define APP_IPC_HW_SPIN_LOCK_MAX        (256u)
 #define APP_IPC_HW_SPIN_LOCK_MMR_SIZE   32768
+#if defined (SOC_AM62A)
+#define APP_IPC_HW_SPIN_LOCK_MMR_BASE   ((uint32_t)0x2a000000u)
+#else
 #define APP_IPC_HW_SPIN_LOCK_MMR_BASE   ((uint32_t)0x30E00000u)
+#endif
 #define APP_IPC_HW_SPIN_LOCK_OFFSET(x)  ((uint32_t)0x800u + (uint32_t)4u*(uint32_t)(x))
 
 static uint8_t g_app_rpmessage_rx_task_stack[APP_IPC_RPMESSAGE_RX_TASK_STACK_SIZE]
@@ -131,6 +135,13 @@ static uint32_t g_app_ipc_remote_proc[] =
     IPC_MCU1_0, IPC_MCU1_1, IPC_MCU2_0, IPC_MCU2_1,
     IPC_MCU3_0, IPC_MCU3_1, IPC_MCU4_0, IPC_MCU4_1,
     IPC_C7X_1, IPC_C7X_2, IPC_C7X_3, IPC_C7X_4
+};
+#endif
+
+#if defined (SOC_AM62A)
+static uint32_t g_app_ipc_remote_proc[] =
+{
+    IPC_MCU1_0, IPC_C7X_1
 };
 #endif
 
