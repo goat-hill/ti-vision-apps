@@ -348,8 +348,12 @@ vx_status app_init(AppObj *obj)
         obj->selectedCam = 0xFF;
         while(obj->selectedCam == 0xFF)
         {
+#if defined(SOC_AM62A)
+            printf("Select camera port index 0-3: ");
+#else
             printf("Select camera port index 0-%d : ", ISS_SENSORS_MAX_CHANNEL-1);
-            ch = getchar();
+#endif
+            scanf("%c", &ch);
             obj->selectedCam = ch - '0';
 
             if(obj->selectedCam >= ISS_SENSORS_MAX_CHANNEL)
@@ -360,14 +364,15 @@ vx_status app_init(AppObj *obj)
 
             while ((obj->selectedCam != 0xFF) && (selectedSensor > (num_sensors_found-1)))
             {
-                printf("%d registered sensor drivers\n", num_sensors_found);
+                printf("Found %d registered sensor driver(s):\n", num_sensors_found);
                 for(count=0;count<num_sensors_found;count++)
                 {
                     printf("%c : %s \n", count+'a', sensor_list[count]);
                 }
 
-                printf("Select a sensor above or press '0' to autodetect the sensor : ");
+                printf("Select a sensor from above or press '0' to autodetect the sensor : ");
                 ch = getchar();
+                scanf("%c", &ch);
                 if(ch == '0')
                 {
                     uint8_t num_sensors_detected = 0;
