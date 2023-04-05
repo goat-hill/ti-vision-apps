@@ -44,7 +44,7 @@ BUILD_CPU_C7x_4?=yes
 else ifeq ($(SOC),am62a)
 BUILD_CPU_MPU1?=yes
 BUILD_CPU_MCU1_0?=yes
-BUILD_CPU_C7x_1?=yes
+BUILD_CPU_C7x_1?=no
 endif
 
 BUILD_PTK?=yes

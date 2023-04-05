@@ -141,7 +141,7 @@ static uint32_t g_app_ipc_remote_proc[] =
 #if defined (SOC_AM62A)
 static uint32_t g_app_ipc_remote_proc[] =
 {
-    IPC_MCU1_0, IPC_C7X_1
+    IPC_MCU1_0, IPC_C7X_1, IPC_MCU2_0
 };
 #endif
 
