@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2018 Texas Instruments Incorporated
+ * Copyright (c) 2018-23 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -130,7 +130,7 @@ int32_t appGrpxDrawCpuLoad(app_grpx_obj_t *obj,
                           );
                 break;
             #endif
-            #if defined(SOC_J784S4)
+            #if !defined(SOC_AM62A)
             case APP_IPC_CPU_C7x_2:
                 snprintf(string1, APP_GRPX_STRING_MAX,
                           "%3s",
@@ -184,6 +184,7 @@ int32_t appGrpxDrawCpuLoad(app_grpx_obj_t *obj,
                           );
                 break;
             #endif
+            #if !defined(SOC_AM62A)
             case APP_IPC_CPU_MCU2_0:
                 snprintf(string1, APP_GRPX_STRING_MAX,
                           "%3s",
@@ -224,6 +225,7 @@ int32_t appGrpxDrawCpuLoad(app_grpx_obj_t *obj,
                           "3-1"
                           );
                 break;
+            #endif
             #if defined(SOC_J784S4)
             case APP_IPC_CPU_MCU4_0:
                 snprintf(string1, APP_GRPX_STRING_MAX,
@@ -256,6 +258,7 @@ int32_t appGrpxDrawCpuLoad(app_grpx_obj_t *obj,
                           "1-0"
                           );
                 break;
+            #if defined(SOC_J784S4)
             case APP_IPC_CPU_MCU1_1:
                 snprintf(string1, APP_GRPX_STRING_MAX,
                           "%3s",
@@ -266,6 +269,7 @@ int32_t appGrpxDrawCpuLoad(app_grpx_obj_t *obj,
                           "1-1"
                           );
                 break;
+            #endif
             default:
                 snprintf(string1, APP_GRPX_STRING_MAX,
                           "%3s",

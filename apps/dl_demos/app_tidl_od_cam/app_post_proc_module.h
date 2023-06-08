@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2018-23 Texas Instruments Incorporated
+ * Copyright (c) 2023 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -59,31 +59,38 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+#ifndef _APP_POST_PROC_MODULE
+#define _APP_POST_PROC_MODULE
 
-#ifndef APP_CFG_H_
-#define APP_CFG_H_
+#include "app_common.h"
+#include "itidl_ti.h"
 
-#include <stdint.h>
+typedef struct {
+    vx_node  node;
 
-#define ENABLE_TIOVX
-#define ENABLE_IPC
-#define ENABLE_PRINTF_REDIRECT
-//#define ENABLE_UART
+    vx_user_data_object config;
+    tivxOCPostProcParams params;
+    tivxOCPostProcOutput post_proc_out;
 
-#define ENABLE_IPC_MPU1_0
-#define ENABLE_IPC_MCU1_0
-#define ENABLE_IPC_C7x_1
+    vx_uint32 num_input_tensors;
+    vx_uint32 num_output_tensors;
 
-#define ENABLE_UDMA
-#define ENABLE_UDMA_COPY
-#define ENABLE_SCICLIENT
+    vx_uint32 num_top_results;
 
-#define ENABLE_IPC_ECHO_TEST
+    vx_object_array output_arr[APP_MAX_BUFQ_DEPTH];
+    vx_image results[APP_MAX_BUFQ_DEPTH];
+    vx_int32 graph_parameter_index;
 
-#define APP_LOG_MEM_SIZE                   (0x00040000u)
-#define TIOVX_OBJ_DESC_SHARED_MEM_SIZE     (0x00FC0000u)
+    vx_char objName[APP_MAX_FILE_PATH];
 
-#define APP_ASSERT_SUCCESS(x)  { if((x)!=0) while(1); }
+} PostProcObj;
 
+vx_status app_update_post_proc(vx_context context, PostProcObj *postProcObj, vx_user_data_object config);
+vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char *objName, vx_int32 num_cameras, vx_int32 bufq_depth);
+void app_deinit_post_proc(PostProcObj *obj, vx_int32 bufq_depth);
+void app_delete_post_proc(PostProcObj *obj);
+vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, vx_object_array in_args_arr, vx_object_array in_tensor_arr, vx_object_array input_img_arr);
+vx_status writePostProcOutput(char* file_name, PostProcObj *postProcObj);
 
-#endif /* APP_CFG_H_ */
+#endif
+

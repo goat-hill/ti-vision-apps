@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2017-23 Texas Instruments Incorporated
+ * Copyright (c) 2023 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -60,7 +60,8 @@
  *
  */
 
-extern const char imgnet_labels[1001][256];
+#define DISPLAY_WIDTH  (1920)
+#define DISPLAY_HEIGHT (1080)
 
 #include "app_post_proc_module.h"
 
@@ -68,59 +69,35 @@ vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char 
 {
     vx_status status = VX_SUCCESS;
 
-#if defined(SOC_AM62A) && defined(QNX)
     tivxDLPostProcParams *local_postproc_config;
     local_postproc_config = calloc(1, sizeof(tivxDLPostProcParams));
+    local_postproc_config->task_type = TIVX_DL_POST_PROC_DETECTION_TASK_TYPE;
+    local_postproc_config->od_prms.ioBufDesc = &postProcObj->params.ioBufDesc; 
+    local_postproc_config->od_prms.viz_th = 0.95; 
 
-    local_postproc_config->task_type = TIVX_DL_POST_PROC_CLASSIFICATION_TASK_TYPE;
-    local_postproc_config->oc_prms.ioBufDesc = &postProcObj->params.ioBufDesc;
-    local_postproc_config->oc_prms.num_top_results = postProcObj->params.num_top_results;
-
-    if(local_postproc_config->oc_prms.ioBufDesc->outWidth[0] == 1001) {
-        local_postproc_config->oc_prms.labelOffset = 0;
-    }else if(local_postproc_config->oc_prms.ioBufDesc->outWidth[0] == 1000) {
-        local_postproc_config->oc_prms.labelOffset = 1;
+    if(local_postproc_config->od_prms.ioBufDesc->outWidth[0] == 1001) {
+        local_postproc_config->od_prms.labelOffset = 0;
+    }else if(local_postproc_config->od_prms.ioBufDesc->outWidth[0] == 1000) {
+        local_postproc_config->od_prms.labelOffset = 1;
     }
-    memcpy(local_postproc_config->oc_prms.classnames, imgnet_labels, 1000*256);
+    //memcpy(local_postproc_config->od_prms.classnames, imgnet_labels, 1000*256);
 
     postProcObj->config = vxCreateUserDataObject(context, "PostProcConfig", sizeof(tivxDLPostProcParams), local_postproc_config);
     status = vxGetStatus((vx_reference)postProcObj->config);
 
-    vx_image output_img = vxCreateImage(context, /*1920*/DISPLAY_WIDTH, /*1080*/DISPLAY_HEIGHT, VX_DF_IMAGE_NV12);
-#else
-    postProcObj->config = vxCreateUserDataObject(context, "PostProcConfig", sizeof(tivxOCPostProcParams), NULL);
-    status = vxGetStatus((vx_reference)postProcObj->config);
-
-    if(status == VX_SUCCESS)
-    {
-        status = vxCopyUserDataObject(postProcObj->config, 0, sizeof(tivxOCPostProcParams),\
-                  &postProcObj->params, VX_WRITE_ONLY, VX_MEMORY_TYPE_HOST);
-    }
-
-    vx_user_data_object output = vxCreateUserDataObject(context, "PostProcOutput", sizeof(tivxOCPostProcOutput), NULL);
-    status = vxGetStatus((vx_reference)output);
-
-#endif
+    vx_image output_img = vxCreateImage(context, DISPLAY_WIDTH, DISPLAY_HEIGHT, VX_DF_IMAGE_NV12);
 
     vx_int32 q;
     for(q = 0; q < bufq_depth; q++)
     {
         if(status == VX_SUCCESS)
         {
-            #if defined(SOC_AM62A) && defined(QNX)
             postProcObj->output_arr[q] = vxCreateObjectArray(context, (vx_reference)output_img, num_cameras);
-            #else
-            postProcObj->output_arr[q] = vxCreateObjectArray(context, (vx_reference)output, num_cameras);
-            #endif
             status = vxGetStatus((vx_reference)postProcObj->output_arr[q]);
             if(status == VX_SUCCESS)
             {
                 /* Keep the first entry of each object-array as its required later to enqueue/dequeue references */
-                #if defined(SOC_AM62A) && defined(QNX)
                 postProcObj->results[q] = (vx_image) vxGetObjectArrayItem((vx_object_array)postProcObj->output_arr[q], 0);
-                #else
-                postProcObj->results[q] = (vx_user_data_object) vxGetObjectArrayItem((vx_object_array)postProcObj->output_arr[q], 0);
-                #endif
             }
         }
         else
@@ -128,13 +105,10 @@ vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char 
             printf("Unable to create output object array at depth %d\n", q);
         }
     }
-    #if defined(SOC_AM62A) && defined(QNX)
     vxReleaseImage(&output_img);
-    #else
-    vxReleaseUserDataObject(&output);
-    #endif
     return status;
 }
+
 
 vx_status app_update_post_proc(vx_context context, PostProcObj *postProcObj, vx_user_data_object config)
 {
@@ -154,7 +128,6 @@ vx_status app_update_post_proc(vx_context context, PostProcObj *postProcObj, vx_
     postProcObj->num_output_tensors = ioBufDesc->numOutputBuf;
 
     vxUnmapUserDataObject(config, map_id_config);
-
     return status;
 }
 
@@ -166,11 +139,7 @@ void app_deinit_post_proc(PostProcObj *postProcObj, vx_int32 bufq_depth)
     for(q = 0; q < bufq_depth; q++)
     {
       vxReleaseObjectArray(&postProcObj->output_arr[q]);
-      #if defined(SOC_AM62A) && defined(QNX)
       vxReleaseImage(&postProcObj->results[q]);
-      #else
-      vxReleaseUserDataObject(&postProcObj->results[q]);
-      #endif
     }
 }
 
@@ -182,10 +151,9 @@ void app_delete_post_proc(PostProcObj *postProcObj)
     }
 }
 
-#if defined(SOC_AM62A) && defined(QNX)
 vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, vx_object_array out_args_arr, vx_object_array out_tensor_arr, vx_object_array input_img_arr)
 {
- vx_status status = VX_SUCCESS;
+    vx_status status = VX_SUCCESS;
 
     vx_image in_args   = (vx_image)vxGetObjectArrayItem((vx_object_array)input_img_arr, 0);
     vx_image result  = (vx_image)vxGetObjectArrayItem((vx_object_array)postProcObj->output_arr[0], 0);
@@ -212,33 +180,3 @@ vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, v
 
     return(status);
 }
-#else
-vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, vx_object_array out_args_arr, vx_object_array out_tensor_arr)
-{
-    vx_status status = VX_SUCCESS;
-
-    vx_user_data_object  in_args  = (vx_user_data_object)vxGetObjectArrayItem((vx_object_array)out_args_arr, 0);
-    vx_tensor in_tensor = (vx_tensor)vxGetObjectArrayItem((vx_object_array)out_tensor_arr, 0);
-    vx_user_data_object result  = (vx_user_data_object)vxGetObjectArrayItem((vx_object_array)postProcObj->output_arr[0], 0);
-
-    postProcObj->node = tivxOCPostProcNode(graph,
-                                           postProcObj->config,
-                                           in_args,
-                                           in_tensor,
-                                           result);
-
-    APP_ASSERT_VALID_REF(postProcObj->node);
-
-    status = vxSetNodeTarget(postProcObj->node, VX_TARGET_STRING, TIVX_TARGET_DSP2);
-    vxSetReferenceName((vx_reference)postProcObj->node, "post_proc_node");
-
-    vx_bool replicate[] = {vx_false_e, vx_true_e, vx_true_e, vx_true_e};
-    vxReplicateNode(graph, postProcObj->node, replicate, 4);
-
-    vxReleaseUserDataObject(&in_args);
-    vxReleaseTensor(&in_tensor);
-    vxReleaseUserDataObject(&result);
-
-    return(status);
-}
-#endif

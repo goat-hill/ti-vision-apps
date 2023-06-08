@@ -7,6 +7,9 @@ TARGET      := vx_app_tidl_od_cam
 CSOURCES    := main.c
 CSOURCES    += app_pre_proc_module.c
 CSOURCES    += app_draw_detections_module.c
+#if defined(SOC_AM62A) && defined(QNX)
+CSOURCES    += app_post_proc_module.c
+#endif
 
 ifeq ($(HOST_COMPILER),GCC_LINUX)
 CFLAGS += -Wno-unused-function
@@ -53,6 +56,11 @@ endif
 endif
 
 IDIRS += $(IMAGING_IDIRS)
+#if defined(SOC_AM62A) && defined(QNX)
+IDIRS += $(EDGEAI_KERNELS_PATH)
+IDIRS += $(EDGEAI_KERNELS_PATH)/include
+IDIRS += $(TIOVX_PATH)/source/include
+#endif
 IDIRS += $(VISION_APPS_PATH)/kernels/img_proc/include
 IDIRS += $(VISION_APPS_PATH)/kernels/fileio/include
 IDIRS += $(VISION_APPS_PATH)/modules/include

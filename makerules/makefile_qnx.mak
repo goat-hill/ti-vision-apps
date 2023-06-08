@@ -8,9 +8,11 @@ QNX_AUX_FS_PATH=$(PSDK_QNX_PATH)/rootfs
 
 ifeq ($(PROFILE), $(filter $(PROFILE),debug))
 QNX_APP_PROFILE=debug
+EDGEAI_LIB_PROFILE=Debug
 endif
 ifeq ($(PROFILE), $(filter $(PROFILE),release all))
 QNX_APP_PROFILE=release
+EDGEAI_LIB_PROFILE=Release
 endif
 
 ifeq ($(SOC),j721e)
@@ -64,6 +66,10 @@ ifeq ($(BUILD_CPU_MPU1),yes)
 	# Remove files not needed for QNX
 	rm -rf $(QNX_FS_PATH)/vision_apps/limits.conf
 
+ifeq ($(SOC),am62a)
+	cp -rfL ${EDGEAI_KERNELS_PATH}/lib/$(EDGEAI_LIB_PROFILE)/* $(QNX_FS_PATH)/usr/lib
+	cp -rfL ${EDGEAI_APPS_UTILS_PATH}/lib/$(EDGEAI_LIB_PROFILE)/* $(QNX_FS_PATH)/usr/lib
+endif
 	chmod +x $(QNX_FS_PATH)/vision_apps/*.sh
 endif
 

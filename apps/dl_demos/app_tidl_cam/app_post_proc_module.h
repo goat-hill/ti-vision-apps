@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2017 Texas Instruments Incorporated
+ * Copyright (c) 2017-23 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -64,6 +64,7 @@
 
 #include "app_common.h"
 #include "itidl_ti.h"
+#include "app_display_module.h"
 
 typedef struct {
     vx_node  node;
@@ -78,8 +79,11 @@ typedef struct {
     vx_uint32 num_top_results;
 
     vx_object_array output_arr[APP_MAX_BUFQ_DEPTH];
+    #if defined(SOC_AM62A) && defined(QNX)
+    vx_image results[APP_MAX_BUFQ_DEPTH];
+    #else
     vx_user_data_object results[APP_MAX_BUFQ_DEPTH];
-
+    #endif
     vx_int32 graph_parameter_index;
 
     vx_char objName[APP_MAX_FILE_PATH];
@@ -90,7 +94,11 @@ vx_status app_update_post_proc(vx_context context, PostProcObj *postProcObj, vx_
 vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char *objName, vx_int32 num_cameras, vx_int32 bufq_depth);
 void app_deinit_post_proc(PostProcObj *obj, vx_int32 bufq_depth);
 void app_delete_post_proc(PostProcObj *obj);
+#if defined(SOC_AM62A) && defined(QNX)
+vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, vx_object_array in_args_arr, vx_object_array in_tensor_arr, vx_object_array input_img_arr);
+#else
 vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, vx_object_array in_args_arr, vx_object_array in_tensor_arr);
+#endif
 
 vx_status writePostProcOutput(char* file_name, PostProcObj *postProcObj);
 

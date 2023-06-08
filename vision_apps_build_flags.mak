@@ -44,7 +44,7 @@ BUILD_CPU_C7x_4?=yes
 else ifeq ($(SOC),am62a)
 BUILD_CPU_MPU1?=yes
 BUILD_CPU_MCU1_0?=yes
-BUILD_CPU_C7x_1?=no
+BUILD_CPU_C7x_1?=yes
 endif
 
 BUILD_PTK?=yes
@@ -76,7 +76,7 @@ ETHFW_INTERCORE_ETH_SUPPORT?=yes
 endif
 endif
 
-BUILD_EDGEAI?=no
+BUILD_EDGEAI?=yes
 
 # If set to no, then MCU core firmware will be built with NO board dependencies
 # (such as I2C, board specific PINMUX, DSS, HDMI, I2C, ETHFW, CSIRX, CSITX).  Most of

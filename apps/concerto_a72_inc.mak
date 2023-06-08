@@ -81,6 +81,8 @@ LDIRS       += $(PSDK_QNX_PATH)/qnx/resmgr/udma_qnx_rsmgr/usr/aarch64/$(BUILD_PR
 ifeq ($(TARGET_PLATFORM)$(TARGET_OS), AM62AQNX)
 LDIRS       += $(PSDK_QNX_PATH)/qnx/pdk_libs/csirxlld/aarch64/$(BUILD_PROFILE_QNX_SO)
 LDIRS       += $(PSDK_QNX_PATH)/qnx/pdk_libs/fvid2lld/aarch64/$(BUILD_PROFILE_QNX_SO)
+LDIRS       += $(EDGEAI_KERNELS_PATH)/lib/Release
+LDIRS       += $(EDGEAI_APP_UTILS_PATH)/lib/Release
 endif
 
 SHARED_LIBS += sharedmemallocator$(BUILD_PROFILE_QNX_SUFFIX)
@@ -93,6 +95,8 @@ ifeq ($(TARGET_PLATFORM)$(TARGET_OS), AM62AQNX)
 SHARED_LIBS += ti-csirxlld$(BUILD_PROFILE_QNX_SUFFIX)
 SHARED_LIBS += ti-fvid2lld$(BUILD_PROFILE_QNX_SUFFIX)
 SHARED_LIBS += screen
+SHARED_LIBS += edgeai-tiovx-kernels 
+SHARED_LIBS += edgeai-apps-utils 
 endif
 
 endif # ifeq ($(TARGET_OS), QNX)
@@ -185,9 +189,12 @@ VISION_APPS_UTILS_LIBS += app_utils_draw2d
 endif
 
 ifeq ($(TARGET_PLATFORM)$(TARGET_OS), AM62AQNX)
+VISION_APPS_UTILS_LIBS += app_utils_grpx
+VISION_APPS_UTILS_LIBS += app_utils_draw2d
 VISION_APPS_UTILS_LIBS += app_utils_udma
 VISION_APPS_UTILS_LIBS += app_utils_sensors
 VISION_APPS_UTILS_LIBS += app_utils_iss
+#VISION_APPS_UTILS_LIBS += edgeai-tiovx-kernels 
 endif
 
 VISION_APPS_UTILS_LIBS += app_utils_hwa

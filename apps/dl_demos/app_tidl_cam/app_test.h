@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2020 Texas Instruments Incorporated
+ * Copyright (c) 2020-23 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -200,6 +200,7 @@ static vx_bool app_test_check_image(vx_image img, vx_uint32 expected_checksum,
     return return_bool;
 }
 
+#if !defined(SOC_AM62A) && !defined(QNX)
 static vx_bool app_test_check_object(vx_user_data_object obj, vx_uint32 size,
                               vx_uint32 expected_checksum, vx_uint32 *actual_checksum)
 {
@@ -213,3 +214,4 @@ static vx_bool app_test_check_object(vx_user_data_object obj, vx_uint32 size,
     }
     return result;
 }
+#endif

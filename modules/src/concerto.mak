@@ -5,12 +5,10 @@ include $(PRELUDE)
 TARGET      := vx_app_modules
 TARGETTYPE  := library
 
-ifneq ($(SOC), am62a)
 CSOURCES    := app_sensor_module.c
 CSOURCES    += app_capture_module.c
 CSOURCES    += app_aewb_module.c
 CSOURCES    += app_display_module.c
-endif
 
 CSOURCES    += app_viss_module.c
 CSOURCES    += app_ldc_module.c

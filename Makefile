@@ -41,7 +41,13 @@ DIRECTORIES += utils/sciserver
 DIRECTORIES += utils/udma
 ifeq ($(BUILD_QNX_MPU),yes)
 DIRECTORIES += utils/sensors
+DIRECTORIES += utils/draw2d
+DIRECTORIES += utils/grpx
 DIRECTORIES += apps/basic_demos/app_single_cam
+DIRECTORIES += apps/dl_demos/app_tidl
+DIRECTORIES += apps/dl_demos/app_tidl_cam
+DIRECTORIES += apps/dl_demos/app_tidl_od_cam
+DIRECTORIES += $(EDGEAI_KERNELS_PATH)
 endif
 
 DIRECTORIES += platform/$(SOC)

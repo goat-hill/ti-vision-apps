@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2018 Texas Instruments Incorporated
+ * Copyright (c) 2018-23 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -93,6 +93,7 @@
 #include <utils/ipc/include/app_ipc.h>
 #include <utils/dss/include/app_dss_defaults.h>
 #include <TI/j7_kernels_imaging_aewb.h>
+#include <edgeai_tiovx_target_kernels.h>
 
 #define APP_ASSERT_SUCCESS(x)  { if((x)!=0) while(1); }
 /* Mutex for controlling access to Init/De-Init. */
@@ -294,6 +295,7 @@ static void appRegisterOpenVXTargetKernels()
     appLogPrintf("APP: OpenVX Target kernel init ... !!!\n");
     tivxRegisterHwaTargetCaptureKernels();
     tivxRegisterImagingTargetAewbKernels();
+    tivxRegisterEdgeaiImgProcTargetArmv8Kernels();
     appLogPrintf("APP: OpenVX Target kernel init ... Done !!!\n");
 }
 
@@ -345,6 +347,7 @@ static void appUnRegisterOpenVXTargetKernels()
     appLogPrintf("APP: OpenVX Target kernel deinit ... !!!\n");
     tivxUnRegisterHwaTargetCaptureKernels();
     tivxUnRegisterImagingTargetAewbKernels();
+    tivxUnRegisterEdgeaiImgProcTargetArmv8Kernels();
     appLogPrintf("APP: OpenVX Target kernel deinit ... Done !!!\n");
 }
 
