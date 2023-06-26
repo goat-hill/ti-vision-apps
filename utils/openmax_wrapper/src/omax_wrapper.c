@@ -25,6 +25,7 @@
 
 #include "omax_wrapper_priv.h"
 #include "omax_dec_priv.h"
+#include <OMX_Core.h>
 
 #define ALIGN64(X)  (((X)+63) &~63)
 #define ALIGN32(X)  (((X)+31) &~31)
@@ -857,9 +858,9 @@ static OMX_ERRORTYPE InitEncComp(app_omax_wrapper_obj_t *encH)
     OMX_PORT_PARAM_TYPE portParam;
     OMX_PARAM_PORTDEFINITIONTYPE inPortParam;
     OMX_PARAM_PORTDEFINITIONTYPE outPortParam;
-    #if defined(SOC_J721S2) || defined(SOC_J784S4)
+    #if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_AM62A)
     OMX_VENDOR_TIVPU_PARAM_TYPE vpuParam = { 0 };
-    #endif /* SOC_J721S2 or SOC_J784S4 */
+    #endif /* SOC_J721S2 or SOC_J784S4 or SOC_AM62A*/
 
     /* Create the OMX component */
     OMX_STRING comp_name = (OMX_STRING)QNX_ENC_COMP_NAME;
@@ -881,7 +882,7 @@ static OMX_ERRORTYPE InitEncComp(app_omax_wrapper_obj_t *encH)
             return omxErr;
         }
 
-    #if defined(SOC_J721S2) || defined(SOC_J784S4)
+    #if defined(SOC_J721S2) || defined(SOC_J784S4) || defined(SOC_AM62A)
         /* Get number of VPU cores */
         omxErr = OMX_GetParameter(encH->compHandleArray[ch].compHandle,
                     (OMX_INDEXTYPE)OMX_VendorTIVPUConfigCoreIndex,
@@ -903,7 +904,7 @@ static OMX_ERRORTYPE InitEncComp(app_omax_wrapper_obj_t *encH)
             WRAPPER_ERROR("\nOmxilEnc=> ERROR: Component OMX_SetParameter() returned 0x%08x:'%s'", omxErr, OmxErrorTypeToStr(omxErr));
             return omxErr;
         }
-    #endif /* SOC_J721S2 or SOC_J784S4 */
+    #endif /* SOC_J721S2 or SOC_J784S4 or SOC_AM62A*/
 
         /* Get component ports info and prepare internal port contexts. */
         SET_OMAX_VERSION_SIZE(portParam, sizeof(OMX_PORT_PARAM_TYPE));
