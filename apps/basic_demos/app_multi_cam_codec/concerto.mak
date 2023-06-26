@@ -45,7 +45,7 @@ endif
 ifeq ($(TARGET_OS), QNX)
 STATIC_LIBS += app_utils_omax_wrapper
 
-ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), J784S4 J721S2))
+ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), AM62A J784S4 J721S2))
 LDIRS += $(PSDK_QNX_PATH)/qnx/codec/vpu/OpenMAXIL/core/nto/aarch64/$(BUILD_PROFILE_QNX_SO)/
 LDIRS += $(PSDK_QNX_PATH)/qnx/codec/vpu/OpenMAXIL/utility/nto/aarch64/$(BUILD_PROFILE_QNX_SO)/
 

@@ -22,6 +22,8 @@ IDIRS+=$(EDGEAI_KERNELS_PATH)
 IDIRS+=$(EDGEAI_KERNELS_PATH)/include
 
 STATIC_LIBS += app_utils_draw2d
+STATIC_LIBS += app_utils_omax_wrapper
+STATIC_LIBS += app_utils_codec_wrapper
 STATIC_LIBS += vx_app_single_cam
 STATIC_LIBS += vx_app_tidl
 STATIC_LIBS += vx_app_tidl_cam 

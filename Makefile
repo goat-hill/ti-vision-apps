@@ -43,7 +43,10 @@ ifeq ($(BUILD_QNX_MPU),yes)
 DIRECTORIES += utils/sensors
 DIRECTORIES += utils/draw2d
 DIRECTORIES += utils/grpx
+DIRECTORIES += utils/codec_wrapper
+DIRECTORIES += utils/openmax_wrapper
 DIRECTORIES += apps/basic_demos/app_single_cam
+DIRECTORIES += apps/basic_demos/app_multi_cam_codec
 DIRECTORIES += apps/dl_demos/app_tidl
 DIRECTORIES += apps/dl_demos/app_tidl_cam
 DIRECTORIES += apps/dl_demos/app_tidl_od_cam
