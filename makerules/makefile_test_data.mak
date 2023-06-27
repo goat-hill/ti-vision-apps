@@ -34,3 +34,9 @@ define INSTALL_TEST_DATA =
 	sync
 endef
 
+define INSTALL_TEST_DATA_QNX =
+	mkdir -p $(1)/$(2)/test_data
+	cp -R $(TIOVX_PATH)/conformance_tests/test_data/* $(1)/$(2)/test_data/
+	sync
+endef
+

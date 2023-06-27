@@ -240,6 +240,7 @@ ifeq ($(BUILD_TARGET_MODE),yes)
 	$(call UBOOT_INSTALL,qnx,$(QNX_SD_FS_BOOT_PATH))
 endif
 endif
+	$(call INSTALL_TEST_DATA_QNX,$(QNX_SD_FS_QNX_PATH),vision_apps)
 	sync
 
 qnx_fs_install_nfs: qnx_fs_copy_spl_uboot qnx_fs_install
