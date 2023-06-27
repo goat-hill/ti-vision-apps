@@ -4,7 +4,7 @@ TIOVX_PATH = $(PSDK_PATH)/tiovx
 MCUSW_PATH=$(PSDK_PATH)/mcusw
 ifeq ($(SOC), $(filter $(SOC), am62a))
   EDGEAI_KERNELS_PATH=$(PSDK_PATH)/edgeai-tiovx-kernels
-  EDGEAI_APP_UTILS_PATH=$(PSDK_PATH)/edgeai-apps-utils
+  EDGEAI_APPS_UTILS_PATH=$(PSDK_PATH)/edgeai-apps-utils
   TIDL_PATH=$(PSDK_PATH)/tidl_am62a_08_06_00_10/ti_dl
 endif
 

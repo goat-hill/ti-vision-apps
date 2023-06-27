@@ -82,7 +82,7 @@ ifeq ($(TARGET_PLATFORM)$(TARGET_OS), AM62AQNX)
 LDIRS       += $(PSDK_QNX_PATH)/qnx/pdk_libs/csirxlld/aarch64/$(BUILD_PROFILE_QNX_SO)
 LDIRS       += $(PSDK_QNX_PATH)/qnx/pdk_libs/fvid2lld/aarch64/$(BUILD_PROFILE_QNX_SO)
 LDIRS       += $(EDGEAI_KERNELS_PATH)/lib/Release
-LDIRS       += $(EDGEAI_APP_UTILS_PATH)/lib/Release
+LDIRS       += $(EDGEAI_APPS_UTILS_PATH)/lib/Release
 endif
 
 SHARED_LIBS += sharedmemallocator$(BUILD_PROFILE_QNX_SUFFIX)
