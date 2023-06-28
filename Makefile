@@ -46,6 +46,7 @@ DIRECTORIES += utils/grpx
 DIRECTORIES += utils/codec_wrapper
 DIRECTORIES += utils/openmax_wrapper
 DIRECTORIES += apps/basic_demos/app_single_cam
+DIRECTORIES += apps/basic_demos/app_multi_cam
 DIRECTORIES += apps/basic_demos/app_multi_cam_codec
 DIRECTORIES += apps/dl_demos/app_tidl
 DIRECTORIES += apps/dl_demos/app_tidl_cam

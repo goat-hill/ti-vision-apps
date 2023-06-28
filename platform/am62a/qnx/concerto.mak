@@ -20,6 +20,7 @@ IDIRS+=$(VISION_APPS_PATH)/apps/dl_demos/app_tidl_cam
 IDIRS+=$(VISION_APPS_PATH)/apps/dl_demos/app_tidl_od_cam
 IDIRS+=$(EDGEAI_KERNELS_PATH)
 IDIRS+=$(EDGEAI_KERNELS_PATH)/include
+IDIRS+=$(VISION_APPS_PATH)/apps/basic_demos/app_multi_cam
 
 STATIC_LIBS += app_utils_draw2d
 STATIC_LIBS += app_utils_omax_wrapper
@@ -29,6 +30,8 @@ STATIC_LIBS += vx_app_tidl
 STATIC_LIBS += vx_app_tidl_cam 
 STATIC_LIBS += vx_app_tidl_od_cam 
 SHARED_LIBS += edgeai-tiovx-kernels
+STATIC_LIBS += vx_app_multi_cam
+
 include $(FINALE)
 
 endif

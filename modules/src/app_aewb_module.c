@@ -135,7 +135,10 @@ static vx_status configure_aewb(vx_context context, AEWBObj *aewbObj, SensorObj 
     {
         aewbObj->params.ae_mode = ALGORITHMS_ISS_AE_DISABLED;
     }
-    aewbObj->params.awb_mode = ALGORITHMS_ISS_AWB_AUTO;
+    if(strcmp(sensorObj->sensor_name, "OV2312-UB953_LI")==0)
+        aewbObj->params.awb_mode = ALGORITHMS_ISS_AWB_DISABLED;
+    else
+        aewbObj->params.awb_mode = ALGORITHMS_ISS_AWB_AUTO;
 
     aewbObj->params.awb_num_skip_frames = 9;
     aewbObj->params.ae_num_skip_frames  = 9;
@@ -318,6 +321,7 @@ vx_status app_create_graph_aewb(vx_graph graph, AEWBObj *aewbObj, vx_object_arra
     }
 
     vxSetReferenceName((vx_reference)aewbObj->node, "aewb_node");
+
 #if defined(SOC_AM62A) && defined(QNX)
     vxSetNodeTarget(aewbObj->node, VX_TARGET_STRING, TIVX_TARGET_MPU_0);
 #else

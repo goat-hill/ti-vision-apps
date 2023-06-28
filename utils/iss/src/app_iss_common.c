@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2018 Texas Instruments Incorporated
+ * Copyright (c) 2018-2023 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -134,6 +134,8 @@ static uint8_t  dcc_ldc_gw_ar0233[DCC_LDC_GW_AR0233_DCC_CFG_NUM_ELEM] = DCC_LDC_
 #include <dcc_2a_ar0820.h>
 #include <dcc_2a_ar0820_wdr.h>
 
+#include <dcc_2a_ov2312.h>
+
 #include <dcc_2a_ub9xx_raw_test_pattern.h>
 
 static uint8_t  dcc_2a_imx390[DCC_2A_IMX390_DCC_CFG_NUM_ELEM] = DCC_2A_IMX390DCC_CFG;
@@ -144,6 +146,8 @@ static uint8_t  dcc_2a_ar0233_wdr[DCC_2A_AR0233_WDR_DCC_CFG_NUM_ELEM] = DCC_2A_A
 
 static uint8_t  dcc_2a_ar0820_linear[DCC_2A_AR0820_DCC_CFG_NUM_ELEM] = DCC_2A_AR0820DCC_CFG;
 static uint8_t  dcc_2a_ar0820_wdr[DCC_2A_AR0820_WDR_DCC_CFG_NUM_ELEM] = DCC_2A_AR0820_WDRDCC_CFG;
+
+static uint8_t  dcc_2a_ov2312[DCC_2A_OV2312_DCC_CFG_NUM_ELEM] = DCC_2A_OV2312DCC_CFG;
 
 static uint8_t  dcc_2a_ub9xx_raw_test_pattern_linear[DCC_2A_UB9XX_RAW_TEST_PATTERN_DCC_CFG_NUM_ELEM] = DCC_2A_UB9XX_RAW_TEST_PATTERNDCC_CFG;
 
@@ -180,6 +184,8 @@ int32_t appIssGetDCCSizeVISS(char * sensor_name, uint32_t wdr_mode)
                 size = DCC_VISS_AR0233_WDR_DCC_CFG_NUM_ELEM;
             else if (0 == strcmp(sensor_name, SENSOR_ONSEMI_AR0820_UB953_LI))
                 size = DCC_VISS_AR0820_WDR_DCC_CFG_NUM_ELEM;
+            else if (0 == strcmp(sensor_name, SENSOR_OV2312_UB953_LI))
+                size = DCC_VISS_OV2312_DCC_CFG_NUM_ELEM;
             else
                 size = -1;
             break;
@@ -220,6 +226,8 @@ int32_t appIssGetDCCBuffVISS(char * sensor_name, uint32_t wdr_mode,  uint8_t * d
                 memcpy(dcc_buf, dcc_viss_ar0233_wdr, num_bytes);
             else if (0 == strcmp(sensor_name, SENSOR_ONSEMI_AR0820_UB953_LI))
                 memcpy(dcc_buf, dcc_viss_ar0820_wdr, num_bytes);
+            else if (0 == strcmp(sensor_name, SENSOR_OV2312_UB953_LI))
+                memcpy(dcc_buf, dcc_viss_ov2312, num_bytes);
             else
                 return -1;
             break;
@@ -246,6 +254,8 @@ int32_t appIssGetDCCSize2A(char * sensor_name, uint32_t wdr_mode)
                 size = DCC_2A_AR0820_DCC_CFG_NUM_ELEM;
             else if (0 == strcmp(sensor_name, UB9XX_RAW_TESTPAT))
                 size = DCC_2A_UB9XX_RAW_TEST_PATTERN_DCC_CFG_NUM_ELEM;
+            else if (0 == strcmp(sensor_name, SENSOR_OV2312_UB953_LI))
+                size = DCC_2A_OV2312_DCC_CFG_NUM_ELEM;
             else
                 size = -1;
             break;
@@ -257,6 +267,8 @@ int32_t appIssGetDCCSize2A(char * sensor_name, uint32_t wdr_mode)
                 size = DCC_2A_AR0233_WDR_DCC_CFG_NUM_ELEM;
             else if (0 == strcmp(sensor_name, SENSOR_ONSEMI_AR0820_UB953_LI))
                 size = DCC_2A_AR0820_WDR_DCC_CFG_NUM_ELEM;
+            else if (0 == strcmp(sensor_name, SENSOR_OV2312_UB953_LI))
+                size = DCC_2A_OV2312_DCC_CFG_NUM_ELEM;
             else
                 size = -1;
             break;
@@ -281,6 +293,8 @@ int32_t appIssGetDCCBuff2A(char * sensor_name, uint32_t wdr_mode,  uint8_t * dcc
                 memcpy(dcc_buf, dcc_2a_ar0820_linear, num_bytes);
             else if (0 == strcmp(sensor_name, UB9XX_RAW_TESTPAT))
                 memcpy(dcc_buf, dcc_2a_ub9xx_raw_test_pattern_linear, num_bytes);
+            else if (0 == strcmp(sensor_name, SENSOR_OV2312_UB953_LI))
+                memcpy(dcc_buf, dcc_2a_ov2312, num_bytes);
             else
                 return -1;
             break;
@@ -292,6 +306,8 @@ int32_t appIssGetDCCBuff2A(char * sensor_name, uint32_t wdr_mode,  uint8_t * dcc
                 memcpy(dcc_buf, dcc_2a_ar0233_wdr, num_bytes);
             else if (0 == strcmp(sensor_name, SENSOR_ONSEMI_AR0820_UB953_LI))
                 memcpy(dcc_buf, dcc_2a_ar0820_wdr, num_bytes);
+            else if (0 == strcmp(sensor_name, SENSOR_OV2312_UB953_LI))
+                memcpy(dcc_buf, dcc_2a_ov2312, num_bytes);
             else
                 return -1;
             break;

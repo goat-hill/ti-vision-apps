@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2020 Texas Instruments Incorporated
+ * Copyright (c) 2020-2023 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -173,6 +173,8 @@ void app_delete_viss(VISSObj *vissObj);
  *
  */
 vx_status app_create_graph_viss(vx_graph graph, VISSObj *vissObj, vx_object_array raw_image_arr, const char *target);
+vx_status app_create_graph_viss_ir(vx_graph graph, VISSObj *vissObj, vx_object_array raw_image_arr, const char *target);
+
 
 /** \brief VISS module write output helper function
  *
