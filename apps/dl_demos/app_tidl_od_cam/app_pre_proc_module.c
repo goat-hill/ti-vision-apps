@@ -273,7 +273,7 @@ vx_status app_create_graph_pre_proc(vx_graph graph, PreProcObj *preProcObj, vx_o
                                           output);
 
     APP_ASSERT_VALID_REF(preProcObj->node);
-    status = vxSetNodeTarget(preProcObj->node, VX_TARGET_STRING, TIVX_TARGET_A72_0);
+    status = vxSetNodeTarget(preProcObj->node, VX_TARGET_STRING, TIVX_TARGET_MPU_0);
 #else
     preProcObj->node = tivxImgPreProcNode(graph,
                                           preProcObj->config,

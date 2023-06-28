@@ -168,7 +168,7 @@ vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, v
 
     APP_ASSERT_VALID_REF(postProcObj->node);
 
-    status = vxSetNodeTarget(postProcObj->node, VX_TARGET_STRING, TIVX_TARGET_A72_0);
+    status = vxSetNodeTarget(postProcObj->node, VX_TARGET_STRING, TIVX_TARGET_MPU_0);
     vxSetReferenceName((vx_reference)postProcObj->node, "post_proc_node");
 
     vx_bool replicate[] = {vx_false_e, vx_true_e, vx_true_e, vx_true_e};

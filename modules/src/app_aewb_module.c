@@ -319,7 +319,7 @@ vx_status app_create_graph_aewb(vx_graph graph, AEWBObj *aewbObj, vx_object_arra
 
     vxSetReferenceName((vx_reference)aewbObj->node, "aewb_node");
 #if defined(SOC_AM62A) && defined(QNX)
-    vxSetNodeTarget(aewbObj->node, VX_TARGET_STRING, TIVX_TARGET_A72_0);
+    vxSetNodeTarget(aewbObj->node, VX_TARGET_STRING, TIVX_TARGET_MPU_0);
 #else
     vxSetNodeTarget(aewbObj->node, VX_TARGET_STRING, TIVX_TARGET_MCU2_0);
 #endif
