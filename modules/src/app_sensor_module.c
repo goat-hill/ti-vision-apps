@@ -199,7 +199,6 @@ vx_status app_querry_sensor(SensorObj *sensorObj)
         }
 #endif
 
-        sensorObj->num_cameras_enabled = 0;
         while(sensorObj->num_cameras_enabled == 0)
         {
             char c;

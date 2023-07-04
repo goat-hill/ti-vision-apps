@@ -1497,6 +1497,8 @@ static void app_default_param_set(AppObj *obj)
     obj->is_interactive = 1;
     obj->write_file = 0;
     obj->num_frames_to_run = 1000000000;
+    /* This application supports single camera usecase */
+    obj->sensorObj.num_cameras_enabled = 1;
 }
 
 #if !defined(SOC_AM62A) && !defined(QNX)
@@ -1627,6 +1629,26 @@ static void set_img_mosaic_params(AppObj *obj, ImgMosaicObj *imgMosaicObj)
 
 static void app_update_param_set(AppObj *obj)
 {
+    vx_bool ldcSelected = vx_false_e;
+    vx_char ch = 0;
+
+    while (ldcSelected != vx_true_e)
+    {
+        fflush (stdin);
+        printf ("LDC Selection Yes(1)/No(0)\n");
+        ch = getchar();
+        obj->sensorObj.enable_ldc = ch - '0';
+
+        if((obj->sensorObj.enable_ldc > 1) || (obj->sensorObj.enable_ldc < 0))
+        {
+            printf("Invalid selection %c. Try again \n", ch);
+        }
+        else
+        {
+            ldcSelected = vx_true_e;
+        }
+    }
+
     obj->sensorObj.sensor_index = 0; /* App works only for IMX390 2MP cameras */
 
 #if !defined(SOC_AM62A) && !defined(QNX)

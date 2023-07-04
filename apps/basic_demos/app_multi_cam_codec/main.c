@@ -2028,6 +2028,9 @@ static void app_default_param_set(AppObj *obj)
     obj->enc_pool.bufq_depth    = APP_ENC_BUFFER_Q_DEPTH;
     obj->dec_pool.bufq_depth    = APP_DEC_BUFFER_Q_DEPTH;
     obj->num_codec_bufs         = CODEC_DEC_BUFQ_SIZE;
+
+    /* number of cameras to be selected by user */
+    obj->sensorObj.num_cameras_enabled = 0;
 }
 
 static void app_querry_param_set(AppObj *obj)
@@ -2036,6 +2039,26 @@ static void app_querry_param_set(AppObj *obj)
     vx_bool encSelected = vx_false_e;
     vx_bool decSelected = vx_false_e;
     obj->sensorObj.num_cameras_enabled = 0;
+    vx_bool ldcSelected = vx_false_e;
+
+    while (ldcSelected != vx_true_e)
+    {
+        fflush (stdin);
+        printf ("LDC Selection Yes(1)/No(0)\n");
+        ch = getchar();
+        obj->sensorObj.enable_ldc = ch - '0';
+
+        if((obj->sensorObj.enable_ldc > 1) || (obj->sensorObj.enable_ldc < 0))
+        {
+            printf("Invalid selection %c. Try again \n", ch);
+        }
+        else
+        {
+            ldcSelected = vx_true_e;
+            printf("enable_ldc %d \n", obj->sensorObj.enable_ldc);
+        }
+        ch = getchar();
+    }
 
     while (encSelected != vx_true_e)
     {

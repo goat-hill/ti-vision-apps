@@ -1828,6 +1828,9 @@ static void app_default_param_set(AppObj *obj)
     obj->sensorObj.num_cameras_enabled = 1;
     obj->sensorObj.ch_mask = 0x1;
     obj->sensorObj.usecase_option = APP_SENSOR_FEATURE_CFG_UC0;
+
+    /* number of cameras to be selected by user */
+    obj->sensorObj.num_cameras_enabled = 0;
 }
 
 #if !defined(SOC_AM62A) && !defined(QNX)
