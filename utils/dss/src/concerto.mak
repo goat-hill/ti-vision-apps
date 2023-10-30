@@ -11,6 +11,16 @@ ifeq ($(BUILD_ENABLE_ETHFW),yes)
 DEFS+=ENABLE_ETHFW
 endif
 
+ifeq ($(RTOS_SDK), mcu_plus_sdk)
+IDIRS       += $(MCU_PLUS_SDK_PATH)/source
+IDIRS       += $(MCU_PLUS_SDK_PATH)/source/drivers
+IDIRS       += $(MCU_PLUS_SDK_PATH)/source/kernel/dpl
+else
+IDIRS       += $(PDK_PATH)/packages
+IDIRS       += $(PDK_PATH)/packages/ti/drv
+IDIRS       += $(PDK_PATH)/packages/ti/drv/dss
+endif
+
 DEFS+=$(BUILD_PDK_BOARD)
 
 include $(FINALE)
