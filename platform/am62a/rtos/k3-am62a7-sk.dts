@@ -57,11 +57,11 @@
 	};
 	edgeai_shared_region: edgeai_shared-memories {
 		compatible = "dma-heap-carveout";
-		reg = <0x00 0xa3000000 0x00 0x0b000000>;
+		reg = <0x00 0xa3000000 0x00 0x0e000000>;
 	};
-	edgeai_core_heaps: edgeai-core-heap-memory@ae000000 {
+	edgeai_core_heaps: edgeai-core-heap-memory@b1000000 {
 		compatible = "shared-dma-pool";
-		reg = <0x00 0xae000000 0x00 0x12000000>;
+		reg = <0x00 0xb1000000 0x00 0x12000000>;
 		no-map;
 	};
 

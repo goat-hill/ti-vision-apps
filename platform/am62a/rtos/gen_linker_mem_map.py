@@ -110,7 +110,7 @@ ddr_mem_addr_1  = 0x0099800000;
 ddr_mem_size_1  = 80*MB
 
 ddr_mem_addr_2 = 0xA0000000;
-ddr_mem_size_2 = 515*MB
+ddr_mem_size_2 = 563*MB
 
 #
 # Other constant sizes
@@ -198,7 +198,7 @@ carveout_size += tiovx_log_rt_mem_size
 
 # Shared memory for Buffers/ION allocator
 ddr_shared_mem_addr     = tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
-ddr_shared_mem_size     = 176*MB;
+ddr_shared_mem_size     = 224*MB;
 carveout_size += ddr_shared_mem_size
 
 mcu_r5f_ddr_local_heap_addr  = ddr_shared_mem_addr + ddr_shared_mem_size;
