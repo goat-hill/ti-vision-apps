@@ -69,6 +69,7 @@
 #include "app_common.h"
 #include "app_sensor_module.h"
 #include "app_capture_module.h"
+#include "app_obj_arr_split_module.h"
 #include "app_viss_module.h"
 #include "app_aewb_module.h"
 #include "app_ldc_module.h"
@@ -84,7 +85,7 @@
 #endif
 
 #define APP_BUFFER_Q_DEPTH   (4)
-#define APP_PIPELINE_DEPTH   (7)
+#define APP_PIPELINE_DEPTH   (9)
 
 #if defined(SOC_AM62A) && defined(QNX)
 /*AM62A: QNX to use screen package for displaying frames on A53*/
@@ -96,6 +97,7 @@ typedef struct {
 
     SensorObj         sensorObj;
     CaptureObj        captureObj;
+    ObjArrSplitObj    objArrSplitObj;
     VISSObj           vissObj;
     AEWBObj           aewbObj;
     LDCObj            ldcObj;
@@ -139,6 +141,15 @@ typedef struct {
     int32_t dequeueCnt;
 
     int32_t write_file;
+    int32_t enable_split_graph;
+    vx_uint32 bypass_split_graph;
+	VISSObj           vissObj1;
+    AEWBObj           aewbObj1;
+    LDCObj            ldcObj1;
+    ScalerObj         scalerObj1;
+    PreProcObj        preProcObj1;
+    PostProcObj       postProcObj1;
+    TIDLObj           tidlObj1;
 #if defined(SOC_AM62A) && defined(QNX)
     tivx_task screen_task;
     uint32_t stop_screen_task;
@@ -149,6 +160,7 @@ typedef struct {
 
 AppObj gAppObj;
 
+vx_image gDisplayInImage;
 static void app_parse_cmd_line_args(AppObj *obj, vx_int32 argc, vx_char *argv[]);
 static vx_status app_init(AppObj *obj);
 static void app_deinit(AppObj *obj);
@@ -242,7 +254,7 @@ int32_t app_run_screen(AppObj *obj)
         }
 
         /* copy frames from OVX buffer to screen buffer*/
-        vx_image display_image = (vx_image)vxGetObjectArrayItem((vx_object_array)obj->postProcObj.output_arr[0], 0);
+        vx_image display_image = gDisplayInImage;
         vxQueryImage(display_image, VX_IMAGE_WIDTH, &width, sizeof(vx_uint32));
         vxQueryImage(display_image, VX_IMAGE_HEIGHT, &height, sizeof(vx_uint32));
         vxQueryImage(display_image, VX_IMAGE_FORMAT, &df, sizeof(vx_df_image));
@@ -264,7 +276,7 @@ int32_t app_run_screen(AppObj *obj)
         rect.end_x = width;
         rect.end_y = height;
 
-        if (0 == strcmp(obj->sensorObj.sensor_name, SENSOR_OV2312_UB953_LI))
+        if (obj->sensorObj.num_cameras_enabled == 1 && 0 == strcmp(obj->sensorObj.sensor_name, SENSOR_OV2312_UB953_LI))
         {
             /*OV2312 raw frame has 1600 width, moving the frame to middle of 1920 width display*/
             ptr1 += (1920-1600)/2;
@@ -547,6 +559,14 @@ static void app_set_cfg_default(AppObj *obj)
 
     snprintf(obj->input_file_path,APP_MAX_FILE_PATH, ".");
 
+    if (obj->sensorObj.num_cameras_enabled != 1)
+    {
+        obj->objArrSplitObj.num_outputs = 4;
+        obj->objArrSplitObj.output0_num_elements = 1;
+        obj->objArrSplitObj.output1_num_elements = 1;
+        obj->objArrSplitObj.output2_num_elements = 1;
+        obj->objArrSplitObj.output3_num_elements = 1;
+    }
 }
 
 static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
@@ -596,6 +616,20 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 obj->sensorObj.is_interactive = obj->is_interactive;
             }
             else
+            if(strcmp(token, "bypass_split_graph")==0)
+            {
+                token = strtok(NULL, s);
+                if(token != NULL)
+                {
+                    token[strlen(token)-1]=0;
+                    obj->bypass_split_graph = atoi(token);
+                    if(obj->bypass_split_graph > 1)
+                    {
+                        obj->bypass_split_graph = 1;
+                    }
+                }
+            }
+            else
             if(strcmp(token, "tidl_config")==0)
             {
                 token = strtok(NULL, s);
@@ -603,6 +637,7 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 {
                     token[strlen(token)-1]=0;
                     strcpy(obj->tidlObj.config_file_path, token);
+                    strcpy(obj->tidlObj1.config_file_path, token);
                 }
             }
             else
@@ -613,6 +648,7 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 {
                     token[strlen(token)-1]=0;
                     strcpy(obj->tidlObj.network_file_path, token);
+                    strcpy(obj->tidlObj1.network_file_path, token);
                 }
             }
             else
@@ -625,6 +661,7 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 {
                     width =  atoi(token);
                     obj->scalerObj.output[0].width   = width;
+                    obj->scalerObj1.output[0].width   = width;
 
                     token = strtok(NULL, s);
                     if(token != NULL)
@@ -634,6 +671,7 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
 
                         height =  atoi(token);
                         obj->scalerObj.output[0].height  = height;
+                        obj->scalerObj1.output[0].height  = height;
                     }
                 }
             }
@@ -647,6 +685,7 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 {
                     width =  atoi(token);
                     obj->scalerObj.output[1].width   = width;
+                    obj->scalerObj1.output[1].width   = width;
 
                     token = strtok(NULL, s);
                     if(token != NULL)
@@ -656,6 +695,7 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
 
                         height =  atoi(token);
                         obj->scalerObj.output[1].height  = height;
+                        obj->scalerObj1.output[1].height  = height;
                     }
                 }
             }
@@ -743,8 +783,10 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 {
                     token[strlen(token)-1]=0;
                     obj->scalerObj.en_out_scaler_write = atoi(token);
+                    obj->scalerObj1.en_out_scaler_write = atoi(token);
                     if(obj->scalerObj.en_out_scaler_write > 1)
                         obj->scalerObj.en_out_scaler_write = 1;
+                        obj->scalerObj1.en_out_scaler_write = 1;
                 }
             }
             else
@@ -755,8 +797,10 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                 {
                     token[strlen(token)-1]=0;
                     obj->preProcObj.en_out_pre_proc_write = atoi(token);
+                    obj->preProcObj1.en_out_pre_proc_write = atoi(token);
                     if(obj->preProcObj.en_out_pre_proc_write > 1)
                         obj->preProcObj.en_out_pre_proc_write = 1;
+                        obj->preProcObj1.en_out_pre_proc_write = 1;
                 }
             }
             else
@@ -857,6 +901,16 @@ vx_status app_tidl_od_cam_main(vx_int32 argc, vx_char* argv[])
     /* Querry sensor parameters */
     app_querry_sensor(&obj->sensorObj);
     APP_PRINTF("Sensor params queried! \n");
+    if(obj->sensorObj.num_cameras_enabled == 1)
+    {
+        printf("split graph will be bypassed will be bypassed. \n");
+        obj->enable_split_graph = 0;
+    }
+    else
+    {
+        printf("enable_split_graph selected \n");
+        obj->enable_split_graph = 1;
+    }
 
     /*Update of parameters are config file read*/
     app_update_param_set(obj);
@@ -919,6 +973,13 @@ static vx_status app_init(AppObj *obj)
     }
     APP_PRINTF("Kernel loading done!\n");
 
+    /* For OV2312 sensor, each sensor has 2 streams - RBG + IR */
+    if(obj->sensorObj.num_cameras_enabled != 1 && strcmp(obj->sensorObj.sensor_name, SENSOR_OV2312_UB953_LI) == 0)
+    {
+        obj->sensorObj.num_cameras_enabled = 2 * obj->sensorObj.num_cameras_enabled;
+        obj->sensorObj.ch_mask = (1<<obj->sensorObj.num_cameras_enabled) - 1;
+    }
+
     /* Initialize modules */
 
     app_init_sensor(&obj->sensorObj, "sensor_obj");
@@ -927,23 +988,59 @@ static vx_status app_init(AppObj *obj)
     app_init_capture(obj->context, &obj->captureObj, &obj->sensorObj, "capture_obj", APP_BUFFER_Q_DEPTH);
     APP_PRINTF("Capture init done!\n");
 
-    app_init_viss(obj->context, &obj->vissObj, &obj->sensorObj, "viss_obj", obj->sensorObj.num_cameras_enabled);
-    APP_PRINTF("VISS init done!\n");
+    if ((1 == obj->enable_split_graph) && (status == VX_SUCCESS))
+    {
+        obj->objArrSplitObj.input_arr = obj->captureObj.raw_image_arr[0];
+        APP_PRINTF("Obj arr splitter init done!\n");
+        status = app_init_obj_arr_split(obj->context, &obj->objArrSplitObj, "objArrSplit_obj");
+    }
 
-    app_init_aewb(obj->context, &obj->aewbObj, &obj->sensorObj, "aewb_obj", 0, obj->sensorObj.num_cameras_enabled);
+    if ((1 == obj->enable_split_graph) && (status == VX_SUCCESS))
+    {
+        app_init_viss(obj->context, &obj->vissObj, &obj->sensorObj, "viss_obj", obj->objArrSplitObj.output0_num_elements);
+    }
+    else
+    {
+        app_init_viss(obj->context, &obj->vissObj, &obj->sensorObj, "viss_obj", obj->sensorObj.num_cameras_enabled);
+    }
+	APP_PRINTF("VISS init done!\n");
+
+    if ((1 == obj->enable_split_graph) && (status == VX_SUCCESS))
+    {
+        app_init_aewb(obj->context, &obj->aewbObj, &obj->sensorObj, "aewb_obj", 0, obj->objArrSplitObj.output0_num_elements);
+    }
+    else
+    {
+        app_init_aewb(obj->context, &obj->aewbObj, &obj->sensorObj, "aewb_obj", 0, obj->sensorObj.num_cameras_enabled);
+    }
     APP_PRINTF("AEWB init done!\n");
 
-    app_init_ldc(obj->context, &obj->ldcObj, &obj->sensorObj, "ldc_obj", obj->sensorObj.num_cameras_enabled);
-    APP_PRINTF("LDC init done!\n");
+    if(status == VX_SUCCESS && 0 == obj->enable_split_graph)
+    {
+        app_init_ldc(obj->context, &obj->ldcObj, &obj->sensorObj, "ldc_obj", obj->sensorObj.num_cameras_enabled);
+        APP_PRINTF("LDC init done!\n");
+    }
 
 #if defined(SOC_AM62A) && defined(QNX)
-    obj->scalerObj.output[0].width  = obj->ldcObj.table_width / 2;
-    obj->scalerObj.output[0].height = obj->ldcObj.table_height / 2;
+    if (0 == obj->enable_split_graph)
+    {
+        obj->scalerObj.output[0].width  = obj->ldcObj.table_width / 2;
+        obj->scalerObj.output[0].height = obj->ldcObj.table_height / 2;
+        /*For Object Detection, TIDL expects input image of resolution 1024x512
+          Resizing 1920x1080 to 1020*512 */
+        obj->scalerObj.output[1].width  = obj->ldcObj.table_width / 1.875;
+        obj->scalerObj.output[1].height = obj->ldcObj.table_height / 2.109;
+    }
+    else
+    {
+        obj->scalerObj.output[0].width  = 960;
+        obj->scalerObj.output[0].height = 480;
+        /*For Object Detection, TIDL expects input image of resolution 1024x512
+          Resizing 1920x1080 to 1020*512 */
+        obj->scalerObj.output[1].width  = 1024;
+        obj->scalerObj.output[1].height = 512;
+    }
 
-    /*For Object Detection, TIDL expects input image of resolution 1024x512
-      Resizing 1920x1080 to 1020*512 */
-    obj->scalerObj.output[1].width  = obj->ldcObj.table_width / 1.875;
-    obj->scalerObj.output[1].height = obj->ldcObj.table_height / 2.109;
 #endif
 
     printf("Scaler output1 width   = %d\n", obj->scalerObj.output[0].width);
@@ -951,19 +1048,97 @@ static vx_status app_init(AppObj *obj)
     printf("Scaler output2 width   = %d\n", obj->scalerObj.output[1].width);
     printf("Scaler output2 height  = %d\n", obj->scalerObj.output[1].height);
 
-    app_init_scaler(obj->context, &obj->scalerObj, "scaler_obj", obj->sensorObj.num_cameras_enabled, 2);
+    if (0 == obj->enable_split_graph)
+    {
+        app_init_scaler(obj->context, &obj->scalerObj, "scaler_obj", obj->sensorObj.num_cameras_enabled, 2);
+    }
+    else
+    {
+        app_init_scaler(obj->context, &obj->scalerObj, "scaler_obj", obj->objArrSplitObj.output0_num_elements, 2);
+    }	
     APP_PRINTF("Scaler init done!\n");
 
     /* Initialize TIDL first to get tensor I/O information from network */
-    app_init_tidl(obj->context, &obj->tidlObj, "tidl_obj", obj->sensorObj.num_cameras_enabled);
+    if (0 == obj->enable_split_graph)
+    {
+        app_init_tidl(obj->context, &obj->tidlObj, "tidl_obj", obj->sensorObj.num_cameras_enabled);
+    }
+    else
+    {
+        app_init_tidl(obj->context, &obj->tidlObj, "tidl_obj", obj->objArrSplitObj.output0_num_elements);
+    }
     APP_PRINTF("TIDL Init Done! \n");
 
     /* Update pre-proc parameters with TIDL config before calling init */
-    app_update_pre_proc(obj->context, &obj->preProcObj, obj->tidlObj.config, obj->sensorObj.num_cameras_enabled);
+    if (0 == obj->enable_split_graph)
+    {
+        app_update_pre_proc(obj->context, &obj->preProcObj, obj->tidlObj.config, obj->sensorObj.num_cameras_enabled);
+    }
+    else
+    {
+        app_update_pre_proc(obj->context, &obj->preProcObj, obj->tidlObj.config, obj->objArrSplitObj.output0_num_elements);
+    }
     APP_PRINTF("Pre Proc Update Done! \n");
 
     app_init_pre_proc(obj->context, &obj->preProcObj, "pre_proc_obj");
     APP_PRINTF("Pre Proc Init Done! \n");
+
+    app_update_post_proc(obj->context, &obj->postProcObj, obj->tidlObj.config);
+    APP_PRINTF("Post Proc Update Done! \n");
+
+    if (0 == obj->enable_split_graph)
+    {
+        status = app_init_post_proc(obj->context, &obj->postProcObj, "post_proc_obj", obj->sensorObj.num_cameras_enabled, APP_BUFFER_Q_DEPTH, 0);
+    }
+    else
+    {
+        status = app_init_post_proc(obj->context, &obj->postProcObj, "post_proc_obj", obj->objArrSplitObj.output0_num_elements, APP_BUFFER_Q_DEPTH, 1);
+    }
+    APP_PRINTF("Post Proc Init Done! \n");
+
+    if((1 == obj->enable_split_graph) && (status == VX_SUCCESS))
+    {
+        app_init_viss(obj->context, &obj->vissObj1, &obj->sensorObj, "viss_obj", obj->objArrSplitObj.output2_num_elements);
+        APP_PRINTF("VISS1 init done!\n");
+
+        app_init_aewb(obj->context, &obj->aewbObj1, &obj->sensorObj, "aewb_obj", 0, obj->objArrSplitObj.output2_num_elements);
+        APP_PRINTF("AEWB1 init done!\n");
+
+#if defined(SOC_AM62A) && defined(QNX)
+        obj->scalerObj1.output[0].width  = 960;
+        obj->scalerObj1.output[0].height = 480;
+
+        /*For Object Detection, TIDL expects input image of resolution 1024x512
+          Resizing 1920x1080 to 1020*512 */
+        obj->scalerObj1.output[1].width  = 1024;
+        obj->scalerObj1.output[1].height = 512;
+#endif
+
+        printf("Scaler1 output1 width   = %d\n", obj->scalerObj1.output[0].width);
+        printf("Scaler1 output1 height  = %d\n", obj->scalerObj1.output[0].height);
+        printf("Scaler1 output2 width   = %d\n", obj->scalerObj1.output[1].width);
+        printf("Scaler1 output2 height  = %d\n", obj->scalerObj1.output[1].height);
+
+        app_init_scaler(obj->context, &obj->scalerObj1, "scaler_obj", obj->objArrSplitObj.output2_num_elements, 2);
+        APP_PRINTF("Scaler1 init done!\n");
+
+        /* Initialize TIDL first to get tensor I/O information from network */
+        app_init_tidl(obj->context, &obj->tidlObj1, "tidl_obj", obj->objArrSplitObj.output2_num_elements);
+        APP_PRINTF("TIDL1 Init Done! \n");
+
+        /* Update pre-proc parameters with TIDL config before calling init */
+        app_update_pre_proc(obj->context, &obj->preProcObj1, obj->tidlObj1.config, obj->objArrSplitObj.output2_num_elements);
+        APP_PRINTF("Pre Proc1 Update Done! \n");
+
+        app_init_pre_proc(obj->context, &obj->preProcObj1, "pre_proc_obj");
+        APP_PRINTF("Pre Proc1 Init Done! \n");
+
+        app_update_post_proc(obj->context, &obj->postProcObj1, obj->tidlObj1.config);
+        APP_PRINTF("Post Proc1 Update Done! \n");
+
+        status = app_init_post_proc(obj->context, &obj->postProcObj1, "post_proc_obj", obj->sensorObj.num_cameras_enabled, APP_BUFFER_Q_DEPTH, obj->enable_split_graph);
+        APP_PRINTF("Post Proc1 Init Done! \n");
+    }
 
 #if !defined(SOC_AM62A) && !defined(QNX)
     /* Update ioBufDesc in draw detections object */
@@ -972,13 +1147,6 @@ static vx_status app_init(AppObj *obj)
 
     app_init_draw_detections(obj->context, &obj->drawDetectionsObj, "draw_detections_obj", obj->sensorObj.num_cameras_enabled);
     APP_PRINTF("Draw Detections Init Done! \n");
-#else
-    /* Update post-proc parameters with TIDL config before calling init */
-    app_update_post_proc(obj->context, &obj->postProcObj, obj->tidlObj.config);
-    APP_PRINTF("Post Proc Update Done! \n");
-
-    status = app_init_post_proc(obj->context, &obj->postProcObj, "post_proc_obj", obj->sensorObj.num_cameras_enabled, APP_BUFFER_Q_DEPTH);
-    APP_PRINTF("Post Proc Init Done! \n");
 #endif
     app_init_img_mosaic(obj->context, &obj->imgMosaicObj, "img_mosaic_obj", APP_BUFFER_Q_DEPTH);
     APP_PRINTF("Img Mosaic init done!\n");
@@ -1036,6 +1204,30 @@ static void app_deinit(AppObj *obj)
     app_deinit_draw_detections(&obj->drawDetectionsObj);
     APP_PRINTF("Draw detections deinit done!\n");
 #endif
+
+    if(1 == obj->enable_split_graph)
+    {
+        app_deinit_obj_arr_split(&obj->objArrSplitObj);
+        APP_PRINTF("Object array splitter deinit done!\n");
+
+        app_deinit_viss(&obj->vissObj1);
+        APP_PRINTF("VISS deinit done!\n");
+
+        app_deinit_aewb(&obj->aewbObj1);
+        APP_PRINTF("AEWB deinit done!\n");
+
+        app_deinit_scaler(&obj->scalerObj1);
+        APP_PRINTF("Scaler deinit done!\n");
+
+        app_deinit_pre_proc(&obj->preProcObj1);
+        APP_PRINTF("Pre proc deinit done!\n");
+
+        app_deinit_tidl(&obj->tidlObj1);
+        APP_PRINTF("TIDL deinit done!\n");
+
+        app_deinit_post_proc(&obj->postProcObj1, APP_BUFFER_Q_DEPTH);
+        APP_PRINTF("Post proc deinit done!\n");
+    }
 
     app_deinit_img_mosaic(&obj->imgMosaicObj, APP_BUFFER_Q_DEPTH);
     APP_PRINTF("Img Mosaic deinit done!\n");
@@ -1095,6 +1287,30 @@ static void app_delete_graph(AppObj *obj)
     APP_PRINTF("Post Proc delete done!\n");
 #endif
 
+    if(1 == obj->enable_split_graph)
+    {
+        app_delete_obj_arr_split(&obj->objArrSplitObj);
+        APP_PRINTF("Object array splitter delete done!\n");
+
+        app_delete_viss(&obj->vissObj1);
+        APP_PRINTF("VISS1 delete done!\n");
+
+        app_delete_aewb(&obj->aewbObj1);
+        APP_PRINTF("AEWB1 delete done!\n");
+
+        app_delete_scaler(&obj->scalerObj1);
+        APP_PRINTF("Scaler1 delete done!\n");
+
+        app_delete_pre_proc(&obj->preProcObj1);
+        APP_PRINTF("Pre Proc1 delete done!\n");
+
+        app_delete_tidl(&obj->tidlObj1);
+        APP_PRINTF("TIDL1 delete done!\n");
+
+        app_delete_post_proc(&obj->postProcObj1);
+        APP_PRINTF("Post Proc1 delete done!\n");
+    }
+
     app_delete_img_mosaic(&obj->imgMosaicObj);
     APP_PRINTF("Img Mosaic delete done!\n");
 
@@ -1108,7 +1324,7 @@ static void app_delete_graph(AppObj *obj)
 static vx_status app_create_graph(AppObj *obj)
 {
     vx_status status = VX_SUCCESS;
-    vx_graph_parameter_queue_params_t graph_parameters_queue_params_list[2];
+    vx_graph_parameter_queue_params_t graph_parameters_queue_params_list[3];
     vx_int32 graph_parameter_index;
 
     obj->graph = vxCreateGraph(obj->context);
@@ -1122,9 +1338,22 @@ static vx_status app_create_graph(AppObj *obj)
         APP_PRINTF("Capture graph done!\n");
     }
 
+    if( (1 == obj->enable_split_graph) && (status == VX_SUCCESS) )
+    {
+        status = app_create_graph_obj_arr_split(obj->graph, &obj->objArrSplitObj);
+        APP_PRINTF("Object array splitter graph done!\n");
+    }
+
     if(status == VX_SUCCESS)
     {
-        status = app_create_graph_viss(obj->graph, &obj->vissObj, obj->captureObj.raw_image_arr[0], TIVX_TARGET_VPAC_VISS1);
+        if(1 == obj->enable_split_graph)
+        {
+            status = app_create_graph_viss(obj->graph, &obj->vissObj, obj->objArrSplitObj.output0_arr, TIVX_TARGET_VPAC_VISS1);
+        }
+        else
+        {
+            status = app_create_graph_viss(obj->graph, &obj->vissObj, obj->captureObj.raw_image_arr[0], TIVX_TARGET_VPAC_VISS1);
+        }
         APP_PRINTF("VISS graph done!\n");
     }
 
@@ -1134,17 +1363,21 @@ static vx_status app_create_graph(AppObj *obj)
         APP_PRINTF("AEWB graph done!\n");
     }
 
-    if(status == VX_SUCCESS)
+    if(0 == obj->enable_split_graph && status == VX_SUCCESS)
     {
         status = app_create_graph_ldc(obj->graph, &obj->ldcObj, obj->vissObj.output_arr, TIVX_TARGET_VPAC_LDC1);
         APP_PRINTF("LDC graph done!\n");
     }
 
-    if(status == VX_SUCCESS)
+    if(0 == obj->enable_split_graph)
     {
         app_create_graph_scaler(obj->context, obj->graph, &obj->scalerObj, obj->ldcObj.output_arr);
-        APP_PRINTF("Scaler graph done!\n");
     }
+    else
+    {
+	    app_create_graph_scaler(obj->context, obj->graph, &obj->scalerObj, obj->vissObj.output_arr);
+    }
+    APP_PRINTF("Scaler graph done!\n");
 
     if(status == VX_SUCCESS)
     {
@@ -1165,7 +1398,14 @@ static vx_status app_create_graph(AppObj *obj)
 #if defined(SOC_AM62A) && defined(QNX)
     if(status == VX_SUCCESS)
     {
-        status = app_create_graph_post_proc(obj->graph, &obj->postProcObj, obj->tidlObj.out_args_arr, obj->tidlObj.output_tensor_arr[0], obj->ldcObj.output_arr);
+        if(0 == obj->enable_split_graph)
+        {
+            status = app_create_graph_post_proc(obj->graph, &obj->postProcObj, obj->tidlObj.out_args_arr, obj->tidlObj.output_tensor_arr[0], obj->ldcObj.output_arr);
+        }
+        else
+        {
+            status = app_create_graph_post_proc(obj->graph, &obj->postProcObj, obj->tidlObj.out_args_arr, obj->tidlObj.output_tensor_arr[0], obj->vissObj.output_arr);
+        }
         APP_PRINTF("Post proc graph done!\n");
     }
 #else
@@ -1176,11 +1416,62 @@ static vx_status app_create_graph(AppObj *obj)
     }
 #endif
 
+    if(1 == obj->enable_split_graph)
+    {
+        if(status == VX_SUCCESS)
+        {
+            status = app_create_graph_viss(obj->graph, &obj->vissObj1, obj->objArrSplitObj.output2_arr, TIVX_TARGET_VPAC_VISS1);
+            APP_PRINTF("VISS1 graph done!\n");
+        }
+
+        if(status == VX_SUCCESS)
+        {
+            status = app_create_graph_aewb(obj->graph, &obj->aewbObj1, obj->vissObj1.h3a_stats_arr);
+            APP_PRINTF("AEWB1 graph done!\n");
+        }
+
+        if(status == VX_SUCCESS)
+        {
+            app_create_graph_scaler(obj->context, obj->graph, &obj->scalerObj1, obj->vissObj1.output_arr);
+            APP_PRINTF("Scaler1 graph done!\n");
+        }
+
+        if(status == VX_SUCCESS)
+        {
+#if defined(SOC_AM62A) && defined(QNX)
+            app_create_graph_pre_proc(obj->graph, &obj->preProcObj1, obj->scalerObj1.output[1].arr);
+            APP_PRINTF("Pre proc1 graph done!\n");
+#endif
+        }
+
+        if(status == VX_SUCCESS)
+        {
+            app_create_graph_tidl(obj->context, obj->graph, &obj->tidlObj1, obj->preProcObj1.output_tensor_arr);
+            APP_PRINTF("TIDL1 graph done!\n");
+        }
+
+#if defined(SOC_AM62A) && defined(QNX)
+        if(status == VX_SUCCESS)
+        {
+            status = app_create_graph_post_proc(obj->graph, &obj->postProcObj1, obj->tidlObj1.out_args_arr, obj->tidlObj1.output_tensor_arr[0], obj->vissObj1.output_arr);
+            APP_PRINTF("Post proc1 graph done!\n");
+        }
+#endif
+    }
+
     vx_int32 idx = 0;
 #if !defined(SOC_AM62A) && !defined(QNX)
     obj->imgMosaicObj.input_arr[idx++] = obj->drawDetectionsObj.output_image_arr;
 #else
-    obj->imgMosaicObj.input_arr[idx++] = obj->scalerObj.output[0].arr;
+    if(1 == obj->enable_split_graph)
+    {
+        obj->imgMosaicObj.input_arr[idx++] = obj->postProcObj.output_arr[0];
+        obj->imgMosaicObj.input_arr[idx++] = obj->postProcObj1.output_arr[0];
+    }
+    else
+    {
+        obj->imgMosaicObj.input_arr[idx++] = obj->scalerObj.output[0].arr;
+    }
 #endif
     obj->imgMosaicObj.num_inputs = idx;
 
@@ -1188,6 +1479,14 @@ static vx_status app_create_graph(AppObj *obj)
     {
         status = app_create_graph_img_mosaic(obj->graph, &obj->imgMosaicObj, NULL);
         APP_PRINTF("Img Mosaic graph done!\n");
+        if(1 == obj->enable_split_graph)
+        {
+            gDisplayInImage = obj->imgMosaicObj.output_image[0];
+        }
+        else
+        {
+            gDisplayInImage = (vx_image)vxGetObjectArrayItem((vx_object_array)obj->postProcObj.output_arr[0], 0);
+        }
     }
 
     if(status == VX_SUCCESS)
@@ -1214,6 +1513,16 @@ static vx_status app_create_graph(AppObj *obj)
         graph_parameters_queue_params_list[graph_parameter_index].refs_list_size = APP_BUFFER_Q_DEPTH;
         graph_parameters_queue_params_list[graph_parameter_index].refs_list = (vx_reference*)&obj->postProcObj.results[0];
         graph_parameter_index++;
+
+        if (obj->enable_split_graph == 1)
+        {
+           add_graph_parameter_by_node_index(obj->graph, obj->postProcObj1.node, 3);
+           obj->postProcObj1.graph_parameter_index = graph_parameter_index;
+           graph_parameters_queue_params_list[graph_parameter_index].graph_parameter_index = graph_parameter_index;
+           graph_parameters_queue_params_list[graph_parameter_index].refs_list_size = APP_BUFFER_Q_DEPTH;
+           graph_parameters_queue_params_list[graph_parameter_index].refs_list = (vx_reference*)&obj->postProcObj1.results[0];
+           graph_parameter_index++;
+        }
 #endif
 
         vxSetGraphScheduleConfig(obj->graph,
@@ -1227,7 +1536,10 @@ static vx_status app_create_graph(AppObj *obj)
         tivxSetNodeParameterNumBufByIndex(obj->vissObj.node, 9, APP_BUFFER_Q_DEPTH);
         tivxSetNodeParameterNumBufByIndex(obj->aewbObj.node, 4, APP_BUFFER_Q_DEPTH);
 
-        tivxSetNodeParameterNumBufByIndex(obj->ldcObj.node, 7, APP_BUFFER_Q_DEPTH);
+        if (obj->enable_split_graph == 0)
+        {
+            tivxSetNodeParameterNumBufByIndex(obj->ldcObj.node, 7, APP_BUFFER_Q_DEPTH);
+        }
 
         /*This output is accessed slightly later in the pipeline by mosaic node so queue depth is larger */
         tivxSetNodeParameterNumBufByIndex(obj->scalerObj.node, 1, 6);
@@ -1238,6 +1550,21 @@ static vx_status app_create_graph(AppObj *obj)
         tivxSetNodeParameterNumBufByIndex(obj->tidlObj.node, 4, APP_BUFFER_Q_DEPTH);
         tivxSetNodeParameterNumBufByIndex(obj->tidlObj.node, 7, APP_BUFFER_Q_DEPTH);
 
+        if(obj->enable_split_graph == 1)
+        {
+            tivxSetNodeParameterNumBufByIndex(obj->vissObj1.node, 6, APP_BUFFER_Q_DEPTH);
+            tivxSetNodeParameterNumBufByIndex(obj->vissObj1.node, 9, APP_BUFFER_Q_DEPTH);
+            tivxSetNodeParameterNumBufByIndex(obj->aewbObj1.node, 4, APP_BUFFER_Q_DEPTH);
+
+            /*This output is accessed slightly later in the pipeline by mosaic node so queue depth is larger */
+            tivxSetNodeParameterNumBufByIndex(obj->scalerObj1.node, 1, 6);
+            tivxSetNodeParameterNumBufByIndex(obj->scalerObj1.node, 2, 6);
+
+            tivxSetNodeParameterNumBufByIndex(obj->preProcObj1.node, 2, APP_BUFFER_Q_DEPTH);
+
+            tivxSetNodeParameterNumBufByIndex(obj->tidlObj1.node, 4, APP_BUFFER_Q_DEPTH);
+            tivxSetNodeParameterNumBufByIndex(obj->tidlObj1.node, 7, APP_BUFFER_Q_DEPTH);
+        }
 #if !defined(SOC_AM62A) && !defined(QNX)
         tivxSetNodeParameterNumBufByIndex(obj->drawDetectionsObj.node, 3, APP_BUFFER_Q_DEPTH);
 #endif
@@ -1297,6 +1624,7 @@ static vx_status app_run_graph_for_one_frame_pipeline(AppObj *obj, vx_int32 fram
     CaptureObj *captureObj = &obj->captureObj;
 #if defined(SOC_AM62A) && defined(QNX)
     PostProcObj *postProcObj = &obj->postProcObj;
+    PostProcObj *postProcObj1 = &obj->postProcObj1;
 #endif
 
     if(obj->pipeline <= 0)
@@ -1305,6 +1633,10 @@ static vx_status app_run_graph_for_one_frame_pipeline(AppObj *obj, vx_int32 fram
         /* Enqueue inputs during pipeup dont execute */
 #if defined(SOC_AM62A) && defined(QNX)
         vxGraphParameterEnqueueReadyRef(obj->graph, postProcObj->graph_parameter_index, (vx_reference*)&postProcObj->results[obj->enqueueCnt], 1);
+        if(1 == obj->enable_split_graph)
+        {
+            vxGraphParameterEnqueueReadyRef(obj->graph, postProcObj1->graph_parameter_index, (vx_reference*)&postProcObj1->results[obj->enqueueCnt], 1);
+        }
 #endif
         vxGraphParameterEnqueueReadyRef(obj->graph, captureObj->graph_parameter_index, (vx_reference*)&captureObj->raw_image_arr[obj->enqueueCnt], 1);
 
@@ -1319,6 +1651,7 @@ static vx_status app_run_graph_for_one_frame_pipeline(AppObj *obj, vx_int32 fram
         vx_image capture_input_image;
 #if defined(SOC_AM62A) && defined(QNX)
         vx_user_data_object results;
+        vx_user_data_object results1;
 #endif
         uint32_t num_refs;
 
@@ -1328,9 +1661,17 @@ static vx_status app_run_graph_for_one_frame_pipeline(AppObj *obj, vx_int32 fram
 #if defined(SOC_AM62A) && defined(QNX)
         /* Dequeue output */
         vxGraphParameterDequeueDoneRef(obj->graph, postProcObj->graph_parameter_index, (vx_reference*)&results, 1, &num_refs);
+		if(1 == obj->enable_split_graph)
+        {
+            vxGraphParameterDequeueDoneRef(obj->graph, postProcObj1->graph_parameter_index, (vx_reference*)&results1, 1, &num_refs);
+        }
 
         /* Enqueue output */
         vxGraphParameterEnqueueReadyRef(obj->graph, postProcObj->graph_parameter_index, (vx_reference*)&results, 1);
+		if(1 == obj->enable_split_graph)
+        {		
+            vxGraphParameterEnqueueReadyRef(obj->graph, postProcObj1->graph_parameter_index, (vx_reference*)&results1, 1);
+        }
 #endif
 
         /* Enqueue input - start execution */
@@ -1387,7 +1728,7 @@ static vx_status app_run_graph(AppObj *obj)
             {
                 app_send_cmd_viss_write_node(&obj->vissObj, frame_id, obj->num_frames_to_write, obj->num_frames_to_skip);
             }
-            if(obj->ldcObj.en_out_ldc_write == 1)
+            if(0 == obj->enable_split_graph && obj->ldcObj.en_out_ldc_write == 1)
             {
                 app_send_cmd_ldc_write_node(&obj->ldcObj, frame_id, obj->num_frames_to_write, obj->num_frames_to_skip);
             }
@@ -1446,8 +1787,9 @@ static void set_sensor_defaults(SensorObj *sensorObj)
     sensorObj->sensor_exp_control_enabled = 0;
     sensorObj->sensor_gain_control_enabled = 0;
     sensorObj->ch_mask = 1;
-    sensorObj->enable_ldc = 1;
-    sensorObj->num_cameras_enabled = 1;
+    sensorObj->enable_ldc = 0;
+    /* number of cameras to be selected by user */
+    sensorObj->num_cameras_enabled = 0;
     sensorObj->usecase_option = APP_SENSOR_FEATURE_CFG_UC0;
     sensorObj->is_interactive = 1;
 
@@ -1495,10 +1837,10 @@ static void app_default_param_set(AppObj *obj)
 
     obj->captureObj.enable_error_detection = 1; /* enable by default */
     obj->is_interactive = 1;
+    obj->bypass_split_graph = 0;
     obj->write_file = 0;
     obj->num_frames_to_run = 1000000000;
-    /* This application supports single camera usecase */
-    obj->sensorObj.num_cameras_enabled = 1;
+    obj->sensorObj.num_cameras_enabled = 0;
 }
 
 #if !defined(SOC_AM62A) && !defined(QNX)
@@ -1606,20 +1948,45 @@ static void set_img_mosaic_params(AppObj *obj, ImgMosaicObj *imgMosaicObj)
 
     imgMosaicObj->out_width    = DISPLAY_WIDTH;
     imgMosaicObj->out_height   = DISPLAY_HEIGHT;
-    imgMosaicObj->num_inputs   = 1;
+	if (obj->enable_split_graph == 1)
+    {
+        imgMosaicObj->num_inputs   = 2;
+    }
+    else 
+    {
+        imgMosaicObj->num_inputs   = 1;
+    }
 
     tivxImgMosaicParamsSetDefaults(&imgMosaicObj->params);
 
     idx = 0;
 
-    imgMosaicObj->params.windows[idx].startX  = 100;
-    imgMosaicObj->params.windows[idx].startY  = 200;
-    imgMosaicObj->params.windows[idx].width   = obj->scalerObj.output[0].width;
-    imgMosaicObj->params.windows[idx].height  = obj->scalerObj.output[0].height;
-    imgMosaicObj->params.windows[idx].input_select   = 0;
-    imgMosaicObj->params.windows[idx].channel_select = 0;
-    idx++;
-
+    if (obj->enable_split_graph == 0)
+    {
+        imgMosaicObj->params.windows[idx].startX  = 100;
+        imgMosaicObj->params.windows[idx].startY  = 200;
+        imgMosaicObj->params.windows[idx].width   = obj->scalerObj.output[0].width;
+        imgMosaicObj->params.windows[idx].height  = obj->scalerObj.output[0].height;
+        imgMosaicObj->params.windows[idx].input_select   = 0;
+        imgMosaicObj->params.windows[idx].channel_select = 0;
+		idx++;
+    }
+    else
+    {
+        imgMosaicObj->params.windows[0].startX  = 0;
+        imgMosaicObj->params.windows[0].startY  = 0;
+        imgMosaicObj->params.windows[0].width   = 960;
+        imgMosaicObj->params.windows[0].height  = 1080;
+        imgMosaicObj->params.windows[1].startX  = 960;
+        imgMosaicObj->params.windows[1].startY  = 0;
+        imgMosaicObj->params.windows[1].width   = 960;
+        imgMosaicObj->params.windows[1].height  = 1080;
+        imgMosaicObj->params.windows[0].input_select   = 0;
+        imgMosaicObj->params.windows[0].channel_select = 0;
+        imgMosaicObj->params.windows[1].input_select   = 1;
+        imgMosaicObj->params.windows[1].channel_select = 0;
+		idx = 2;
+	}
     imgMosaicObj->params.num_windows  = idx;
 
     /* Number of time to clear the output buffer before it gets reused */
@@ -1629,25 +1996,28 @@ static void set_img_mosaic_params(AppObj *obj, ImgMosaicObj *imgMosaicObj)
 
 static void app_update_param_set(AppObj *obj)
 {
-    vx_bool ldcSelected = vx_false_e;
-    vx_char ch = 0;
+    if (obj->enable_split_graph == 0)
+	{
+        vx_bool ldcSelected = vx_false_e;
+        vx_char ch = 0;
 
-    while (ldcSelected != vx_true_e)
-    {
-        fflush (stdin);
-        printf ("LDC Selection Yes(1)/No(0)\n");
-        ch = getchar();
-        obj->sensorObj.enable_ldc = ch - '0';
+        while (ldcSelected != vx_true_e)
+        {
+            fflush (stdin);
+            printf ("LDC Selection Yes(1)/No(0)\n");
+            ch = getchar();
+            obj->sensorObj.enable_ldc = ch - '0';
 
-        if((obj->sensorObj.enable_ldc > 1) || (obj->sensorObj.enable_ldc < 0))
-        {
-            printf("Invalid selection %c. Try again \n", ch);
+            if((obj->sensorObj.enable_ldc > 1) || (obj->sensorObj.enable_ldc < 0))
+            {
+                printf("Invalid selection %c. Try again \n", ch);
+            }
+            else
+            {
+                ldcSelected = vx_true_e;
+            }
         }
-        else
-        {
-            ldcSelected = vx_true_e;
-        }
-    }
+	}
 
     obj->sensorObj.sensor_index = 0; /* App works only for IMX390 2MP cameras */
 
@@ -1655,6 +2025,15 @@ static void app_update_param_set(AppObj *obj)
     update_draw_detections_defaults(obj, &obj->drawDetectionsObj);
     update_img_mosaic_defaults(&obj->imgMosaicObj, obj->scalerObj.output[1].width, obj->scalerObj.output[1].height, obj->sensorObj.num_cameras_enabled);
 #else
+    if (obj->sensorObj.num_cameras_enabled != 1)
+    {
+        obj->objArrSplitObj.num_outputs = 4;
+        obj->objArrSplitObj.output0_num_elements = 1;
+        obj->objArrSplitObj.output1_num_elements = 1;
+        obj->objArrSplitObj.output2_num_elements = 1;
+        obj->objArrSplitObj.output3_num_elements = 1;
+    }
+
     set_img_mosaic_params(obj, &obj->imgMosaicObj);
 #endif
 }

@@ -60,14 +60,12 @@
  *
  */
 
-#define DISPLAY_WIDTH  (1920)
-#define DISPLAY_HEIGHT (1080)
-
 #include "app_post_proc_module.h"
 
-vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char *objName, vx_int32 num_cameras, vx_int32 bufq_depth)
+vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char *objName, vx_int32 num_cameras, vx_int32 bufq_depth, uint32_t enable_split_graph)
 {
     vx_status status = VX_SUCCESS;
+    uint32_t POST_PROC_OUT_WIDTH = 1920, POST_PROC_OUT_HEIGHT = 1080;
 
     tivxDLPostProcParams *local_postproc_config;
     local_postproc_config = calloc(1, sizeof(tivxDLPostProcParams));
@@ -85,7 +83,12 @@ vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char 
     postProcObj->config = vxCreateUserDataObject(context, "PostProcConfig", sizeof(tivxDLPostProcParams), local_postproc_config);
     status = vxGetStatus((vx_reference)postProcObj->config);
 
-    vx_image output_img = vxCreateImage(context, DISPLAY_WIDTH, DISPLAY_HEIGHT, VX_DF_IMAGE_NV12);
+    if (enable_split_graph == 1)
+    {
+        POST_PROC_OUT_WIDTH = 1600;
+        POST_PROC_OUT_HEIGHT = 1300;
+    }
+    vx_image output_img = vxCreateImage(context, POST_PROC_OUT_WIDTH, POST_PROC_OUT_HEIGHT, VX_DF_IMAGE_NV12);
 
     vx_int32 q;
     for(q = 0; q < bufq_depth; q++)

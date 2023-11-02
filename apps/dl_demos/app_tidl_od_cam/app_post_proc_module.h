@@ -86,7 +86,7 @@ typedef struct {
 } PostProcObj;
 
 vx_status app_update_post_proc(vx_context context, PostProcObj *postProcObj, vx_user_data_object config);
-vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char *objName, vx_int32 num_cameras, vx_int32 bufq_depth);
+vx_status app_init_post_proc(vx_context context, PostProcObj *postProcObj, char *objName, vx_int32 num_cameras, vx_int32 bufq_depth, uint32_t enable_split_graph);
 void app_deinit_post_proc(PostProcObj *obj, vx_int32 bufq_depth);
 void app_delete_post_proc(PostProcObj *obj);
 vx_status app_create_graph_post_proc(vx_graph graph, PostProcObj *postProcObj, vx_object_array in_args_arr, vx_object_array in_tensor_arr, vx_object_array input_img_arr);
