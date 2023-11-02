@@ -129,6 +129,11 @@ typedef struct {
     tivx_task screen_task;
     uint32_t stop_screen_task;
     uint32_t stop_screen_task_done;
+
+    VISSObj       vissObj2;
+    VISSObj       vissObj3;
+    AEWBObj       aewbObj2;
+
 #endif
 
     int32_t enable_ldc;
@@ -541,11 +546,19 @@ static void app_set_cfg_default(AppObj *obj)
     snprintf(obj->captureObj.output_file_path,APP_MAX_FILE_PATH, ".");
     snprintf(obj->vissObj.output_file_path,APP_MAX_FILE_PATH, ".");
     snprintf(obj->vissObj1.output_file_path,APP_MAX_FILE_PATH, ".");
+#if defined(SOC_AM62A) && defined(QNX)
+    snprintf(obj->vissObj2.output_file_path,APP_MAX_FILE_PATH, ".");
+    snprintf(obj->vissObj3.output_file_path,APP_MAX_FILE_PATH, ".");
+#endif
     snprintf(obj->ldcObj.output_file_path,APP_MAX_FILE_PATH, ".");
 
     obj->captureObj.en_out_capture_write = 0;
     obj->vissObj.en_out_viss_write = 0;
     obj->vissObj1.en_out_viss_write = 0;
+#if defined(SOC_AM62A) && defined(QNX)
+    obj->vissObj2.en_out_viss_write = 0;
+    obj->vissObj3.en_out_viss_write = 0;
+#endif
     obj->ldcObj.en_out_ldc_write = 0;
     obj->ldcObj1.en_out_ldc_write = 0;
 
@@ -693,6 +706,10 @@ static void app_parse_cfg_file(AppObj *obj, vx_char *cfg_file_name)
                     strcpy(obj->captureObj.output_file_path, token);
                     strcpy(obj->vissObj.output_file_path, token);
                     strcpy(obj->vissObj1.output_file_path, token);
+#if defined(SOC_AM62A) && defined(QNX)
+                    strcpy(obj->vissObj2.output_file_path, token);
+                    strcpy(obj->vissObj3.output_file_path, token);
+#endif
                     strcpy(obj->ldcObj.output_file_path, token);
                     strcpy(obj->ldcObj1.output_file_path, token);
                     strcpy(obj->output_file_path, token);
@@ -1064,11 +1081,21 @@ static vx_status app_init(AppObj *obj)
     if((1 == obj->enable_split_graph) && (status == VX_SUCCESS))
     {
         status = app_init_viss(obj->context, &obj->vissObj1, &obj->sensorObj, "viss_obj1", obj->objArrSplitObj.output1_num_elements);
+        if (obj->sensorObj.num_cameras_enabled == 4)
+        {
+            status = app_init_viss(obj->context, &obj->vissObj2, &obj->sensorObj, "viss_obj", obj->objArrSplitObj.output2_num_elements);
+            status = app_init_viss(obj->context, &obj->vissObj3, &obj->sensorObj, "viss_obj1", obj->objArrSplitObj.output3_num_elements);
+        }
         APP_PRINTF("VISS init done!\n");
         
         #if defined(SOC_AM62A)
             if (strcmp(obj->sensorObj.sensor_name,"OV2312-UB953_LI")==0){
                 /* AEWB node is not supported for IR stream */
+                if (obj->sensorObj.num_cameras_enabled == 4)
+                {
+                    status = app_init_aewb(obj->context, &obj->aewbObj2, &obj->sensorObj, "aewb_obj", 0, obj->objArrSplitObj.output2_num_elements);
+                    APP_PRINTF("AEWB init done!\n");
+                }
             }
             else {
                 if((1 == obj->enable_aewb) && (status == VX_SUCCESS))
@@ -1154,6 +1181,11 @@ static void app_deinit(AppObj *obj)
     if(1 == obj->enable_split_graph)
     {
         app_deinit_viss(&obj->vissObj1);
+        if (obj->sensorObj.num_cameras_enabled == 4)
+        {
+            app_deinit_viss(&obj->vissObj2);
+            app_deinit_viss(&obj->vissObj3);
+        }
         APP_PRINTF("VISS deinit done!\n");
         
         #if !defined(SOC_AM62A)
@@ -1168,6 +1200,10 @@ static void app_deinit(AppObj *obj)
                 APP_PRINTF("LDC deinit done!\n");
             }
         #endif
+        if (obj->sensorObj.num_cameras_enabled == 4)
+        {
+            app_deinit_aewb(&obj->aewbObj2);
+        }
     }
 
     if(obj->enable_mosaic == 1)
@@ -1212,11 +1248,20 @@ static void app_delete_graph(AppObj *obj)
     if (1 == obj->enable_split_graph)
     {
         app_delete_viss(&obj->vissObj1);
+        if (obj->sensorObj.num_cameras_enabled == 4)
+        {
+            app_delete_viss(&obj->vissObj2);
+            app_delete_viss(&obj->vissObj3);
+        }
         APP_PRINTF("VISS delete done!\n");
 
         if (strcmp(obj->sensorObj.sensor_name, "OV2312-UB953_LI") == 0)
         {
             /* AEWB1 not addded to graph */
+            if (obj->sensorObj.num_cameras_enabled == 4)
+            {
+                app_delete_aewb(&obj->aewbObj2);
+            }
         }
         else
         {
@@ -1347,7 +1392,14 @@ static vx_status app_create_graph(AppObj *obj)
                 status = app_create_graph_viss(obj->graph, &obj->vissObj1, obj->objArrSplitObj.output1_arr, TIVX_TARGET_VPAC2_VISS1);
             #elif defined(SOC_AM62A)
                 if (strcmp(obj->sensorObj.sensor_name,"OV2312-UB953_LI")==0)
-                   status = app_create_graph_viss_ir(obj->graph, &obj->vissObj1, obj->objArrSplitObj.output1_arr, TIVX_TARGET_VPAC_VISS1);
+                {
+                     status = app_create_graph_viss_ir(obj->graph, &obj->vissObj1, obj->objArrSplitObj.output1_arr, TIVX_TARGET_VPAC_VISS1);
+                     if (obj->sensorObj.num_cameras_enabled == 4)
+                     {
+                         status = app_create_graph_viss(obj->graph, &obj->vissObj2, obj->objArrSplitObj.output2_arr, TIVX_TARGET_VPAC_VISS1);
+                         status = app_create_graph_viss_ir(obj->graph, &obj->vissObj3, obj->objArrSplitObj.output3_arr, TIVX_TARGET_VPAC_VISS1);
+                     }
+                }
                else 
                     status = app_create_graph_viss(obj->graph, &obj->vissObj1, obj->objArrSplitObj.output1_arr, TIVX_TARGET_VPAC_VISS1);
             #else
@@ -1362,6 +1414,11 @@ static vx_status app_create_graph(AppObj *obj)
                 #if defined(SOC_AM62A)
                     if (strcmp(obj->sensorObj.sensor_name,"OV2312-UB953_LI")==0){
                         /* AEWB node is not supported for IR stream */
+                        if (obj->sensorObj.num_cameras_enabled == 4)
+                        {
+                            status = app_create_graph_aewb(obj->graph, &obj->aewbObj2, obj->vissObj2.h3a_stats_arr);
+                            APP_PRINTF("AEWB graph done!\n");
+                        }
                     }
                     else
                         status = app_create_graph_aewb(obj->graph, &obj->aewbObj1, obj->vissObj1.h3a_stats_arr);
@@ -1409,6 +1466,15 @@ static vx_status app_create_graph(AppObj *obj)
             }
 
             obj->imgMosaicObj.input_arr[idx++] = mosaic_in_arr;
+            if (obj->sensorObj.num_cameras_enabled == 4)
+            {
+                vx_object_array mosaic_in_arr2, mosaic_in_arr3;
+                mosaic_in_arr2 = obj->vissObj2.output_arr;
+                obj->imgMosaicObj.input_arr[idx++] = mosaic_in_arr2;
+
+                mosaic_in_arr3 = obj->vissObj3.output_arr;
+                obj->imgMosaicObj.input_arr[idx++] = mosaic_in_arr3;
+            }
         }
     }
 
@@ -1488,10 +1554,19 @@ static vx_status app_create_graph(AppObj *obj)
         if((obj->enable_split_graph == 1) && (status == VX_SUCCESS))
         {
             status = tivxSetNodeParameterNumBufByIndex(obj->vissObj1.node, 6, APP_BUFFER_Q_DEPTH);
-
+            if (obj->sensorObj.num_cameras_enabled == 4)
+            {
+                status = tivxSetNodeParameterNumBufByIndex(obj->vissObj2.node, 6, APP_BUFFER_Q_DEPTH);
+                status = tivxSetNodeParameterNumBufByIndex(obj->vissObj3.node, 6, APP_BUFFER_Q_DEPTH);
+            }
             if (status == VX_SUCCESS)
             {
                 status = tivxSetNodeParameterNumBufByIndex(obj->vissObj1.node, 9, APP_BUFFER_Q_DEPTH);
+                if (obj->sensorObj.num_cameras_enabled == 4)
+                {
+                    status = tivxSetNodeParameterNumBufByIndex(obj->vissObj2.node, 9, APP_BUFFER_Q_DEPTH);
+                    status = tivxSetNodeParameterNumBufByIndex(obj->vissObj3.node, 9, APP_BUFFER_Q_DEPTH);
+                }
             }
         
             if((obj->enable_aewb == 1) && (status == VX_SUCCESS))
@@ -1724,6 +1799,11 @@ static vx_status app_run_graph(AppObj *obj)
     if(0 == obj->enable_split_graph)
     {
         obj->vissObj1.en_out_viss_write = 0;
+        if (obj->sensorObj.num_cameras_enabled == 4)
+        {
+            obj->vissObj2.en_out_viss_write = 0;
+            obj->vissObj3.en_out_viss_write = 0;
+        }
     }
 
     if (obj->test_mode == 1) {
@@ -1746,6 +1826,18 @@ static vx_status app_run_graph(AppObj *obj)
             if((obj->vissObj1.en_out_viss_write == 1) && (status == VX_SUCCESS))
             {
                 status = app_send_cmd_viss_write_node(&obj->vissObj1, frame_id, obj->num_frames_to_write, obj->num_frames_to_skip);
+            }
+            if (obj->sensorObj.num_cameras_enabled == 4)
+            {
+                if((obj->vissObj2.en_out_viss_write == 1) && (status == VX_SUCCESS))
+                {
+                    status = app_send_cmd_viss_write_node(&obj->vissObj2, frame_id, obj->num_frames_to_write, obj->num_frames_to_skip);
+                }
+                if((obj->vissObj3.en_out_viss_write == 1) && (status == VX_SUCCESS))
+                {
+                    status = app_send_cmd_viss_write_node(&obj->vissObj3, frame_id, obj->num_frames_to_write, obj->num_frames_to_skip);
+                }
+
             }
             if((obj->ldcObj.en_out_ldc_write == 1) && (status == VX_SUCCESS))
             {
@@ -1876,6 +1968,10 @@ static void set_img_mosaic_params(ImgMosaicObj *imgMosaicObj, vx_uint32 in_width
     if (1 == enable_split_graph)
     {
         imgMosaicObj->num_inputs   = 2;
+        if(numCh == 4)
+        {
+            imgMosaicObj->num_inputs   = 4;
+        }
     }
     else
     {
@@ -1888,16 +1984,40 @@ static void set_img_mosaic_params(ImgMosaicObj *imgMosaicObj, vx_uint32 in_width
 
     for(ch = 0; ch < numCh; ch++)
     {
-
 #if defined(SOC_AM62A) && defined(QNX)
-        imgMosaicObj->params.windows[0].startX  = 0;
-        imgMosaicObj->params.windows[0].startY  = 0;
-        imgMosaicObj->params.windows[0].width   = 960;
-        imgMosaicObj->params.windows[0].height  = 1080;
-        imgMosaicObj->params.windows[1].startX  = 960;
-        imgMosaicObj->params.windows[1].startY  = 0;
-        imgMosaicObj->params.windows[1].width   = 960;
-        imgMosaicObj->params.windows[1].height  = 1080;
+        if (imgMosaicObj->num_inputs == 2)
+        {
+            imgMosaicObj->params.windows[0].startX  = 0;
+            imgMosaicObj->params.windows[0].startY  = 0;
+            imgMosaicObj->params.windows[0].width   = 960;
+            imgMosaicObj->params.windows[0].height  = 1080;
+            imgMosaicObj->params.windows[1].startX  = 960;
+            imgMosaicObj->params.windows[1].startY  = 0;
+            imgMosaicObj->params.windows[1].width   = 960;
+            imgMosaicObj->params.windows[1].height  = 1080;
+        }
+        else
+        {
+            imgMosaicObj->params.windows[0].startX  = 0;
+            imgMosaicObj->params.windows[0].startY  = 0;
+            imgMosaicObj->params.windows[0].width   = 960;
+            imgMosaicObj->params.windows[0].height  = 540;
+
+            imgMosaicObj->params.windows[1].startX  = 960;
+            imgMosaicObj->params.windows[1].startY  = 0;
+            imgMosaicObj->params.windows[1].width   = 960;
+            imgMosaicObj->params.windows[1].height  = 540;
+
+            imgMosaicObj->params.windows[2].startX  = 0;
+            imgMosaicObj->params.windows[2].startY  = 540;
+            imgMosaicObj->params.windows[2].width   = 960;
+            imgMosaicObj->params.windows[2].height  = 540;
+
+            imgMosaicObj->params.windows[3].startX  = 960;
+            imgMosaicObj->params.windows[3].startY  = 540;
+            imgMosaicObj->params.windows[3].width   = 960;
+            imgMosaicObj->params.windows[3].height  = 540;
+        }
         imgMosaicObj->params.windows[idx].input_select   = 0;
 #else
         vx_int32 winX = ch%grid_size;
@@ -1911,9 +2031,16 @@ static void set_img_mosaic_params(ImgMosaicObj *imgMosaicObj, vx_uint32 in_width
 
         if (1 == enable_split_graph)
         {
-            if(ch >= objArrSplitObj->output0_num_elements)
+            if (imgMosaicObj->num_inputs != 4)
             {
-                imgMosaicObj->params.windows[idx].input_select   = 1;
+                if(ch >= objArrSplitObj->output0_num_elements)
+                {
+                    imgMosaicObj->params.windows[idx].input_select   = 1;
+                }
+            }
+            else
+            {
+                imgMosaicObj->params.windows[idx].input_select   = idx;
             }
             imgMosaicObj->params.windows[idx].channel_select = ch%objArrSplitObj->output0_num_elements;
         }
@@ -1950,8 +2077,19 @@ static void app_update_param_set(AppObj *obj)
     }
     else
     {
-        obj->objArrSplitObj.output0_num_elements = (obj->sensorObj.num_cameras_enabled + 1) / 2;
-        obj->objArrSplitObj.output1_num_elements = obj->sensorObj.num_cameras_enabled - obj->objArrSplitObj.output0_num_elements;
+        if (obj->sensorObj.num_cameras_enabled == 4)
+        {
+            obj->objArrSplitObj.num_outputs = 4;
+            obj->objArrSplitObj.output0_num_elements = 1;
+            obj->objArrSplitObj.output1_num_elements = 1;
+            obj->objArrSplitObj.output2_num_elements = 1;
+            obj->objArrSplitObj.output3_num_elements = 1;
+        }
+        else 
+        {
+            obj->objArrSplitObj.output0_num_elements = (obj->sensorObj.num_cameras_enabled + 1) / 2;
+            obj->objArrSplitObj.output1_num_elements = obj->sensorObj.num_cameras_enabled - obj->objArrSplitObj.output0_num_elements;
+        }
     }
     set_img_mosaic_params(&obj->imgMosaicObj, resized_width, resized_height, obj->sensorObj.num_cameras_enabled, &obj->objArrSplitObj, obj->enable_split_graph);
 }
