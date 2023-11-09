@@ -4,7 +4,7 @@
  */ 
 /* 
  * 
- * Copyright (c) 2023 Texas Instruments Incorporated 
+ * Copyright (c) 2018 Texas Instruments Incorporated 
  * 
  * All rights reserved not granted herein. 
  * 
@@ -71,10 +71,6 @@
 #define MAIN_OCRAM_MCU2_0_ADDR (0x60000000u)
 #define MAIN_OCRAM_MCU2_0_SIZE (0x00080000u)
 
-/* Main OCRAM for MCU2_1 [ size 512.00 KB ] */
-#define MAIN_OCRAM_MCU2_1_ADDR (0x60080000u)
-#define MAIN_OCRAM_MCU2_1_SIZE (0x00080000u)
-
 /* L2 for C7x_1 [ size 448.00 KB ] */
 #define L2RAM_C7x_1_ADDR (0x64800000u)
 #define L2RAM_C7x_1_SIZE (0x00070000u)
@@ -103,45 +99,13 @@
 #define DDR_MCU1_0_DTS_ADDR (0xA0100000u)
 #define DDR_MCU1_0_DTS_SIZE (0x00F00000u)
 
-/* DDR for MCU1_1 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU1_1_IPC_ADDR (0xA1000000u)
-#define DDR_MCU1_1_IPC_SIZE (0x00100000u)
-
-/* DDR for MCU1_1 for all sections, used for reserving memory in DTS file [ size 15.00 MB ] */
-#define DDR_MCU1_1_DTS_ADDR (0xA1100000u)
-#define DDR_MCU1_1_DTS_SIZE (0x00F00000u)
-
 /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU2_0_IPC_ADDR (0xA2000000u)
+#define DDR_MCU2_0_IPC_ADDR (0xA1000000u)
 #define DDR_MCU2_0_IPC_SIZE (0x00100000u)
 
 /* DDR for MCU2_0 for all sections, used for reserving memory in DTS file [ size 31.00 MB ] */
-#define DDR_MCU2_0_DTS_ADDR (0xA2100000u)
+#define DDR_MCU2_0_DTS_ADDR (0xA1100000u)
 #define DDR_MCU2_0_DTS_SIZE (0x01F00000u)
-
-/* DDR for MCU2_1 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU2_1_IPC_ADDR (0xA4000000u)
-#define DDR_MCU2_1_IPC_SIZE (0x00100000u)
-
-/* DDR for MCU2_1 for all sections, used for reserving memory in DTS file [ size 31.00 MB ] */
-#define DDR_MCU2_1_DTS_ADDR (0xA4100000u)
-#define DDR_MCU2_1_DTS_SIZE (0x01F00000u)
-
-/* DDR for MCU3_0 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU3_0_IPC_ADDR (0xA6000000u)
-#define DDR_MCU3_0_IPC_SIZE (0x00100000u)
-
-/* DDR for MCU3_0 for all sections, used for reserving memory in DTS file [ size 15.00 MB ] */
-#define DDR_MCU3_0_DTS_ADDR (0xA6100000u)
-#define DDR_MCU3_0_DTS_SIZE (0x00F00000u)
-
-/* DDR for MCU3_1 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU3_1_IPC_ADDR (0xA7000000u)
-#define DDR_MCU3_1_IPC_SIZE (0x00100000u)
-
-/* DDR for MCU3_1 for all sections, used for reserving memory in DTS file [ size 15.00 MB ] */
-#define DDR_MCU3_1_DTS_ADDR (0xA7100000u)
-#define DDR_MCU3_1_DTS_SIZE (0x00F00000u)
 
 /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */
 #define IPC_VRING_MEM_ADDR (0xA8000000u)
@@ -167,61 +131,45 @@
 #define DDR_C7x_1_IPC_ADDR (0xB0000000u)
 #define DDR_C7x_1_IPC_SIZE (0x00100000u)
 
-/* DDR for C7x_1 for all sections, used for reserving memory in DTS file [ size 95.00 MB ] */
+/* DDR for C7x_1 for all sections, used for reserving memory in DTS file [ size 63.00 MB ] */
 #define DDR_C7x_1_DTS_ADDR (0xB0100000u)
-#define DDR_C7x_1_DTS_SIZE (0x05F00000u)
+#define DDR_C7x_1_DTS_SIZE (0x03F00000u)
 
 /* DDR for C7x_2 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_C7x_2_IPC_ADDR (0xB6000000u)
+#define DDR_C7x_2_IPC_ADDR (0xB4000000u)
 #define DDR_C7x_2_IPC_SIZE (0x00100000u)
 
-/* DDR for C7x_2 for all sections, used for reserving memory in DTS file [ size 31.00 MB ] */
-#define DDR_C7x_2_DTS_ADDR (0xB6100000u)
-#define DDR_C7x_2_DTS_SIZE (0x01F00000u)
+/* DDR for C7x_2 for all sections, used for reserving memory in DTS file [ size 63.00 MB ] */
+#define DDR_C7x_2_DTS_ADDR (0xB4100000u)
+#define DDR_C7x_2_DTS_SIZE (0x03F00000u)
 
 /* DDR for MCU1_0 for local heap [ size  8.00 MB ] */
 #define DDR_MCU1_0_LOCAL_HEAP_ADDR (0xB8000000u)
 #define DDR_MCU1_0_LOCAL_HEAP_SIZE (0x00800000u)
 
-/* DDR for MCU1_1 for local heap [ size  8.00 MB ] */
-#define DDR_MCU1_1_LOCAL_HEAP_ADDR (0xB8800000u)
-#define DDR_MCU1_1_LOCAL_HEAP_SIZE (0x00800000u)
-
 /* DDR for MCU2_0 for local heap [ size 16.00 MB ] */
-#define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xB9000000u)
+#define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xB8800000u)
 #define DDR_MCU2_0_LOCAL_HEAP_SIZE (0x01000000u)
-
-/* DDR for MCU2_1 for local heap [ size 16.00 MB ] */
-#define DDR_MCU2_1_LOCAL_HEAP_ADDR (0xBA000000u)
-#define DDR_MCU2_1_LOCAL_HEAP_SIZE (0x01000000u)
-
-/* DDR for MCU3_0 for local heap [ size  8.00 MB ] */
-#define DDR_MCU3_0_LOCAL_HEAP_ADDR (0xBB000000u)
-#define DDR_MCU3_0_LOCAL_HEAP_SIZE (0x00800000u)
-
-/* DDR for MCU3_1 for local heap [ size  8.00 MB ] */
-#define DDR_MCU3_1_LOCAL_HEAP_ADDR (0xBB800000u)
-#define DDR_MCU3_1_LOCAL_HEAP_SIZE (0x00800000u)
 
 /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
 #define DDR_SHARED_MEM_ADDR (0xC0000000u)
 #define DDR_SHARED_MEM_SIZE (0x20000000u)
 
-/* DDR for c7x_1 for Scratch Memory [ size 368.00 MB ] */
+/* DDR for c7x_1 for Scratch Memory [ size 128.00 MB ] */
 #define DDR_C7X_1_SCRATCH_ADDR (0x100000000u)
-#define DDR_C7X_1_SCRATCH_SIZE (0x17000000u)
+#define DDR_C7X_1_SCRATCH_SIZE (0x08000000u)
 
-/* DDR for c7x_1 for local heap [ size 256.00 MB ] */
-#define DDR_C7X_1_LOCAL_HEAP_ADDR (0x117000000u)
-#define DDR_C7X_1_LOCAL_HEAP_SIZE (0x10000000u)
+/* DDR for c7x_1 for local heap [ size 128.00 MB ] */
+#define DDR_C7X_1_LOCAL_HEAP_ADDR (0x108000000u)
+#define DDR_C7X_1_LOCAL_HEAP_SIZE (0x08000000u)
 
-/* DDR for c7x_2 for local heap [ size 16.00 MB ] */
-#define DDR_C7X_2_LOCAL_HEAP_ADDR (0x127000000u)
-#define DDR_C7X_2_LOCAL_HEAP_SIZE (0x01000000u)
+/* DDR for c7x_2 for local heap [ size 128.00 MB ] */
+#define DDR_C7X_2_LOCAL_HEAP_ADDR (0x110000000u)
+#define DDR_C7X_2_LOCAL_HEAP_SIZE (0x08000000u)
 
-/* DDR for c7x_2 for Scratch Memory [ size 64.00 MB ] */
-#define DDR_C7X_2_SCRATCH_ADDR (0x128000000u)
-#define DDR_C7X_2_SCRATCH_SIZE (0x04000000u)
+/* DDR for c7x_2 for Scratch Memory [ size 128.00 MB ] */
+#define DDR_C7X_2_SCRATCH_ADDR (0x118000000u)
+#define DDR_C7X_2_SCRATCH_SIZE (0x08000000u)
 
 /* Physical address of memory for shared memory buffers in DDR [ size 512.00 MB ] */
 #define DDR_SHARED_MEM_PHYS_ADDR (0x900000000u)
@@ -230,10 +178,6 @@
 /* Main OCRAM Physical Address for MCU2_0 [ size 512.00 KB ] */
 #define MAIN_OCRAM_MCU2_0_PHYS_ADDR (0x4F02000000u)
 #define MAIN_OCRAM_MCU2_0_PHYS_SIZE (0x00080000u)
-
-/* Main OCRAM Physical Address for MCU2_1 [ size 512.00 KB ] */
-#define MAIN_OCRAM_MCU2_1_PHYS_ADDR (0x4F02080000u)
-#define MAIN_OCRAM_MCU2_1_PHYS_SIZE (0x00080000u)
 
 #define DDR_64BIT_BASE_VADDR (0x100000000u)
 #define DDR_64BIT_BASE_PADDR (0x880000000u)

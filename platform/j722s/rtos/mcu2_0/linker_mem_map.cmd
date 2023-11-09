@@ -4,7 +4,7 @@
  */ 
 /* 
  * 
- * Copyright (c) 2023 Texas Instruments Incorporated 
+ * Copyright (c) 2018 Texas Instruments Incorporated 
  * 
  * All rights reserved not granted herein. 
  * 
@@ -75,11 +75,11 @@ MEMORY
     /* Main OCRAM for MCU2_0 [ size 512.00 KB ] */
     MAIN_OCRAM_MCU2_0        ( RWIX ) : ORIGIN = 0x60000000 , LENGTH = 0x00080000
     /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
-    DDR_MCU2_0_IPC           ( RWIX ) : ORIGIN = 0xA2000000 , LENGTH = 0x00100000
+    DDR_MCU2_0_IPC           ( RWIX ) : ORIGIN = 0xA1000000 , LENGTH = 0x00100000
     /* DDR for MCU2_0 for Linux resource table [ size 1024 B ] */
-    DDR_MCU2_0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xA2100000 , LENGTH = 0x00000400
+    DDR_MCU2_0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xA1100000 , LENGTH = 0x00000400
     /* DDR for MCU2_0 for code/data [ size 31.00 MB ] */
-    DDR_MCU2_0               ( RWIX ) : ORIGIN = 0xA2100400 , LENGTH = 0x01EFFC00
+    DDR_MCU2_0               ( RWIX ) : ORIGIN = 0xA1100400 , LENGTH = 0x01EFFC00
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */
     IPC_VRING_MEM                     : ORIGIN = 0xA8000000 , LENGTH = 0x02000000
     /* Memory for remote core logging [ size 256.00 KB ] */
@@ -89,7 +89,7 @@ MEMORY
     /* Memory for remote core file operations [ size  4.00 MB ] */
     APP_FILEIO_MEM                    : ORIGIN = 0xAE000000 , LENGTH = 0x00400000
     /* DDR for MCU2_0 for local heap [ size 16.00 MB ] */
-    DDR_MCU2_0_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xB9000000 , LENGTH = 0x01000000
+    DDR_MCU2_0_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xB8800000 , LENGTH = 0x01000000
     /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x20000000
 }

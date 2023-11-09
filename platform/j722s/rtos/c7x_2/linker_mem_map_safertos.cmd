@@ -4,7 +4,7 @@
  */ 
 /* 
  * 
- * Copyright (c) 2023 Texas Instruments Incorporated 
+ * Copyright (c) 2018 Texas Instruments Incorporated 
  * 
  * All rights reserved not granted herein. 
  * 
@@ -79,15 +79,15 @@ MEMORY
     /* Memory for remote core file operations [ size  4.00 MB ] */
     APP_FILEIO_MEM                    : ORIGIN = 0xAE000000 , LENGTH = 0x00400000
     /* DDR for C7x_2 for Linux IPC [ size 1024.00 KB ] */
-    DDR_C7x_2_IPC            ( RWIX ) : ORIGIN = 0xB6000000 , LENGTH = 0x00100000
+    DDR_C7x_2_IPC            ( RWIX ) : ORIGIN = 0xB4000000 , LENGTH = 0x00100000
     /* DDR for C7x_2 for Linux resource table [ size 1024 B ] */
-    DDR_C7x_2_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xB6100000 , LENGTH = 0x00000400
-    /* DDR for C7x_2 for code/data [ size 30.00 MB ] */
-    DDR_C7x_2                ( RWIX ) : ORIGIN = 0xB6200000 , LENGTH = 0x01E00000
+    DDR_C7x_2_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xB4100000 , LENGTH = 0x00000400
+    /* DDR for C7x_2 for code/data [ size 62.00 MB ] */
+    DDR_C7x_2                ( RWIX ) : ORIGIN = 0xB4200000 , LENGTH = 0x03E00000
     /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x20000000
-    /* DDR for c7x_2 for local heap [ size 16.00 MB ] */
-    DDR_C7X_2_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0x127000000 , LENGTH = 0x01000000
-    /* DDR for c7x_2 for Scratch Memory [ size 64.00 MB ] */
-    DDR_C7X_2_SCRATCH        ( RWIX ) : ORIGIN = 0x128000000 , LENGTH = 0x04000000
+    /* DDR for c7x_2 for local heap [ size 128.00 MB ] */
+    DDR_C7X_2_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0x110000000 , LENGTH = 0x08000000
+    /* DDR for c7x_2 for Scratch Memory [ size 128.00 MB ] */
+    DDR_C7X_2_SCRATCH        ( RWIX ) : ORIGIN = 0x118000000 , LENGTH = 0x08000000
 }

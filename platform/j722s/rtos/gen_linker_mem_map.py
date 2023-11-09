@@ -166,10 +166,6 @@ mcu2_0_main_ocram_addr       = main_ocram_mem_addr;
 mcu2_0_main_ocram_addr_phys  = main_ocram_mem_addr_phys;
 mcu2_0_main_ocram_size       = 512*KB;
 
-mcu2_1_main_ocram_addr       = mcu2_0_main_ocram_addr + mcu2_0_main_ocram_size;
-mcu2_1_main_ocram_addr_phys  = mcu2_0_main_ocram_addr_phys + mcu2_0_main_ocram_size;
-mcu2_1_main_ocram_size       = 512*KB;
-
 #
 # DDR memory allocation for various CPUs
 #
@@ -178,30 +174,10 @@ mcu1_0_ddr_resource_table_addr = mcu1_0_ddr_ipc_addr + linux_ddr_ipc_size;
 mcu1_0_ddr_addr = mcu1_0_ddr_resource_table_addr + linux_ddr_resource_table_size;
 mcu1_0_ddr_size = 16*MB - (mcu1_0_ddr_addr-mcu1_0_ddr_ipc_addr);
 
-mcu1_1_ddr_ipc_addr = mcu1_0_ddr_addr + mcu1_0_ddr_size;
-mcu1_1_ddr_resource_table_addr = mcu1_1_ddr_ipc_addr + linux_ddr_ipc_size;
-mcu1_1_ddr_addr = mcu1_1_ddr_resource_table_addr + linux_ddr_resource_table_size;
-mcu1_1_ddr_size = 16*MB - (mcu1_1_ddr_addr-mcu1_1_ddr_ipc_addr);
-
-mcu2_0_ddr_ipc_addr = mcu1_1_ddr_addr + mcu1_1_ddr_size;
+mcu2_0_ddr_ipc_addr = mcu1_0_ddr_addr + mcu1_0_ddr_size;
 mcu2_0_ddr_resource_table_addr = mcu2_0_ddr_ipc_addr + linux_ddr_ipc_size;
 mcu2_0_ddr_addr = mcu2_0_ddr_resource_table_addr + linux_ddr_resource_table_size;
 mcu2_0_ddr_size = 32*MB - (mcu2_0_ddr_addr-mcu2_0_ddr_ipc_addr);
-
-mcu2_1_ddr_ipc_addr = mcu2_0_ddr_addr + mcu2_0_ddr_size;
-mcu2_1_ddr_resource_table_addr = mcu2_1_ddr_ipc_addr + linux_ddr_ipc_size;
-mcu2_1_ddr_addr = mcu2_1_ddr_resource_table_addr + linux_ddr_resource_table_size;
-mcu2_1_ddr_size = 32*MB - (mcu2_1_ddr_addr-mcu2_1_ddr_ipc_addr);
-
-mcu3_0_ddr_ipc_addr = mcu2_1_ddr_addr + mcu2_1_ddr_size;
-mcu3_0_ddr_resource_table_addr = mcu3_0_ddr_ipc_addr + linux_ddr_ipc_size;
-mcu3_0_ddr_addr = mcu3_0_ddr_resource_table_addr + linux_ddr_resource_table_size;
-mcu3_0_ddr_size = 16*MB - (mcu3_0_ddr_addr-mcu3_0_ddr_ipc_addr);
-
-mcu3_1_ddr_ipc_addr = mcu3_0_ddr_addr + mcu3_0_ddr_size;
-mcu3_1_ddr_resource_table_addr = mcu3_1_ddr_ipc_addr + linux_ddr_ipc_size;
-mcu3_1_ddr_addr = mcu3_1_ddr_resource_table_addr + linux_ddr_resource_table_size;
-mcu3_1_ddr_size = 16*MB - (mcu3_1_ddr_addr-mcu3_1_ddr_ipc_addr);
 
 #
 # DDR memory allocation for various shared memories
@@ -230,7 +206,7 @@ c7x_1_ddr_vecs_size = 16*KB;
 c7x_1_ddr_secure_vecs_addr = c7x_1_ddr_resource_table_addr + 5*MB;
 c7x_1_ddr_secure_vecs_size = 16*KB;
 c7x_1_ddr_addr = c7x_1_ddr_secure_vecs_addr + c7x_1_ddr_secure_vecs_size;
-c7x_1_ddr_size = 96*MB - (c7x_1_ddr_addr-c7x_1_ddr_ipc_addr);
+c7x_1_ddr_size = 64*MB - (c7x_1_ddr_addr-c7x_1_ddr_ipc_addr);
 
 c7x_2_ddr_ipc_addr = c7x_1_ddr_addr  + c7x_1_ddr_size;
 c7x_2_ddr_resource_table_addr = c7x_2_ddr_ipc_addr + linux_ddr_ipc_size;
@@ -241,35 +217,27 @@ c7x_2_ddr_vecs_size = 16*KB;
 c7x_2_ddr_secure_vecs_addr = c7x_2_ddr_resource_table_addr + 5*MB;
 c7x_2_ddr_secure_vecs_size = 16*KB;
 c7x_2_ddr_addr = c7x_2_ddr_secure_vecs_addr + c7x_2_ddr_secure_vecs_size;
-c7x_2_ddr_size = 32*MB - (c7x_2_ddr_addr-c7x_2_ddr_ipc_addr);
+c7x_2_ddr_size = 64*MB - (c7x_2_ddr_addr-c7x_2_ddr_ipc_addr);
 
 mcu1_0_ddr_local_heap_addr  = c7x_2_ddr_addr + c7x_2_ddr_size;
 mcu1_0_ddr_local_heap_size  = 8*MB;
-mcu1_1_ddr_local_heap_addr  = mcu1_0_ddr_local_heap_addr + mcu1_0_ddr_local_heap_size;
-mcu1_1_ddr_local_heap_size  = 8*MB;
-mcu2_0_ddr_local_heap_addr  = mcu1_1_ddr_local_heap_addr + mcu1_1_ddr_local_heap_size;
-mcu2_0_ddr_local_heap_size  = 16*MB;
-mcu2_1_ddr_local_heap_addr  = mcu2_0_ddr_local_heap_addr + mcu2_0_ddr_local_heap_size;
-mcu2_1_ddr_local_heap_size  = 16*MB;
-mcu3_0_ddr_local_heap_addr  = mcu2_1_ddr_local_heap_addr + mcu2_1_ddr_local_heap_size;
-mcu3_0_ddr_local_heap_size  = 8*MB;
-mcu3_1_ddr_local_heap_addr  = mcu3_0_ddr_local_heap_addr + mcu3_0_ddr_local_heap_size;
-mcu3_1_ddr_local_heap_size  = 8*MB;
+mcu2_0_ddr_local_heap_addr  = mcu1_0_ddr_local_heap_addr + mcu1_0_ddr_local_heap_size;
+mcu2_0_ddr_local_heap_size  = 32*MB;
 
 # Shared memory for DMA Buf FD carveout
 ddr_shared_mem_addr     = 0xC0000000; # This will be the virtual address used for R5F's / C7X's
 ddr_shared_mem_size     = 512*MB;
 
 c7x_1_ddr_scratch_addr     = ddr_mem_addr_hi;
-c7x_1_ddr_scratch_size     = 368*MB;
+c7x_1_ddr_scratch_size     = 128*MB;
 
 c7x_1_ddr_local_heap_addr  = c7x_1_ddr_scratch_addr + c7x_1_ddr_scratch_size;
-c7x_1_ddr_local_heap_size  = 256*MB;
+c7x_1_ddr_local_heap_size  = 128*MB;
 
 c7x_2_ddr_local_heap_addr = c7x_1_ddr_local_heap_addr + c7x_1_ddr_local_heap_size;
-c7x_2_ddr_local_heap_size = 16*MB;
+c7x_2_ddr_local_heap_size = 128*MB;
 c7x_2_ddr_scratch_addr    = c7x_2_ddr_local_heap_addr + c7x_2_ddr_local_heap_size;
-c7x_2_ddr_scratch_size    = 64*MB;
+c7x_2_ddr_scratch_size    = 128*MB;
 
 # Shared memory for DMA Buf FD carveout (located in high mem)
 ddr_shared_mem_addr_phys  = 0x900000000; # TODO: Clean this up
@@ -303,10 +271,7 @@ c7x_2_l1   = MemSection("L1RAM_C7x_2", "RWIX", c7x_2_l1_addr  , c7x_2_l1_size  ,
 
 # Main OCRAM memory sections
 mcu2_0_main_ocram   = MemSection("MAIN_OCRAM_MCU2_0", "RWIX", mcu2_0_main_ocram_addr  , mcu2_0_main_ocram_size  , "Main OCRAM for MCU2_0");
-mcu2_1_main_ocram   = MemSection("MAIN_OCRAM_MCU2_1", "RWIX", mcu2_1_main_ocram_addr  , mcu2_1_main_ocram_size  , "Main OCRAM for MCU2_1");
-
 mcu2_0_main_ocram_phys   = MemSection("MAIN_OCRAM_MCU2_0_PHYS", "RWIX", mcu2_0_main_ocram_addr_phys  , mcu2_0_main_ocram_size  , "Main OCRAM Physical Address for MCU2_0");
-mcu2_1_main_ocram_phys   = MemSection("MAIN_OCRAM_MCU2_1_PHYS", "RWIX", mcu2_1_main_ocram_addr_phys  , mcu2_1_main_ocram_size  , "Main OCRAM Physical Address for MCU2_1");
 
 # CPU code/data memory sections in DDR
 mcu1_0_ddr_ipc             = MemSection("DDR_MCU1_0_IPC", "RWIX", mcu1_0_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU1_0 for Linux IPC");
@@ -319,16 +284,6 @@ mcu1_0_ddr_total.concat(mcu1_0_ddr_resource_table);
 mcu1_0_ddr_total.concat(mcu1_0_ddr);
 mcu1_0_ddr_total.setDtsName("vision_apps_mcu_r5fss0_core0_memory_region", "vision-apps-r5f-memory");
 
-mcu1_1_ddr_ipc             = MemSection("DDR_MCU1_1_IPC", "RWIX", mcu1_1_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU1_1 for Linux IPC");
-mcu1_1_ddr_ipc.setDtsName("vision_apps_mcu_r5fss0_core1_dma_memory_region", "vision-apps-r5f-dma-memory");
-mcu1_1_ddr_resource_table  = MemSection("DDR_MCU1_1_RESOURCE_TABLE", "RWIX", mcu1_1_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for MCU1_1 for Linux resource table");
-mcu1_1_ddr                 = MemSection("DDR_MCU1_1", "RWIX", mcu1_1_ddr_addr, mcu1_1_ddr_size, "DDR for MCU1_1 for code/data");
-mcu1_1_ddr_local_heap      = MemSection("DDR_MCU1_1_LOCAL_HEAP", "RWIX", mcu1_1_ddr_local_heap_addr, mcu1_1_ddr_local_heap_size, "DDR for MCU1_1 for local heap");
-mcu1_1_ddr_total           = MemSection("DDR_MCU1_1_DTS", "", 0, 0, "DDR for MCU1_1 for all sections, used for reserving memory in DTS file");
-mcu1_1_ddr_total.concat(mcu1_1_ddr_resource_table);
-mcu1_1_ddr_total.concat(mcu1_1_ddr);
-mcu1_1_ddr_total.setDtsName("vision_apps_mcu_r5fss0_core1_memory_region", "vision-apps-r5f-memory");
-
 mcu2_0_ddr_ipc             = MemSection("DDR_MCU2_0_IPC", "RWIX", mcu2_0_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU2_0 for Linux IPC");
 mcu2_0_ddr_ipc.setDtsName("vision_apps_main_r5fss0_core0_dma_memory_region", "vision-apps-r5f-dma-memory");
 mcu2_0_ddr_resource_table  = MemSection("DDR_MCU2_0_RESOURCE_TABLE", "RWIX", mcu2_0_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for MCU2_0 for Linux resource table");
@@ -338,36 +293,6 @@ mcu2_0_ddr_local_heap      = MemSection("DDR_MCU2_0_LOCAL_HEAP", "RWIX", mcu2_0_
 mcu2_0_ddr_total.concat(mcu2_0_ddr_resource_table);
 mcu2_0_ddr_total.concat(mcu2_0_ddr);
 mcu2_0_ddr_total.setDtsName("vision_apps_main_r5fss0_core0_memory_region", "vision-apps-r5f-memory");
-
-mcu2_1_ddr_ipc             = MemSection("DDR_MCU2_1_IPC", "RWIX", mcu2_1_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU2_1 for Linux IPC");
-mcu2_1_ddr_ipc.setDtsName("vision_apps_main_r5fss0_core1_dma_memory_region", "vision-apps-r5f-dma-memory");
-mcu2_1_ddr_resource_table  = MemSection("DDR_MCU2_1_RESOURCE_TABLE", "RWIX", mcu2_1_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for MCU2_1 for Linux resource table");
-mcu2_1_ddr                 = MemSection("DDR_MCU2_1", "RWIX", mcu2_1_ddr_addr, mcu2_1_ddr_size, "DDR for MCU2_1 for code/data");
-mcu2_1_ddr_total           = MemSection("DDR_MCU2_1_DTS", "", 0, 0, "DDR for MCU2_1 for all sections, used for reserving memory in DTS file");
-mcu2_1_ddr_local_heap      = MemSection("DDR_MCU2_1_LOCAL_HEAP", "RWIX", mcu2_1_ddr_local_heap_addr, mcu2_1_ddr_local_heap_size, "DDR for MCU2_1 for local heap");
-mcu2_1_ddr_total.concat(mcu2_1_ddr_resource_table);
-mcu2_1_ddr_total.concat(mcu2_1_ddr);
-mcu2_1_ddr_total.setDtsName("vision_apps_main_r5fss0_core1_memory_region", "vision-apps-r5f-memory");
-
-mcu3_0_ddr_ipc             = MemSection("DDR_MCU3_0_IPC", "RWIX", mcu3_0_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU3_0 for Linux IPC");
-mcu3_0_ddr_ipc.setDtsName("vision_apps_main_r5fss1_core0_dma_memory_region", "vision-apps-r5f-dma-memory");
-mcu3_0_ddr_resource_table  = MemSection("DDR_MCU3_0_RESOURCE_TABLE", "RWIX", mcu3_0_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for MCU3_0 for Linux resource table");
-mcu3_0_ddr                 = MemSection("DDR_MCU3_0", "RWIX", mcu3_0_ddr_addr, mcu3_0_ddr_size, "DDR for MCU3_0 for code/data");
-mcu3_0_ddr_local_heap      = MemSection("DDR_MCU3_0_LOCAL_HEAP", "RWIX", mcu3_0_ddr_local_heap_addr, mcu3_0_ddr_local_heap_size, "DDR for MCU3_0 for local heap");
-mcu3_0_ddr_total           = MemSection("DDR_MCU3_0_DTS", "", 0, 0, "DDR for MCU3_0 for all sections, used for reserving memory in DTS file");
-mcu3_0_ddr_total.concat(mcu3_0_ddr_resource_table);
-mcu3_0_ddr_total.concat(mcu3_0_ddr);
-mcu3_0_ddr_total.setDtsName("vision_apps_main_r5fss1_core0_memory_region", "vision-apps-r5f-memory");
-
-mcu3_1_ddr_ipc             = MemSection("DDR_MCU3_1_IPC", "RWIX", mcu3_1_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU3_1 for Linux IPC");
-mcu3_1_ddr_ipc.setDtsName("vision_apps_main_r5fss1_core1_dma_memory_region", "vision-apps-r5f-dma-memory");
-mcu3_1_ddr_resource_table  = MemSection("DDR_MCU3_1_RESOURCE_TABLE", "RWIX", mcu3_1_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for MCU3_1 for Linux resource table");
-mcu3_1_ddr                 = MemSection("DDR_MCU3_1", "RWIX", mcu3_1_ddr_addr, mcu3_1_ddr_size, "DDR for MCU3_1 for code/data");
-mcu3_1_ddr_local_heap      = MemSection("DDR_MCU3_1_LOCAL_HEAP", "RWIX", mcu3_1_ddr_local_heap_addr, mcu3_1_ddr_local_heap_size, "DDR for MCU3_1 for local heap");
-mcu3_1_ddr_total           = MemSection("DDR_MCU3_1_DTS", "", 0, 0, "DDR for MCU3_1 for all sections, used for reserving memory in DTS file");
-mcu3_1_ddr_total.concat(mcu3_1_ddr_resource_table);
-mcu3_1_ddr_total.concat(mcu3_1_ddr);
-mcu3_1_ddr_total.setDtsName("vision_apps_main_r5fss1_core1_memory_region", "vision-apps-r5f-memory");
 
 c7x_2_ddr_ipc             = MemSection("DDR_C7x_2_IPC", "RWIX", c7x_2_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for C7x_2 for Linux IPC");
 c7x_2_ddr_ipc.setDtsName("vision_apps_c71_1_dma_memory_region", "vision-apps-c71_1-dma-memory");
@@ -422,9 +347,6 @@ vision_apps_ddr_total.setDtsName("vision_apps_memory_region", "vision-apps-dma-m
 vision_apps_core_heaps_lo = MemSection("DDR_VISION_APPS_CORE_HEAPS_LO_DTS", "", 0, 0, "Vision Apps Core Heaps in 32bit address range of DDR");
 vision_apps_core_heaps_lo.concat(mcu1_0_ddr_local_heap);
 vision_apps_core_heaps_lo.concat(mcu2_0_ddr_local_heap);
-vision_apps_core_heaps_lo.concat(mcu2_1_ddr_local_heap);
-vision_apps_core_heaps_lo.concat(mcu3_0_ddr_local_heap);
-vision_apps_core_heaps_lo.concat(mcu3_1_ddr_local_heap);
 vision_apps_core_heaps_lo.setDtsName("vision_apps_core_heaps_lo", "vision-apps-core-heap-memory-lo");
 
 c7x_1_ddr_local_heap_phy  = MemSection("DDR_C7X_1_LOCAL_HEAP", "RWIX", ddr_mem_addr_hi_phy, (c7x_1_ddr_scratch_size + c7x_1_ddr_local_heap_size + c7x_2_ddr_scratch_size + c7x_2_ddr_local_heap_size), "DDR for c7x_1, c7x_2 for scratch memory and local heap");
@@ -463,23 +385,6 @@ mcu1_0_mmap.addMemSection( mcu1_0_ddr_local_heap  );
 mcu1_0_mmap.addMemSection( ddr_shared_mem       );
 mcu1_0_mmap.checkOverlap();
 
-mcu1_1_mmap = MemoryMap("mcu1_1");
-mcu1_1_mmap.addMemSection( mcu_r5f_tcma_vecs );
-mcu1_1_mmap.addMemSection( mcu_r5f_tcma      );
-mcu1_1_mmap.addMemSection( mcu_r5f_tcmb0_vecs );
-mcu1_1_mmap.addMemSection( mcu_r5f_tcmb0      );
-mcu1_1_mmap.addMemSection( mcu1_1_ddr_ipc     );
-mcu1_1_mmap.addMemSection( mcu1_1_ddr_resource_table  );
-mcu1_1_mmap.addMemSection( mcu1_1_ddr         );
-mcu1_1_mmap.addMemSection( app_log_mem        );
-mcu1_1_mmap.addMemSection( tiovx_obj_desc_mem );
-mcu1_1_mmap.addMemSection( app_fileio_mem        );
-mcu1_1_mmap.addMemSection( ipc_vring_mem      );
-mcu1_1_mmap.addMemSection( mcu1_1_ddr_local_heap  );
-mcu1_1_mmap.addMemSection( ddr_shared_mem     );
-mcu1_1_mmap.checkOverlap();
-
-
 mcu2_0_mmap = MemoryMap("mcu2_0");
 mcu2_0_mmap.addMemSection( mcu_r5f_tcma_vecs );
 mcu2_0_mmap.addMemSection( mcu_r5f_tcma      );
@@ -495,52 +400,6 @@ mcu2_0_mmap.addMemSection( mcu2_0_ddr_local_heap  );
 mcu2_0_mmap.addMemSection( ddr_shared_mem     );
 mcu2_0_mmap.addMemSection( mcu2_0_main_ocram );
 mcu2_0_mmap.checkOverlap();
-
-mcu2_1_mmap = MemoryMap("mcu2_1");
-mcu2_1_mmap.addMemSection( mcu_r5f_tcma_vecs );
-mcu2_1_mmap.addMemSection( mcu_r5f_tcma      );
-mcu2_1_mmap.addMemSection( r5f_tcmb0          );
-mcu2_1_mmap.addMemSection( mcu2_1_ddr_ipc     );
-mcu2_1_mmap.addMemSection( mcu2_1_ddr_resource_table  );
-mcu2_1_mmap.addMemSection( mcu2_1_ddr         );
-mcu2_1_mmap.addMemSection( app_log_mem        );
-mcu2_1_mmap.addMemSection( tiovx_obj_desc_mem );
-mcu2_1_mmap.addMemSection( app_fileio_mem        );
-mcu2_1_mmap.addMemSection( ipc_vring_mem      );
-mcu2_1_mmap.addMemSection( mcu2_1_ddr_local_heap  );
-mcu2_1_mmap.addMemSection( ddr_shared_mem     );
-mcu2_1_mmap.addMemSection( mcu2_1_main_ocram );
-mcu2_1_mmap.checkOverlap();
-
-mcu3_0_mmap = MemoryMap("mcu3_0");
-mcu3_0_mmap.addMemSection( mcu_r5f_tcma_vecs );
-mcu3_0_mmap.addMemSection( mcu_r5f_tcma      );
-mcu3_0_mmap.addMemSection( r5f_tcmb0          );
-mcu3_0_mmap.addMemSection( mcu3_0_ddr_ipc     );
-mcu3_0_mmap.addMemSection( mcu3_0_ddr_resource_table  );
-mcu3_0_mmap.addMemSection( mcu3_0_ddr         );
-mcu3_0_mmap.addMemSection( app_log_mem        );
-mcu3_0_mmap.addMemSection( tiovx_obj_desc_mem );
-mcu3_0_mmap.addMemSection( app_fileio_mem        );
-mcu3_0_mmap.addMemSection( ipc_vring_mem      );
-mcu3_0_mmap.addMemSection( mcu3_0_ddr_local_heap  );
-mcu3_0_mmap.addMemSection( ddr_shared_mem     );
-mcu3_0_mmap.checkOverlap();
-
-mcu3_1_mmap = MemoryMap("mcu3_1");
-mcu3_1_mmap.addMemSection( mcu_r5f_tcma_vecs );
-mcu3_1_mmap.addMemSection( mcu_r5f_tcma      );
-mcu3_1_mmap.addMemSection( r5f_tcmb0          );
-mcu3_1_mmap.addMemSection( mcu3_1_ddr_ipc     );
-mcu3_1_mmap.addMemSection( mcu3_1_ddr_resource_table  );
-mcu3_1_mmap.addMemSection( mcu3_1_ddr         );
-mcu3_1_mmap.addMemSection( app_log_mem        );
-mcu3_1_mmap.addMemSection( tiovx_obj_desc_mem );
-mcu3_1_mmap.addMemSection( app_fileio_mem        );
-mcu3_1_mmap.addMemSection( ipc_vring_mem      );
-mcu3_1_mmap.addMemSection( mcu3_1_ddr_local_heap  );
-mcu3_1_mmap.addMemSection( ddr_shared_mem     );
-mcu3_1_mmap.checkOverlap();
 
 c7x_1_mmap = MemoryMap("c7x_1");
 c7x_1_mmap.addMemSection( c7x_1_l2           );
@@ -591,26 +450,10 @@ html_mmap.addMemSection( mcu1_0_ddr_ipc     );
 html_mmap.addMemSection( mcu1_0_ddr_resource_table      );
 html_mmap.addMemSection( mcu1_0_ddr         );
 html_mmap.addMemSection( mcu1_0_ddr_local_heap );
-html_mmap.addMemSection( mcu1_1_ddr_ipc     );
-html_mmap.addMemSection( mcu1_1_ddr_resource_table      );
-html_mmap.addMemSection( mcu1_1_ddr         );
-html_mmap.addMemSection( mcu1_1_ddr_local_heap );
 html_mmap.addMemSection( mcu2_0_ddr_ipc     );
 html_mmap.addMemSection( mcu2_0_ddr_resource_table      );
 html_mmap.addMemSection( mcu2_0_ddr         );
 html_mmap.addMemSection( mcu2_0_ddr_local_heap );
-html_mmap.addMemSection( mcu2_1_ddr_ipc     );
-html_mmap.addMemSection( mcu2_1_ddr_resource_table      );
-html_mmap.addMemSection( mcu2_1_ddr         );
-html_mmap.addMemSection( mcu2_1_ddr_local_heap );
-html_mmap.addMemSection( mcu3_0_ddr_ipc     );
-html_mmap.addMemSection( mcu3_0_ddr_resource_table      );
-html_mmap.addMemSection( mcu3_0_ddr         );
-html_mmap.addMemSection( mcu3_0_ddr_local_heap );
-html_mmap.addMemSection( mcu3_1_ddr_ipc     );
-html_mmap.addMemSection( mcu3_1_ddr_resource_table      );
-html_mmap.addMemSection( mcu3_1_ddr         );
-html_mmap.addMemSection( mcu3_1_ddr_local_heap );
 html_mmap.addMemSection( c7x_1_ddr_ipc     );
 html_mmap.addMemSection( c7x_1_ddr_resource_table     );
 html_mmap.addMemSection( c7x_1_ddr_boot    );
@@ -634,7 +477,6 @@ html_mmap.addMemSection( ipc_vring_mem      );
 html_mmap.addMemSection( ddr_shared_mem     );
 html_mmap.addMemSection( tiovx_log_rt_mem );
 html_mmap.addMemSection( mcu2_0_main_ocram );
-html_mmap.addMemSection( mcu2_1_main_ocram );
 html_mmap.checkOverlap();
 
 c_header_mmap = MemoryMap("Memory Map for C header file");
@@ -644,28 +486,16 @@ c_header_mmap.addMemSection( c7x_1_msmc         );
 c_header_mmap.addMemSection( c7x_2_l2           );
 c_header_mmap.addMemSection( c7x_2_l1           );
 c_header_mmap.addMemSection( mcu1_0_ddr_ipc     );
-c_header_mmap.addMemSection( mcu1_1_ddr_ipc     );
 c_header_mmap.addMemSection( mcu2_0_ddr_ipc     );
-c_header_mmap.addMemSection( mcu2_1_ddr_ipc     );
-c_header_mmap.addMemSection( mcu3_0_ddr_ipc     );
-c_header_mmap.addMemSection( mcu3_1_ddr_ipc     );
 c_header_mmap.addMemSection( c7x_1_ddr_ipc     );
 c_header_mmap.addMemSection( c7x_2_ddr_ipc     );
 c_header_mmap.addMemSection( mcu1_0_ddr_total     );
-c_header_mmap.addMemSection( mcu1_1_ddr_total     );
 c_header_mmap.addMemSection( mcu2_0_ddr_total     );
-c_header_mmap.addMemSection( mcu2_1_ddr_total     );
-c_header_mmap.addMemSection( mcu3_0_ddr_total     );
-c_header_mmap.addMemSection( mcu3_1_ddr_total     );
 c_header_mmap.addMemSection( c7x_1_ddr_total     );
 c_header_mmap.addMemSection( c7x_2_ddr_total     );
 
 c_header_mmap.addMemSection( mcu1_0_ddr_local_heap);
-c_header_mmap.addMemSection( mcu1_1_ddr_local_heap);
 c_header_mmap.addMemSection( mcu2_0_ddr_local_heap);
-c_header_mmap.addMemSection( mcu2_1_ddr_local_heap);
-c_header_mmap.addMemSection( mcu3_0_ddr_local_heap);
-c_header_mmap.addMemSection( mcu3_1_ddr_local_heap);
 c_header_mmap.addMemSection( c7x_1_ddr_local_heap);
 c_header_mmap.addMemSection( c7x_1_ddr_scratch);
 c_header_mmap.addMemSection( c7x_2_ddr_local_heap);
@@ -679,24 +509,14 @@ c_header_mmap.addMemSection( ddr_shared_mem     );
 c_header_mmap.addMemSection( ddr_shared_mem_phys     );
 c_header_mmap.addMemSection( c7x_1_msmc         );
 c_header_mmap.addMemSection( mcu2_0_main_ocram  );
-c_header_mmap.addMemSection( mcu2_1_main_ocram  );
 c_header_mmap.addMemSection( mcu2_0_main_ocram_phys  );
-c_header_mmap.addMemSection( mcu2_1_main_ocram_phys  );
 c_header_mmap.checkOverlap();
 
 dts_mmap = MemoryMap("Memory Map for Linux kernel dts/dtsi file");
 dts_mmap.addMemSection( mcu1_0_ddr_ipc     );
 dts_mmap.addMemSection( mcu1_0_ddr_total   );
-dts_mmap.addMemSection( mcu1_1_ddr_ipc     );
-dts_mmap.addMemSection( mcu1_1_ddr_total   );
 dts_mmap.addMemSection( mcu2_0_ddr_ipc     );
 dts_mmap.addMemSection( mcu2_0_ddr_total   );
-dts_mmap.addMemSection( mcu2_1_ddr_ipc     );
-dts_mmap.addMemSection( mcu2_1_ddr_total   );
-dts_mmap.addMemSection( mcu3_0_ddr_ipc     );
-dts_mmap.addMemSection( mcu3_0_ddr_total   );
-dts_mmap.addMemSection( mcu3_1_ddr_ipc     );
-dts_mmap.addMemSection( mcu3_1_ddr_total   );
 dts_mmap.addMemSection( c7x_1_ddr_ipc      );
 dts_mmap.addMemSection( c7x_1_ddr_total    );
 dts_mmap.addMemSection( c7x_2_ddr_ipc      );
@@ -714,14 +534,10 @@ dts_mmap.checkOverlap();
 LinkerCmdFile(c7x_1_mmap , "./c7x_1/linker_mem_map.cmd" ).export();
 LinkerCmdFile(c7x_2_mmap , "./c7x_2/linker_mem_map.cmd" ).export();
 LinkerCmdFile(mcu1_0_mmap, "./mcu1_0/linker_mem_map.cmd").export();
-LinkerCmdFile(mcu1_1_mmap, "./mcu1_1/linker_mem_map.cmd").export();
 LinkerCmdFile(mcu2_0_mmap, "./mcu2_0/linker_mem_map.cmd").export();
-LinkerCmdFile(mcu2_1_mmap, "./mcu2_1/linker_mem_map.cmd").export();
-LinkerCmdFile(mcu3_0_mmap, "./mcu3_0/linker_mem_map.cmd").export();
-LinkerCmdFile(mcu3_1_mmap, "./mcu3_1/linker_mem_map.cmd").export();
 
 HtmlMmapTable(html_mmap, "./system_memory_map.html").export();
 
 CHeaderFile(c_header_mmap, 0x880000000, 0x100000000, "./app_mem_map.h").export();
 
-DtsFile(dts_mmap, "./k3-j721s2-rtos-memory-map.dtsi").export();
+DtsFile(dts_mmap, "./k3-j722s-rtos-memory-map.dtsi").export();
