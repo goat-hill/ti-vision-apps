@@ -148,18 +148,6 @@
 #endif /* #if defined(ENABLE_TIOVX) */
 
 
-/* PDK header files */
-#ifdef ENABLE_BOARD
-/* This header is only needed for the definition of TRUE used */
-#include <ti/csl/csl_types.h>
-#include <ti/board/board.h>
-#endif
-
-#ifdef ENABLE_UART
-#include <ti/drv/uart/UART.h>
-#include <ti/drv/uart/UART_stdio.h>
-#endif
-
 app_log_shared_mem_t g_app_log_shared_mem
 __attribute__ ((section(".bss:app_log_mem")))
 __attribute__ ((aligned(4096)))
@@ -220,6 +208,13 @@ __attribute__ ((aligned(4096)))
         ;
 #endif
 
+#ifdef DDR_SCRATCH_NON_CACHE_SIZE
+uint8_t g_ddr_scratch_non_cache_mem[DDR_SCRATCH_NON_CACHE_SIZE]
+__attribute__ ((section(".bss:ddr_scratch_non_cache_mem")))
+__attribute__ ((aligned(4096)))
+        ;
+#endif
+
 static void appRegisterOpenVXTargetKernels();
 static void appUnRegisterOpenVXTargetKernels();
 void appRtosTestRegister();
@@ -245,14 +240,6 @@ int32_t appInit()
     #ifdef ENABLE_IPC
     uint32_t host_os_type;
     void *ipc_resource_table = NULL;
-    #endif
-
-    #if defined(CPU_mcu2_0) || defined(CPU_mcu2_1)
-    app_mem_rat_prm_t l3_mem_rat_prm;
-    #endif
-
-    #if defined(R5F)
-    app_mem_rat_prm_t ddr_mem_rat_prm;
     #endif
 
     /* Init and start GTC timer */
@@ -456,41 +443,6 @@ int32_t appInit()
     #endif
 
     appLogPrintf("APP: Init ... !!!\n");
-
-    /* TBD: Check CSL for RAT in J722S */
-    #if defined(R5F)
-    #if defined(CPU_mcu1_0)
-    status = appMemSetRatRegs((CSL_ratRegs *)(CSL_MCU_R5FSS0_RAT_CFG_BASE));
-    #else
-    status = appMemSetRatRegs((CSL_ratRegs *)(CSL_R5FSS0_RAT_CFG_BASE));
-    #endif
-    APP_ASSERT_SUCCESS(status);
-    #endif
-
-    #if defined(CPU_mcu2_0) || defined(CPU_mcu2_1)
-    #ifdef L3_MEM_SIZE
-
-    l3_mem_rat_prm.size        = L3_MEM_SIZE;
-
-    #if defined(CPU_mcu2_0)
-    l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU2_0_ADDR;
-    l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU2_0_PHYS_ADDR;
-    #endif
-
-    status = appMemAddrTranslate(&l3_mem_rat_prm);
-    APP_ASSERT_SUCCESS(status);
-    #endif
-    #endif
-
-    #if defined(R5F)
-
-    ddr_mem_rat_prm.size              = DDR_SHARED_MEM_SIZE;
-    ddr_mem_rat_prm.baseAddress       = DDR_SHARED_MEM_ADDR;
-    ddr_mem_rat_prm.translatedAddress = DDR_SHARED_MEM_PHYS_ADDR;
-
-    status = appMemAddrTranslate(&ddr_mem_rat_prm);
-    APP_ASSERT_SUCCESS(status);
-    #endif
 
     #ifdef ENABLE_UART
     {
@@ -837,24 +789,6 @@ static void appRegisterOpenVXTargetKernels()
         #if defined(ENABLE_DSS_SINGLE) || defined(ENABLE_DSS_DUAL)
         tivxRegisterVideoIOTargetDisplayKernels();
         tivxRegisterVideoIOTargetDisplayM2MKernels();
-        #endif
-        #ifdef C7524
-        #ifdef CPU_c7x_1
-        {
-            void app_c7x_target_kernel_img_add_register(void);
-
-            app_c7x_target_kernel_img_add_register();
-        }
-        tivxRegisterTIDLTargetKernels();
-        tivxRegisterTVMTargetKernels();
-        tivxRegisterImgProcTargetC71Kernels();
-        #endif
-        #ifdef CPU_c7x_2
-        tivxRegisterStereoTargetKernels();
-        tivxRegisterSrvTargetC66Kernels();
-        tivxRegisterHwaTargetArmKernels();
-        tivxRegisterImgProcTargetC66Kernels();
-        #endif
         #endif
         #ifdef ENABLE_VHWA_VPAC
         tivxRegisterImgProcTargetR5FKernels();

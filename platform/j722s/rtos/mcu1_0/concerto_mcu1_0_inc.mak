@@ -55,5 +55,6 @@ STATIC_LIBS += app_utils_sciserver
 ADDITIONAL_STATIC_LIBS += sciclient_direct.aer5f
 ADDITIONAL_STATIC_LIBS += sciserver_tirtos.aer5f
 ADDITIONAL_STATIC_LIBS += rm_pm_hal.aer5f
+ADDITIONAL_STATIC_LIBS += drivers.j722s.wkup-r5f.ti-arm-clang.${TARGET_BUILD}.lib
 
 DEFS        += $(RTOS)

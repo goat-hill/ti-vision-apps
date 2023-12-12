@@ -68,7 +68,7 @@
 	};
 	vision_apps_core_heaps_lo: vision-apps-core-heap-memory-lo@b8000000 {
 		compatible = "shared-dma-pool";
-		reg = <0x00 0xb8000000 0x00 0x01800000>;
+		reg = <0x00 0xb8000000 0x00 0x02800000>;
 		no-map;
 	};
 	c7x_ddr_heaps_hi: c7x_ddr_heaps_hi-apps-core-heap-memory-hi@880000000 {

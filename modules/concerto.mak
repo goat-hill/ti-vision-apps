@@ -30,6 +30,10 @@ ifeq ($(TARGET_OS),QNX)
 SYS_SHARED_LIBS += screen
 endif
 
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

@@ -50,6 +50,10 @@ CFLAGS      += -Wno-strict-aliasing
 CSOURCES    := $(call all-c-files)
 CPPSOURCES  := $(call all-cpp-files)
 
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

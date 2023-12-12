@@ -75,8 +75,8 @@
 #define ENABLE_IPC_C7x_1
 #define ENABLE_IPC_C7x_2
 
-#define ENABLE_UDMA
-#define ENABLE_UDMA_COPY
+#undef ENABLE_UDMA
+#undef ENABLE_UDMA_COPY
 #define ENABLE_SCICLIENT
 
 #define ENABLE_IPC_ECHO_TEST

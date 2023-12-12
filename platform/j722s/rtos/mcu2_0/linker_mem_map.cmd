@@ -88,8 +88,8 @@ MEMORY
     TIOVX_OBJ_DESC_MEM                : ORIGIN = 0xAA040000 , LENGTH = 0x03FC0000
     /* Memory for remote core file operations [ size  4.00 MB ] */
     APP_FILEIO_MEM                    : ORIGIN = 0xAE000000 , LENGTH = 0x00400000
-    /* DDR for MCU2_0 for local heap [ size 16.00 MB ] */
-    DDR_MCU2_0_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xB8800000 , LENGTH = 0x01000000
+    /* DDR for MCU2_0 for local heap [ size 32.00 MB ] */
+    DDR_MCU2_0_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xB8800000 , LENGTH = 0x02000000
     /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x20000000
 }

@@ -10,31 +10,16 @@ IDIRS+=$(VISION_APPS_PATH)/kernels/stereo/include
 IDIRS+=$(IMAGING_PATH)/kernels/include
 IDIRS+=$(IMAGING_PATH)/sensor_drv/include
 
-ifeq ($(RTOS),SYSBIOS)
-	LDIRS += $(PDK_PATH)/packages/ti/osal/lib/tirtos/$(SOC)/r5f/$(TARGET_BUILD)/
-endif
 ifeq ($(RTOS),FREERTOS)
-	LDIRS += $(PDK_PATH)/packages/ti/osal/lib/freertos/$(SOC)/r5f/$(TARGET_BUILD)/
+	LDIRS += $(MCU_PLUS_SDK_PATH)/source/kernel/freertos/lib/
 endif
-ifeq ($(RTOS),SAFERTOS)
-	LDIRS += $(PDK_PATH)/packages/ti/osal/lib/safertos/$(SOC)/r5f/$(TARGET_BUILD)/
-endif
-LDIRS += $(PDK_PATH)/packages/ti/csl/lib/$(SOC)/r5f/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/board/lib/$(BUILD_PDK_BOARD)/r5f/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/uart/lib/$(SOC)/r5f/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/fvid2/lib/$(SOC)/r5f/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/i2c/lib/$(SOC)/r5f/$(TARGET_BUILD)/
-
-LDIRS += $(PDK_PATH)/packages/ti/drv/enet/lib/$(SOC)/r5f/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/enet/lib/r5f/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/pm/lib/$(SOC)/r5f/$(TARGET_BUILD)/
+LDIRS += $(MCU_PLUS_SDK_PATH)/source/board/lib/
+LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
 
 LDIRS += $(TIOVX_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(IMAGING_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(VIDEO_IO_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
-
-STATIC_LIBS += vx_target_kernels_img_proc_r5f
 
 APP_UTILS_LIBS =
 APP_UTILS_LIBS += app_utils_mem
@@ -56,51 +41,14 @@ TIOVX_LIBS += vx_framework vx_vxu vx_platform_psdk_j7_rtos vx_kernels_target_uti
 TIOVX_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
 TIOVX_LIBS += vx_target_kernels_source_sink
 TIOVX_LIBS += vx_kernels_host_utils vx_kernels_openvx_core
-TIOVX_LIBS += vx_kernels_hwa_tests vx_kernels_hwa
-TIOVX_LIBS += vx_target_kernels_vpac_nf vx_target_kernels_vpac_viss
-TIOVX_LIBS += vx_target_kernels_vpac_msc vx_target_kernels_vpac_ldc
-TIOVX_LIBS += vx_target_kernels_dmpac_dof vx_target_kernels_dmpac_sde
-TIOVX_LIBS += vx_target_kernels_display
-TIOVX_LIBS += vx_target_kernels_capture
-TIOVX_LIBS += vx_target_kernels_csitx
-TIOVX_LIBS += vx_target_kernels_j7_arm
-TIOVX_LIBS += vx_target_kernels_display_m2m
 
 SYS_STATIC_LIBS += $(TIOVX_LIBS)
 
-IMAGING_LIBS  = ti_imaging_awbalg
-IMAGING_LIBS += ti_imaging_dcc
-IMAGING_LIBS += vx_kernels_imaging
-IMAGING_LIBS += vx_target_kernels_imaging_aewb
-IMAGING_LIBS += ti_imaging_aealg
-IMAGING_LIBS += ti_imaging_sensordrv
-IMAGING_LIBS += ti_imaging_ittsrvr
-IMAGING_LIBS += app_utils_sensors
-IMAGING_LIBS += app_utils_iss
 
-SYS_STATIC_LIBS += $(IMAGING_LIBS)
-
-ADDITIONAL_STATIC_LIBS += ti.board.aer5f
-ADDITIONAL_STATIC_LIBS += ti.drv.uart.aer5f
-ADDITIONAL_STATIC_LIBS += ipc.aer5f
-ADDITIONAL_STATIC_LIBS += fvid2.aer5f
-ADDITIONAL_STATIC_LIBS += udma.aer5f
-ADDITIONAL_STATIC_LIBS += ti.drv.i2c.aer5f
-
-ADDITIONAL_STATIC_LIBS += ti.osal.aer5f
+ADDITIONAL_STATIC_LIBS += board.j722s.r5f.ti-arm-clang.${TARGET_BUILD}.lib
 
 ifeq ($(RTOS),FREERTOS)
-	ADDITIONAL_STATIC_LIBS += ti.kernel.freertos.aer5f
-endif
-
-ifeq ($(RTOS),SAFERTOS)
-	ADDITIONAL_STATIC_LIBS += ti.kernel.safertos.aer5f
-endif
-
-ADDITIONAL_STATIC_LIBS += ti.csl.aer5f
-
-ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SAFERTOS))
-	ADDITIONAL_STATIC_LIBS += ti.csl.init.aer5f
+	ADDITIONAL_STATIC_LIBS += freertos.j722s.r5f.ti-arm-clang.${TARGET_BUILD}.lib
 endif
 
 endif

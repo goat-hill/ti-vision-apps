@@ -66,10 +66,12 @@
 
 MEMORY
 {
-    /* L2 for C7x_2 [ size 448.00 KB ] */
-    L2RAM_C7x_2              ( RWIX ) : ORIGIN = 0x65800000 , LENGTH = 0x00070000
+    /* L3 for C7x_2 [ size  2.00 MB ] */
+    L2RAM_C7x_2_MAIN         ( RWIX ) : ORIGIN = 0x7E000000 , LENGTH = 0x00200000
+    /* L2 for C7x_2 [ size 240.00 KB ] */
+    L2RAM_C7x_2_AUX          ( RWIX ) : ORIGIN = 0x7F000000 , LENGTH = 0x0003C000
     /* L1 for C7x_2 [ size 16.00 KB ] */
-    L1RAM_C7x_2              ( RWIX ) : ORIGIN = 0x65E00000 , LENGTH = 0x00004000
+    L2RAM_C7x_2_AUX_AS_L1    ( RWIX ) : ORIGIN = 0x7F03C000 , LENGTH = 0x00004000
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */
     IPC_VRING_MEM                     : ORIGIN = 0xA8000000 , LENGTH = 0x02000000
     /* Memory for remote core logging [ size 256.00 KB ] */
@@ -92,8 +94,12 @@ MEMORY
     DDR_C7x_2                ( RWIX ) : ORIGIN = 0xB4604000 , LENGTH = 0x039FC000
     /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x20000000
-    /* DDR for c7x_2 for local heap [ size 128.00 MB ] */
-    DDR_C7X_2_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0x110000000 , LENGTH = 0x08000000
-    /* DDR for c7x_2 for Scratch Memory [ size 128.00 MB ] */
-    DDR_C7X_2_SCRATCH        ( RWIX ) : ORIGIN = 0x118000000 , LENGTH = 0x08000000
+    /* DDR for c7x_2 for non cacheable local heap [ size 16.00 MB ] */
+    DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE ( RWIX ) : ORIGIN = 0x110000000 , LENGTH = 0x01000000
+    /* DDR for c7x_2 for non cacheable scratch Memory [ size 16.00 MB ] */
+    DDR_C7X_2_SCRATCH_NON_CACHEABLE ( RWIX ) : ORIGIN = 0x111000000 , LENGTH = 0x01000000
+    /* DDR for c7x_2 for local heap [ size 112.00 MB ] */
+    DDR_C7X_2_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0x112000000 , LENGTH = 0x07000000
+    /* DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
+    DDR_C7X_2_SCRATCH        ( RWIX ) : ORIGIN = 0x119000000 , LENGTH = 0x07000000
 }

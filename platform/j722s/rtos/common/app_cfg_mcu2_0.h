@@ -77,20 +77,20 @@
  */
 #ifdef BUILD_MCU_BOARD_DEPENDENCIES
    /* TBD: Check board dependencies */
-    #define ENABLE_CSI2RX
-    #define ENABLE_CSI2TX
+    #undef ENABLE_CSI2RX
+    #undef ENABLE_CSI2TX
 
     /* IMPORANT NOTE:
      * - Only one of ENABLE_DSS_SINGLE or ENABLE_DSS_DUAL should be defined
      * - When ENABLE_DSS_SINGLE is defined, only one of ENABLE_DSS_HDMI or ENABLE_DSS_EDP should be defined
      * - When ENABLE_DSS_DUAL is defined, ENABLE_DSS_HDMI and ENABLE_DSS_EDP are not used, both EDP and HDMI are enabled unconditionally
      */
-    #define ENABLE_DSS_SINGLE
+    #undef ENABLE_DSS_SINGLE
     #undef  ENABLE_DSS_DUAL
 
     /* define below to enable eDP display,
        make sure to undef ENABLE_DSS_HDMI & ENABLE_DSS_DSI as well */
-    #define ENABLE_DSS_EDP
+    #undef ENABLE_DSS_EDP
     /* define below to enable HDMI display,
        make sure to undef ENABLE_DSS_EDP & ENABLE_DSS_DSI as well */
     #undef ENABLE_DSS_HDMI
@@ -98,8 +98,8 @@
        & ENABLE_DSS_EDP as well */
     #undef ENABLE_DSS_DSI
 
-    #define ENABLE_I2C
-    #define ENABLE_BOARD
+    #undef ENABLE_I2C
+    #undef ENABLE_BOARD
 
 #else
 
@@ -116,8 +116,8 @@
 #endif
 
 
-#define ENABLE_FVID2
-#define ENABLE_VHWA_VPAC
+#undef ENABLE_FVID2
+#undef ENABLE_VHWA_VPAC
 #undef ENABLE_VHWA_DMPAC
 
 #if defined (ENABLE_DSS_DSI) && !defined(ENABLE_I2C)

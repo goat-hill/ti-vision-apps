@@ -1,8 +1,19 @@
 DEFS+=CPU_mcu2_0
+DEFS+=BUILD_MCU2_0
+DEFS+=BUILD_MCU
+DEFS+=VIM_DIRECT_REGISTRATION
 
+# This enables ARM Thumb mode which reduces firmware size and enables faster boot
+COPT +=--code_state=16
 ifeq ($(RTOS),FREERTOS)
-	CSOURCES += $(SOC)_mpu_cfg.c
-	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_freertos.cmd
+	CSOURCES += generated/ti_board_config.c
+	CSOURCES += generated/ti_board_open_close.c
+	CSOURCES += generated/ti_dpl_config.c
+	CSOURCES += generated/ti_drivers_config.c
+	CSOURCES += generated/ti_drivers_open_close.c
+	CSOURCES += generated/ti_pinmux_config.c
+	CSOURCES += generated/ti_power_clock_config.c
+	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_freertos_mcuplus.cmd
 endif
 
 ifeq ($(RTOS),SAFERTOS)
@@ -24,22 +35,13 @@ ifeq ($(RTOS),SAFERTOS)
 	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_r5f}/source_code_and_projects/SafeRTOS/portable/$(SAFERTOS_ISA_EXT_r5f)/$(SAFERTOS_COMPILER_EXT_r5f)
 endif
 
-LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-
-LDIRS += $(PDK_PATH)/packages/ti/drv/csirx/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/csitx/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/dss/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/vhwa/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-
+IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/mcu2_0/generated
 ifeq ($(RTOS),FREERTOS)
-    LDIRS += $(PDK_PATH)/packages/ti/kernel/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
+	LDIRS += $(MCU_PLUS_SDK_PATH)/source/kernel/freertos/lib/
 endif
 
-ifeq ($(RTOS),SAFERTOS)
-	LDIRS += $(PDK_PATH)/packages/ti/kernel/safertos/lib/$(SOC)/mcu2_0/$(TARGET_BUILD)/
-endif
+LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
+LDIRS += $(MCU_PLUS_SDK_PATH)/source/board/lib/
 
 include $($(_MODULE)_SDIR)/../concerto_r5f_inc.mak
 
@@ -48,16 +50,9 @@ STATIC_LIBS += app_rtos_common_mcu2_0
 ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SAFERTOS))
 	STATIC_LIBS += app_rtos
 endif
-SYS_STATIC_LIBS += app_utils_hwa
-SYS_STATIC_LIBS += app_utils_dss
+
 SYS_STATIC_LIBS += app_utils_sciclient
 
-ADDITIONAL_STATIC_LIBS += csirx.aer5f
-ADDITIONAL_STATIC_LIBS += csitx.aer5f
-ADDITIONAL_STATIC_LIBS += dss.aer5f
-ADDITIONAL_STATIC_LIBS += vhwa.aer5f
-
-ADDITIONAL_STATIC_LIBS += pm_lib.aer5f
-ADDITIONAL_STATIC_LIBS += sciclient.aer5f
+ADDITIONAL_STATIC_LIBS += drivers.j722s.main-r5f.ti-arm-clang.${TARGET_BUILD}.lib
 
 DEFS        += $(RTOS)

@@ -24,6 +24,10 @@ ifeq ($(TARGET_OS), QNX)
 IDIRS       += $(QNX_TARGET)/usr/include
 endif
 
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif
@@ -44,6 +48,10 @@ IDIRS       += $(VISION_APPS_PATH)
 CFLAGS      += -DGL_ES -DSTANDALONE
 
 DEFS += _HOST_BUILD _TMS320C6600 TMS320C66X HOST_EMULATION
+
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
 
 include $(FINALE)
 

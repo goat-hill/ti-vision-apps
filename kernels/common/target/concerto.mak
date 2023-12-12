@@ -1,5 +1,5 @@
 
-ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), X86 x86_64 A72 A53 A15 M4 C66 EVE R5F C71 C7120 C7504))
+ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), X86 x86_64 A72 A53 A15 M4 C66 EVE R5F C71 C7120 C7504 C7524))
 ifeq ($(BUILD_PTK), yes)
 
 include $(PRELUDE)
@@ -16,6 +16,10 @@ endif
 
 ifeq ($(TARGET_CPU),C66)
 DEFS += CORE_DSP CORE_C6XX
+endif
+
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
 endif
 
 include $(FINALE)

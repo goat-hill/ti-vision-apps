@@ -25,6 +25,10 @@ TARGETTYPE  := library
 
 CSOURCES    := app_grpx_null.c
 
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

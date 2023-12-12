@@ -1,70 +1,25 @@
 ifeq ($(RTOS),FREERTOS)
-	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_freertos.cmd
-endif
-ifeq ($(RTOS),SAFERTOS)
-	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_safertos.cmd
+	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_freertos_mcuplus.cmd
 endif
 
-ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SYSBIOS))
-	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
-endif
-
-ifeq ($(RTOS),SAFERTOS)
-	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map_safertos.cmd
-endif
+LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
 
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos
-
-
-ifeq ($(RTOS),SAFERTOS)
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/api/$(SAFERTOS_ISA_EXT_c7x)
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/api/PrivWrapperStd
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/config
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/kernel/include_api
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/kernel/include_prv
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/portable/$(SAFERTOS_ISA_EXT_c7x)
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/portable/$(SAFERTOS_ISA_EXT_c7x)/$(SAFERTOS_COMPILER_EXT_c7x)
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/SafeRTOS/api/NoWrapper
-	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_c7x}/source_code_and_projects/demo_projects/SafeRTOS_TDA4VL_C7x_Demo
-	IDIRS+=$(PDK_PATH)/packages/ti/kernel/safertos/TI_CGT/c7x
-endif
 
 ifeq ($(RTOS),FREERTOS)
 	LDIRS += $(PDK_PATH)/packages/ti/kernel/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
 endif
 
-ifeq ($(RTOS),SAFERTOS)
-	LDIRS += $(PDK_PATH)/packages/ti/kernel/safertos/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-endif
-
-LDIRS += $(PDK_PATH)/packages/ti/drv/ipc/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/udma/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-LDIRS += $(PDK_PATH)/packages/ti/drv/sciclient/lib/$(SOC)/c7x_1/$(TARGET_BUILD)/
-LDIRS += $(TIDL_PATH)/ti_dl/lib/$(TARGET_PLATFORM)/dsp/algo/$(TARGET_BUILD)
-
-STATIC_LIBS += vx_target_kernels_img_proc_c71
-
-TIDL_LIBS =
-TIDL_LIBS += common_C7524
-TIDL_LIBS += mmalib_C7524
-TIDL_LIBS += mmalib_cn_C7524
-TIDL_LIBS += tidl_algo
-TIDL_LIBS += tidl_priv_algo
-TIDL_LIBS += tidl_obj_algo
-TIDL_LIBS += tidl_custom
-
-SYS_STATIC_LIBS += $(TIDL_LIBS)
-
-ADDITIONAL_STATIC_LIBS += dmautils.ae71
-ADDITIONAL_STATIC_LIBS += libtiadalg_structure_from_motion.a
-
 include $($(_MODULE)_SDIR)/../concerto_c7x_inc.mak
 
 # CPU instance specific libraries
 STATIC_LIBS += app_rtos_common_c7x_1
-ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SAFERTOS))
+
+ifeq ($(RTOS),FREERTOS)
 	STATIC_LIBS += app_rtos
 endif
+
+ADDITIONAL_STATIC_LIBS += drivers.j722s.c75ss0-0.ti-c7000.${TARGET_BUILD}.lib
 
 #
 # Suppress this warning, 10063-D: entry-point symbol other than "_c_int00" specified

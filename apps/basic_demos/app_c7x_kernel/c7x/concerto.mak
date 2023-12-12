@@ -1,4 +1,4 @@
-ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), x86_64 C71 C7120 C7504))
+ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), x86_64 C71 C7120 C7504 C7524))
 
 include $(PRELUDE)
 TARGET      := vx_app_c7x_target_kernel
@@ -9,6 +9,10 @@ ifeq ($(TARGET_CPU), x86_64)
 IDIRS       += $(CGT7X_ROOT)/host_emulation/include/C7100
 CFLAGS += --std=c++14 -D_HOST_EMULATION -pedantic -fPIC -w -c -g
 CFLAGS += -Wno-sign-compare
+endif
+
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
 endif
 
 include $(FINALE)

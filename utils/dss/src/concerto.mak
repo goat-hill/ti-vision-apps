@@ -23,6 +23,10 @@ endif
 
 DEFS+=$(BUILD_PDK_BOARD)
 
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

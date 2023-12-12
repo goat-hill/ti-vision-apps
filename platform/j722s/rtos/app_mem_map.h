@@ -71,25 +71,29 @@
 #define MAIN_OCRAM_MCU2_0_ADDR (0x60000000u)
 #define MAIN_OCRAM_MCU2_0_SIZE (0x00080000u)
 
-/* L2 for C7x_1 [ size 448.00 KB ] */
-#define L2RAM_C7x_1_ADDR (0x64800000u)
-#define L2RAM_C7x_1_SIZE (0x00070000u)
+/* L3 for C7x_1 [ size  2.00 MB ] */
+#define L2RAM_C7x_1_MAIN_ADDR (0x7E000000u)
+#define L2RAM_C7x_1_MAIN_SIZE (0x00200000u)
+
+/* L3 for C7x_2 [ size  2.00 MB ] */
+#define L2RAM_C7x_2_MAIN_ADDR (0x7E000000u)
+#define L2RAM_C7x_2_MAIN_SIZE (0x00200000u)
+
+/* L2 for C7x_1 [ size 240.00 KB ] */
+#define L2RAM_C7x_1_AUX_ADDR (0x7F000000u)
+#define L2RAM_C7x_1_AUX_SIZE (0x0003C000u)
+
+/* L2 for C7x_2 [ size 240.00 KB ] */
+#define L2RAM_C7x_2_AUX_ADDR (0x7F000000u)
+#define L2RAM_C7x_2_AUX_SIZE (0x0003C000u)
 
 /* L1 for C7x_1 [ size 16.00 KB ] */
-#define L1RAM_C7x_1_ADDR (0x64E00000u)
-#define L1RAM_C7x_1_SIZE (0x00004000u)
-
-/* L2 for C7x_2 [ size 448.00 KB ] */
-#define L2RAM_C7x_2_ADDR (0x65800000u)
-#define L2RAM_C7x_2_SIZE (0x00070000u)
+#define L2RAM_C7x_1_AUX_AS_L1_ADDR (0x7F03C000u)
+#define L2RAM_C7x_1_AUX_AS_L1_SIZE (0x00004000u)
 
 /* L1 for C7x_2 [ size 16.00 KB ] */
-#define L1RAM_C7x_2_ADDR (0x65E00000u)
-#define L1RAM_C7x_2_SIZE (0x00004000u)
-
-/* MSMC for C7x_1 [ size  3.78 MB ] */
-#define MSMC_C7x_1_ADDR (0x70020000u)
-#define MSMC_C7x_1_SIZE (0x003C8000u)
+#define L2RAM_C7x_2_AUX_AS_L1_ADDR (0x7F03C000u)
+#define L2RAM_C7x_2_AUX_AS_L1_SIZE (0x00004000u)
 
 /* DDR for MCU1_0 for Linux IPC [ size 1024.00 KB ] */
 #define DDR_MCU1_0_IPC_ADDR (0xA0000000u)
@@ -147,29 +151,45 @@
 #define DDR_MCU1_0_LOCAL_HEAP_ADDR (0xB8000000u)
 #define DDR_MCU1_0_LOCAL_HEAP_SIZE (0x00800000u)
 
-/* DDR for MCU2_0 for local heap [ size 16.00 MB ] */
+/* DDR for MCU2_0 for local heap [ size 32.00 MB ] */
 #define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xB8800000u)
-#define DDR_MCU2_0_LOCAL_HEAP_SIZE (0x01000000u)
+#define DDR_MCU2_0_LOCAL_HEAP_SIZE (0x02000000u)
 
 /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
 #define DDR_SHARED_MEM_ADDR (0xC0000000u)
 #define DDR_SHARED_MEM_SIZE (0x20000000u)
 
-/* DDR for c7x_1 for Scratch Memory [ size 128.00 MB ] */
-#define DDR_C7X_1_SCRATCH_ADDR (0x100000000u)
-#define DDR_C7X_1_SCRATCH_SIZE (0x08000000u)
+/* DDR for c7x_1 for non cacheable local heap [ size 16.00 MB ] */
+#define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x100000000u)
+#define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
 
-/* DDR for c7x_1 for local heap [ size 128.00 MB ] */
-#define DDR_C7X_1_LOCAL_HEAP_ADDR (0x108000000u)
-#define DDR_C7X_1_LOCAL_HEAP_SIZE (0x08000000u)
+/* DDR for c7x_1 for non cacheable scratch Memory [ size 16.00 MB ] */
+#define DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR (0x101000000u)
+#define DDR_C7X_1_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
 
-/* DDR for c7x_2 for local heap [ size 128.00 MB ] */
-#define DDR_C7X_2_LOCAL_HEAP_ADDR (0x110000000u)
-#define DDR_C7X_2_LOCAL_HEAP_SIZE (0x08000000u)
+/* DDR for c7x_1 for local heap [ size 112.00 MB ] */
+#define DDR_C7X_1_LOCAL_HEAP_ADDR (0x102000000u)
+#define DDR_C7X_1_LOCAL_HEAP_SIZE (0x07000000u)
 
-/* DDR for c7x_2 for Scratch Memory [ size 128.00 MB ] */
-#define DDR_C7X_2_SCRATCH_ADDR (0x118000000u)
-#define DDR_C7X_2_SCRATCH_SIZE (0x08000000u)
+/* DDR for c7x_1 for Scratch Memory [ size 112.00 MB ] */
+#define DDR_C7X_1_SCRATCH_ADDR (0x109000000u)
+#define DDR_C7X_1_SCRATCH_SIZE (0x07000000u)
+
+/* DDR for c7x_2 for non cacheable local heap [ size 16.00 MB ] */
+#define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x110000000u)
+#define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
+
+/* DDR for c7x_2 for non cacheable scratch Memory [ size 16.00 MB ] */
+#define DDR_C7X_2_SCRATCH_NON_CACHEABLE_ADDR (0x111000000u)
+#define DDR_C7X_2_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
+
+/* DDR for c7x_2 for local heap [ size 112.00 MB ] */
+#define DDR_C7X_2_LOCAL_HEAP_ADDR (0x112000000u)
+#define DDR_C7X_2_LOCAL_HEAP_SIZE (0x07000000u)
+
+/* DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
+#define DDR_C7X_2_SCRATCH_ADDR (0x119000000u)
+#define DDR_C7X_2_SCRATCH_SIZE (0x07000000u)
 
 /* Physical address of memory for shared memory buffers in DDR [ size 512.00 MB ] */
 #define DDR_SHARED_MEM_PHYS_ADDR (0x900000000u)

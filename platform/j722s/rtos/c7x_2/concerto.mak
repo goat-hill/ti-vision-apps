@@ -16,6 +16,7 @@ CSOURCES    := $(call all-c-files)
 
 include $($(_MODULE)_SDIR)/concerto_c7x_2_inc.mak
 
+IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common_linux
 
 STATIC_LIBS += app_rtos_linux
@@ -45,6 +46,7 @@ CSOURCES    := $(call all-c-files)
 
 include $($(_MODULE)_SDIR)/concerto_c7x_2_inc.mak
 
+IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common_qnx
 
 STATIC_LIBS += app_rtos_qnx

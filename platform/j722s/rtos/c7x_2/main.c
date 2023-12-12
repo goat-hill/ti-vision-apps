@@ -66,33 +66,79 @@
 #include <utils/rtos/include/app_rtos.h>
 #include <stdio.h>
 #include <string.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/HwiP.h>
-#include <ti/osal/CacheP.h>
+#include <HwiP.h>
+#include <CacheP.h>
 #include <app_mem_map.h>
 #include <app_ipc_rsctable.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/csl_clec.h>
-#include <ti/csl/arch/c7x/Cache.h>
-#include <ti/csl/arch/c7x/Hwi.h>
-#include <ti/csl/arch/c7x/Mmu.h>
-#include <utils/perf_stats/include/app_perf_stats.h>
 
-#if (defined (SAFERTOS))
-#include "SafeRTOS_API.h"
-#include "SafeRTOSConfig.h"
-#endif
+#include <DebugP.h>
+#include <kernel/dpl/ClockP.h>
+#include <hw_include/cslr_soc.h>
+#include <hw_include/csl_clec.h>
+#include <hw_include/am62ax/cslr_soc_baseaddress.h>
 
-/* TBD: Update for J722S. the upper 2GB DDR starts from 0x0008_8000_0000 */
-/* This address is mapped to a virtual address of 0x0001_0000_0000 */
-#define DDR_C7X_2_LOCAL_HEAP_VADDR (DDR_C7X_2_LOCAL_HEAP_ADDR)
-#define DDR_C7X_2_LOCAL_HEAP_PADDR (DDR_64BIT_BASE_PADDR + (DDR_C7X_2_LOCAL_HEAP_ADDR - DDR_64BIT_BASE_VADDR))
+#include <kernel/nortos/dpl/c75/CacheP_c75.h>
+#include <kernel/nortos/dpl/c75/HwiP_c75.h>
+#include <kernel/nortos/dpl/c75/MmuP_c75.h>
+#include <ipc_notify.h>
+#include <ipc_notify/v0/ipc_notify_v0.h>
+#include <soc.h>
+#include <ClockP.h>
+#include <SystemP.h>
 
-#define DDR_C7X_2_SCRATCH_VADDR    (DDR_C7X_2_SCRATCH_ADDR)
-#define DDR_C7X_2_SCRATCH_PADDR    (DDR_64BIT_BASE_PADDR + (DDR_C7X_2_SCRATCH_ADDR - DDR_64BIT_BASE_VADDR))
+#define ENABLE_C7X_CACHE_WRITE_THROUGH
+
+extern void vTaskStartScheduler( void );
+
+#define TIMER2_CLOCK_SRC_MUX_ADDR (0x1081B8u)
+#define TIMER2_CLOCK_SRC_MCU_HFOSC0 (0x0u)
+#define TIMER2_BASE_ADDR     (0x2420000u)
+
+void IpcNotify_getConfig(IpcNotify_InterruptConfig **interruptConfig, uint32_t *interruptConfigNum)
+{
+    /* extern globals that are specific to this core */
+    extern IpcNotify_InterruptConfig gIpcNotifyInterruptConfig_c75ss0_0[];
+    extern uint32_t gIpcNotifyInterruptConfigNum_c75ss0_0;
+
+    *interruptConfig = &gIpcNotifyInterruptConfig_c75ss0_0[0];
+    *interruptConfigNum = gIpcNotifyInterruptConfigNum_c75ss0_0;
+}
+ClockP_Config gClockConfig = {
+    .timerBaseAddr = TIMER2_BASE_ADDR,
+    .timerHwiIntNum = 10,
+    .eventId = 378,
+    .timerInputClkHz = 25000000,
+    .timerInputPreScaler = 1,
+    .usecPerTick = 1000,
+};
+
+/* ----------- DebugP ----------- */
+void putchar_(char character)
+{
+    /* Output to CCS console */
+    putchar(character);    
+}
+
+#define C7x_EL2_SNOOP_CFG_REG (0x7C00000Cu)
+
+#define DISABLE_C7X_SNOOP_FILTER    (0) /*On reset value is 0*/
+#define ENABLE_C7X_MMU_TO_DMC_SNOOP (1) /*On reset value is 1*/
+#define ENABLE_C7X_PMC_TO_DMC_SNOOP (0) /*On reset value is 1*/
+#define ENABLE_C7X_SE_TO_DMC_SNOOP  (1) /*On reset value is 1*/
+#define ENABLE_C7X_DRU_TO_DMC_SNOOP (1) /*On reset value is 1*/
+#define ENABLE_C7X_SOC_TO_DMC_SNOOP (1) /*On reset value is 1*/
+
+static void setC7xSnoopCfgReg()
+{
+    volatile uint32_t *pReg = (uint32_t *)C7x_EL2_SNOOP_CFG_REG;
+
+    /* This operation overrides the existing value of snoop config!*/
+    *pReg = (uint32_t)(0u);
+}
 
 static void appMain(void* arg0, void* arg1)
 {
+    appUtilsTaskInit();
     appInit();
     appRun();
     #if 1
@@ -113,14 +159,6 @@ void StartupEmulatorWaitFxn (void)
     }while (enableDebug);
 }
 
-void StartupEmulatorWaitFxn1 (void)
-{
-    volatile uint32_t enableDebug = 0;
-    do
-    {
-    }while (enableDebug);
-}
-
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 16KB
@@ -132,70 +170,48 @@ __attribute__ ((section(".bss:taskStackSection")))
 __attribute__ ((aligned(8192)))
     ;
 
-/* DRU configuration */
-/* TBD: Update QoS for J722S */
-#if 0
-#define J721E_DDR_QOS_EXP_DRU_QUEUE_PRIORITY   (2)
-#define J721E_DDR_QOS_EXP_DRU_QUEUE_ORDER_ID   (4)
-#define J7ES_DRU_NUM_CH (5)
-#define J7ES_DRU_CFG_y(i) (0x6D008000 + ((i) * 8))
-#define writel(x,y) (*((uint32_t *)(y))=(x))
+#if defined(ENABLE_C7X_CACHE_WRITE_THROUGH)
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-void setup_dru_qos(void)
-{
-    #if 0
-    unsigned int channel;
+void temp_CSL_c7xSetL1DCFG(uint64_t param);
 
-    for (channel = 0; channel < J7ES_DRU_NUM_CH; ++channel)
-    {
-        writel((J721E_DDR_QOS_EXP_DRU_QUEUE_ORDER_ID << 4) | J721E_DDR_QOS_EXP_DRU_QUEUE_PRIORITY, J7ES_DRU_CFG_y(channel));
-    }
-    #endif
+#ifdef __cplusplus
 }
+#endif
 
-/* A copy of this function is in both C7 main files, except the cfgClec.rtMap value */
-static void appC7xClecInitDru(void)
+__asm__ __volatile__("temp_CSL_c7xSetL1DCFG: \n"
+" MVC .S1 A4, ECR256 ; \n"
+" RET .B1\n"
+);
+
+static void configureC7xL1DCacheAsWriteThrough()
 {
-/* TBD: Update CLEC J722S */
-#if 0    
-    CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
-
-    uint32_t i;
-    uint32_t dru_input_start = 208;
-    uint32_t dru_input_num   = 12;
-    /* program CLEC events from DRU used by any app running on C7x-2 (Upto 12 channels)
-     */
-    for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
-    {
-        /* Configure CLEC */
-        cfgClec.secureClaimEnable = FALSE;
-        cfgClec.evtSendEnable     = TRUE;
-
-        /* cfgClec.rtMap value is different for each C7x */
-        cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_5;
-
-        cfgClec.extEvtNum         = 0;
-        cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
-    }
-#endif    
+    volatile uint64_t l1dcfg = 0x1U;
+#if !defined(MCU_PLUS_SDK)
+    Cache_wbInvL1dAll();
+#else
+    CacheP_wbInvAll(CacheP_TYPE_L1D);
+#endif
+    temp_CSL_c7xSetL1DCFG(l1dcfg);
 }
+#endif
 
 int main(void)
 {
     app_rtos_task_params_t tskParams;
     app_rtos_task_handle_t task;
-    /* This is for debug purpose - see the description of function header */
-    StartupEmulatorWaitFxn1();
-    OS_init();
 
-    appC7xClecInitDru();
+    StartupEmulatorWaitFxn();
 
-    setup_dru_qos();
-
-    appPerfStatsInit();
+    /* set timer clock source */
+    SOC_controlModuleUnlockMMR(SOC_DOMAIN_ID_MAIN, 2);
+    *(volatile uint32_t*)(TIMER2_CLOCK_SRC_MUX_ADDR) = TIMER2_CLOCK_SRC_MCU_HFOSC0;
+    SOC_controlModuleLockMMR(SOC_DOMAIN_ID_MAIN, 2);
+    /* initialize Clock */
+    ClockP_init();
 
     appRtosTaskParamsInit(&tskParams);
     tskParams.priority = 8u;
@@ -203,11 +219,14 @@ int main(void)
     tskParams.stacksize = sizeof (gTskStackMain);
     tskParams.taskfxn = &appMain;
     task = appRtosTaskCreate(&tskParams);
-    if(NULL == task)
-    {
-        OS_stop();
-    }
-    OS_start();
+
+    DebugP_assert(task != NULL);
+    vTaskStartScheduler();
+    /* The following line should never be reached because vTaskStartScheduler()
+    will only return if there was not enough FreeRTOS heap memory available to
+    create the Idle and (if configured) Timer tasks.  Heap management, and
+    techniques for trapping heap exhaustion, are described in the book text. */
+    DebugP_assertNoLog(0);
 
     return 0;
 }
@@ -216,213 +235,185 @@ uint32_t g_app_rtos_c7x_mmu_map_error = 0;
 
 void appMmuMap(Bool is_secure)
 {
-    Bool            retVal;
-    Mmu_MapAttrs    attrs;
+    int32_t retVal;
+    MmuP_MapAttrs    attrs;
 
-    uint32_t ns = 1;
+    MmuP_MapAttrs_init(&attrs);
 
-    if(is_secure)
-        ns = 0;
-    else
-        ns = 1;
+    attrs.attrIndx = MMUP_ATTRINDX_MAIR0;
 
-    Mmu_initMapAttrs(&attrs);
-
-    attrs.attrIndx = Mmu_AttrIndx_MAIR0;
-    attrs.ns = ns;
-
-    /* TBD: Update MMU for J722S */
-
-    retVal = Mmu_map(0x00000000U, 0x00000000U, 0x20000000U, &attrs, is_secure);
-    if(retVal==FALSE)
+    retVal = MmuP_map(0x00000000, 0x00000000, 0x20000000, &attrs);
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x20000000U, 0x20000000U, 0x20000000U, &attrs, is_secure);
-    if(retVal==FALSE)
+    retVal = MmuP_map(0x20000000, 0x20000000, 0x20000000, &attrs);
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x40000000U, 0x40000000U, 0x20000000U, &attrs, is_secure);
-    if(retVal==FALSE)
+    retVal = MmuP_map(0x40000000, 0x40000000, 0x20000000, &attrs);
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x60000000U, 0x60000000U, 0x10000000U, &attrs, is_secure);
-    if(retVal==FALSE)
+    retVal = MmuP_map(0x60000000, 0x60000000, 0x10000000, &attrs);
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x78000000U, 0x78000000U, 0x08000000U, &attrs, is_secure); /* CLEC */
-    if(retVal==FALSE)
+    retVal = MmuP_map(0x70000000, 0x70000000, 0x10000000, &attrs);
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    attrs.attrIndx = Mmu_AttrIndx_MAIR7;
-
-    retVal = Mmu_map(0x80000000U, 0x80000000U, 0x20000000U, &attrs, is_secure); /* OCMC - 1MB */
-    if(retVal == FALSE)
+    retVal = MmuP_map(0x7C200000U, 0x7C200000U, 0x00100000U, &attrs); /* CLEC */
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0xA0000000U, 0xA0000000U, 0x20000000U, &attrs, is_secure); /* OCMC - 1MB */
-    if(retVal == FALSE)
+    retVal = MmuP_map(0x7C400000U, 0x7C400000U, 0x00100000U, &attrs); /* DRU */
+    if(retVal==SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x70000000U, 0x70000000U, 0x00400000U, &attrs, is_secure); /* MSMC - 4MB */
-    if(retVal == FALSE)
+    MmuP_MapAttrs_init(&attrs);
+    attrs.attrIndx = MMUP_ATTRINDX_MAIR0;
+
+    retVal = MmuP_map(L2RAM_C7x_1_MAIN_ADDR, L2RAM_C7x_1_MAIN_ADDR, 0x01000000, &attrs);
+    if(retVal == SystemP_FAILURE)
+    {
+        goto mmu_exit;
+    }
+    retVal = MmuP_map(L2RAM_C7x_1_AUX_ADDR, L2RAM_C7x_1_AUX_ADDR, 0x01000000, &attrs);
+    if(retVal == SystemP_FAILURE)
+    {
+        goto mmu_exit;
+    }
+    attrs.attrIndx = MMUP_ATTRINDX_MAIR7;
+
+
+    retVal = MmuP_map(DDR_C7x_1_DTS_ADDR, DDR_C7x_1_DTS_ADDR, DDR_C7x_1_DTS_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(0x41C00000U, 0x41C00000U, 0x00100000U, &attrs, is_secure); /* OCMC - 1MB */
-    if(retVal == FALSE)
+    retVal = MmuP_map(DDR_SHARED_MEM_ADDR, DDR_SHARED_MEM_ADDR, DDR_SHARED_MEM_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    /*The region mapped by the MMU is intentionally set to 2MB for L2 SRAM since
-      page sizes are a function of the region size and having smaller page sizes
-      negatively affects the performance of L2 SRAM as the table walks with the
-      translation table in DDR are expensive, especially in context of high-
-      throughput, low-latency memory like L2 SRAM*/
-    retVal = Mmu_map(L2RAM_C7x_2_ADDR, L2RAM_C7x_2_ADDR, 0x00200000, &attrs, is_secure); /* L2 sram 448KB        */
-    if(retVal == FALSE)
+    retVal = MmuP_map(DDR_C7X_1_LOCAL_HEAP_ADDR, DDR_C7X_1_LOCAL_HEAP_ADDR, DDR_C7X_1_LOCAL_HEAP_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(DDR_C7x_2_DTS_ADDR, DDR_C7x_2_DTS_ADDR, DDR_C7x_2_DTS_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == FALSE)
+    retVal = MmuP_map(DDR_C7X_1_SCRATCH_ADDR, DDR_C7X_1_SCRATCH_ADDR, DDR_C7X_1_SCRATCH_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(DDR_C7X_2_LOCAL_HEAP_VADDR, DDR_C7X_2_LOCAL_HEAP_PADDR, DDR_C7X_2_LOCAL_HEAP_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == FALSE)
+    MmuP_MapAttrs_init(&attrs);
+
+    attrs.attrIndx = MMUP_ATTRINDX_MAIR4;
+
+    retVal = MmuP_map(APP_LOG_MEM_ADDR, APP_LOG_MEM_ADDR, APP_LOG_MEM_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(DDR_C7X_2_SCRATCH_VADDR, DDR_C7X_2_SCRATCH_PADDR, DDR_C7X_2_SCRATCH_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == FALSE)
+    retVal = MmuP_map(APP_FILEIO_MEM_ADDR, APP_FILEIO_MEM_ADDR, APP_FILEIO_MEM_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(DDR_SHARED_MEM_ADDR, DDR_SHARED_MEM_PHYS_ADDR, DDR_SHARED_MEM_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == FALSE)
+    retVal = MmuP_map(TIOVX_OBJ_DESC_MEM_ADDR, TIOVX_OBJ_DESC_MEM_ADDR, TIOVX_OBJ_DESC_MEM_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    attrs.attrIndx = Mmu_AttrIndx_MAIR4;
-
-    retVal = Mmu_map(APP_LOG_MEM_ADDR, APP_LOG_MEM_ADDR, APP_LOG_MEM_SIZE, &attrs, is_secure);
-    if(retVal == FALSE)
+    retVal = MmuP_map(IPC_VRING_MEM_ADDR, IPC_VRING_MEM_ADDR, IPC_VRING_MEM_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(TIOVX_OBJ_DESC_MEM_ADDR, TIOVX_OBJ_DESC_MEM_ADDR, TIOVX_OBJ_DESC_MEM_SIZE, &attrs, is_secure);
-    if(retVal == FALSE)
+	retVal = MmuP_map(DDR_C7x_1_IPC_ADDR, DDR_C7x_1_IPC_ADDR, 2*DDR_C7x_1_IPC_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(IPC_VRING_MEM_ADDR, IPC_VRING_MEM_ADDR, IPC_VRING_MEM_SIZE, &attrs, is_secure);
-    if(retVal == FALSE)
+    retVal = MmuP_map(TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(DDR_C7x_2_IPC_ADDR, DDR_C7x_2_IPC_ADDR, DDR_C7x_2_IPC_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == FALSE)
+    retVal = MmuP_map(DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR, DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR, DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
-    retVal = Mmu_map(TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_SIZE, &attrs, is_secure);
-    if(retVal == FALSE)
+    retVal = MmuP_map(DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR, DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR, DDR_C7X_1_SCRATCH_NON_CACHEABLE_SIZE, &attrs);
+    if(retVal == SystemP_FAILURE)
     {
         goto mmu_exit;
     }
 
 mmu_exit:
-    if(retVal == FALSE)
+    if(retVal == SystemP_FAILURE)
     {
         g_app_rtos_c7x_mmu_map_error++;
     }
-
-
 
     return;
 }
 
 void appCacheInit()
 {
-    Cache_Size  cacheSize;
+    /* Going with default cache setting on reset */
+    /* L1P - 32kb$, L1D - 64kb$, L2 - 0kb$ */
+#if defined(ENABLE_C7X_CACHE_WRITE_THROUGH)
+    configureC7xL1DCacheAsWriteThrough();
+#endif
 
-    /* TBD: Update Cache for J722S */
-    /* init cache size here, since this needs to be done in secure mode */
-    cacheSize.l1pSize = Cache_L1Size_32K;
-    cacheSize.l1dSize = Cache_L1Size_32K;
-    cacheSize.l2Size  = Cache_L2Size_64K;
+    setC7xSnoopCfgReg();
 
-    Cache_setSize(&cacheSize);
 }
 
-void InitMmu(void)
+void MmuP_setConfig(void)
 {
     /* This is for debug purpose - see the description of function header */
-    StartupEmulatorWaitFxn();
-
     g_app_rtos_c7x_mmu_map_error = 0;
 
-    appC7xClecInitForNonSecAccess();
-
+    /* There is no secure mode in C7504 */
     appMmuMap(FALSE);
-    appMmuMap(TRUE);
 
     appCacheInit();
 }
-
-/* Offset to be added to convert virtual address to physical address */
-#define VIRT_PHY_ADDR_OFFSET (DDR_64BIT_BASE_PADDR - DDR_64BIT_BASE_VADDR)
 
 uint64_t appUdmaVirtToPhyAddrConversion(const void *virtAddr,
                                       uint32_t chNum,
                                       void *appData)
 {
-  uint64_t phyAddr = (uint64_t)virtAddr;
 
-  /* Note: I think this is correct but needs review */
-  if ( ((uint64_t)virtAddr >= DDR_SHARED_MEM_ADDR) &&
-       ((uint64_t)virtAddr < (DDR_SHARED_MEM_ADDR+DDR_SHARED_MEM_SIZE)) )
-  {
-        if (DDR_SHARED_MEM_PHYS_ADDR >= DDR_SHARED_MEM_ADDR)
-        {
-            phyAddr = (uint64_t)virtAddr + (DDR_SHARED_MEM_PHYS_ADDR - DDR_SHARED_MEM_ADDR);
-        }
-        else
-        {
-            phyAddr = (uint64_t)virtAddr - (DDR_SHARED_MEM_ADDR - DDR_SHARED_MEM_PHYS_ADDR);
-        }
-  }
-  else if ( ((uint64_t)virtAddr >= DDR_C7X_2_LOCAL_HEAP_ADDR) )
-  {
-    phyAddr = ((uint64_t)virtAddr + VIRT_PHY_ADDR_OFFSET);
-  }
-
-  return phyAddr;
+  return (uint64_t)virtAddr;
 }
 
 uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
@@ -449,4 +440,3 @@ uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
 
     return target_ptr;
 }
-

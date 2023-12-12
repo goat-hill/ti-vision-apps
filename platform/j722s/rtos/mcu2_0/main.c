@@ -62,18 +62,43 @@
 
 #include <app.h>
 #include <utils/console_io/include/app_log.h>
+#include <utils/misc/include/app_misc.h>
 #include <utils/rtos/include/app_rtos.h>
 #include <stdio.h>
 #include <string.h>
-#include <ti/osal/osal.h>
 #include <app_ipc_rsctable.h>
 #include "app_cfg_mcu2_0.h"
 #include <utils/perf_stats/include/app_perf_stats.h>
 
+#include "ti_drivers_config.h"
+#include "ti_board_config.h"
+#include "ti_drivers_open_close.h"
+#include "ti_board_open_close.h"
+#include <ipc_notify.h>
+#include <ipc_notify/v0/ipc_notify_v0.h>
+
+extern void vTaskStartScheduler( void );
+
+void IpcNotify_getConfig(IpcNotify_InterruptConfig **interruptConfig, uint32_t *interruptConfigNum)
+{
+    /* extern globals that are specific to this core */
+    extern IpcNotify_InterruptConfig gIpcNotifyInterruptConfig_main_r5fss0_0[];
+    extern uint32_t gIpcNotifyInterruptConfigNum_main_r5fss0_0;
+
+    *interruptConfig = &gIpcNotifyInterruptConfig_main_r5fss0_0[0];
+    *interruptConfigNum = gIpcNotifyInterruptConfigNum_main_r5fss0_0;
+}
+
 static void appMain(void* arg0, void* arg1)
 {
+    appUtilsTaskInit();
+
+    Drivers_open();
+    Board_driversOpen();
+
     appInit();
     appRun();
+
     #if 1
     while(1)
     {
@@ -105,7 +130,8 @@ int main(void)
     /* This is for debug purpose - see the description of function header */
     StartupEmulatorWaitFxn();
 
-    OS_init();
+    System_init();
+    Board_init(); 
 
     appPerfStatsInit();
 
@@ -115,11 +141,14 @@ int main(void)
     tskParams.stacksize = sizeof (gTskStackMain);
     tskParams.taskfxn = &appMain;
     task = appRtosTaskCreate(&tskParams);
-    if(NULL == task)
-    {
-        OS_stop();
-    }
-    OS_start();
+
+    DebugP_assert(task != NULL);
+    vTaskStartScheduler();
+    /* The following line should never be reached because vTaskStartScheduler()
+    will only return if there was not enough FreeRTOS heap memory available to
+    create the Idle and (if configured) Timer tasks.  Heap management, and
+    techniques for trapping heap exhaustion, are described in the book text. */
+    DebugP_assertNoLog(0);
 
     return 0;
 }

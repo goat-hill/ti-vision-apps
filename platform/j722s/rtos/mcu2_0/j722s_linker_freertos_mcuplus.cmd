@@ -14,7 +14,6 @@
 --fill_value=0
 --stack_size=0x8000
 --heap_size=0x10000
---entry_point=_freertosresetvectors
 
 -stack  0x8000  /* SOFTWARE STACK SIZE */
 -heap   0x10000 /* HEAP AREA SIZE      */
@@ -53,6 +52,8 @@ SECTIONS
     .cinit              : {} palign(8)      > DDR_MCU2_0
     .pinit              : {} palign(8)      > R5F_TCMA
     .bss                : {} align(4)       > DDR_MCU2_0
+    RUN_START(__BSS_START)
+    RUN_END(__BSS_END)
     .data               : {} palign(128)    > DDR_MCU2_0
     .sysmem             : {} align(8)       > DDR_MCU2_0
     .stack              : {} align(4)       > DDR_MCU2_0
@@ -94,8 +95,8 @@ SECTIONS
     RUN_END(__ABORT_STACK_END)
 
     .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > DDR_MCU2_0  (HIGH)
-    RUN_START(__UND_STACK_START)
-    RUN_END(__UND_STACK_END)
+    RUN_START(__UNDEFINED_STACK_START)
+    RUN_END(__UNDEFINED_STACK_END)
 
     .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > DDR_MCU2_0  (HIGH)
     RUN_START(__SVC_STACK_START)

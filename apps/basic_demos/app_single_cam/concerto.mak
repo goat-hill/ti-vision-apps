@@ -35,6 +35,10 @@ endif
 
 IDIRS += $(IMAGING_IDIRS)
 
+ifeq ($(SOC), j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif
