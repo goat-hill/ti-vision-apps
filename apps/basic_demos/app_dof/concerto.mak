@@ -27,7 +27,7 @@ include $(VISION_APPS_PATH)/apps/concerto_mpu_inc.mak
 endif
 endif
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

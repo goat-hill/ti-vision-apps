@@ -16,7 +16,7 @@ IDIRS       += $(VISION_APPS_PATH)/kernels/fileio/include
 IDIRS       += $(VISION_APPS_PATH)/kernels/fileio/host
 IDIRS       += $(VXLIB_PATH)/packages
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

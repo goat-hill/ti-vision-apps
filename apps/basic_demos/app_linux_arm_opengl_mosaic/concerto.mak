@@ -34,7 +34,7 @@ IDIRS += $(VISION_APPS_SRV_IDIRS)
 
 STATIC_LIBS += $(VISION_APPS_SRV_LIBS)
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

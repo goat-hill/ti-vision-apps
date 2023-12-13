@@ -30,7 +30,7 @@ IDIRS += $(PSDK_QNX_PATH)/qnx/codec/img/qnx/OpenMAXIL/khronos/openmaxil/
 IDIRS += $(PSDK_QNX_PATH)/qnx/codec/img/qnx/OpenMAXIL/core/public/khronos/openmaxil
 endif
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

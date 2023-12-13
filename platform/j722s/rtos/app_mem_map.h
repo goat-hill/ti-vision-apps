@@ -76,39 +76,39 @@
 #define L2RAM_C7x_1_MAIN_SIZE (0x00200000u)
 
 /* L3 for C7x_2 [ size  2.00 MB ] */
-#define L2RAM_C7x_2_MAIN_ADDR (0x7E000000u)
+#define L2RAM_C7x_2_MAIN_ADDR (0x7E200000u)
 #define L2RAM_C7x_2_MAIN_SIZE (0x00200000u)
 
 /* L2 for C7x_1 [ size 240.00 KB ] */
 #define L2RAM_C7x_1_AUX_ADDR (0x7F000000u)
 #define L2RAM_C7x_1_AUX_SIZE (0x0003C000u)
 
-/* L2 for C7x_2 [ size 240.00 KB ] */
-#define L2RAM_C7x_2_AUX_ADDR (0x7F000000u)
-#define L2RAM_C7x_2_AUX_SIZE (0x0003C000u)
-
 /* L1 for C7x_1 [ size 16.00 KB ] */
 #define L2RAM_C7x_1_AUX_AS_L1_ADDR (0x7F03C000u)
 #define L2RAM_C7x_1_AUX_AS_L1_SIZE (0x00004000u)
 
+/* L2 for C7x_2 [ size 240.00 KB ] */
+#define L2RAM_C7x_2_AUX_ADDR (0x7F800000u)
+#define L2RAM_C7x_2_AUX_SIZE (0x0003C000u)
+
 /* L1 for C7x_2 [ size 16.00 KB ] */
-#define L2RAM_C7x_2_AUX_AS_L1_ADDR (0x7F03C000u)
+#define L2RAM_C7x_2_AUX_AS_L1_ADDR (0x7F83C000u)
 #define L2RAM_C7x_2_AUX_AS_L1_SIZE (0x00004000u)
 
 /* DDR for MCU1_0 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU1_0_IPC_ADDR (0xA0000000u)
+#define DDR_MCU1_0_IPC_ADDR (0xA1000000u)
 #define DDR_MCU1_0_IPC_SIZE (0x00100000u)
 
 /* DDR for MCU1_0 for all sections, used for reserving memory in DTS file [ size 15.00 MB ] */
-#define DDR_MCU1_0_DTS_ADDR (0xA0100000u)
+#define DDR_MCU1_0_DTS_ADDR (0xA1100000u)
 #define DDR_MCU1_0_DTS_SIZE (0x00F00000u)
 
 /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU2_0_IPC_ADDR (0xA1000000u)
+#define DDR_MCU2_0_IPC_ADDR (0xA2000000u)
 #define DDR_MCU2_0_IPC_SIZE (0x00100000u)
 
 /* DDR for MCU2_0 for all sections, used for reserving memory in DTS file [ size 31.00 MB ] */
-#define DDR_MCU2_0_DTS_ADDR (0xA1100000u)
+#define DDR_MCU2_0_DTS_ADDR (0xA2100000u)
 #define DDR_MCU2_0_DTS_SIZE (0x01F00000u)
 
 /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */

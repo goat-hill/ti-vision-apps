@@ -28,7 +28,7 @@ CSOURCES    += tivx_dl_color_convert_host.c
 IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/include
 IDIRS       += $(TIDL_PATH)/arm-tidl/rt/inc
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

@@ -15,6 +15,10 @@ IDIRS += $(VISION_APPS_KERNELS_IDIRS)
 
 STATIC_LIBS += $(IMAGING_LIBS)
 
+ifeq ($(SOC),j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

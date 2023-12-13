@@ -35,7 +35,7 @@ endif
 
 IDIRS += $(IMAGING_IDIRS)
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

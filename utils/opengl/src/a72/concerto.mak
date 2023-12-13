@@ -22,7 +22,7 @@ IDIRS       += $(QNX_TARGET)/usr/include
 CSOURCES    := app_gl_egl_utils_qnx.c
 endif
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

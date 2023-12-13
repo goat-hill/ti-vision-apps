@@ -21,7 +21,7 @@ TARGETTYPE  := library
 CSOURCES    := $(call all-c-files)
 IDIRS       += $(VISION_APPS_PATH)/kernels/sample/include
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

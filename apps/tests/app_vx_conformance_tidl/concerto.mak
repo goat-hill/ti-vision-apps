@@ -24,6 +24,10 @@ STATIC_LIBS += $(TEST_LIBS)
 
 CFLAGS      += -DBUILD_CT_TIOVX_TIDL
 
+ifeq ($(SOC),j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

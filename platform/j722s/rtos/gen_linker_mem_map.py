@@ -113,7 +113,7 @@ GB = KB*MB;
 # virtual lower DDR address range 0x0001_0000_0000
 #
 
-ddr_mem_addr  = 0xa0000000;
+ddr_mem_addr  = 0xa1000000;
 ddr_mem_size  = 1*GB + 448*MB; # Last 64MB is used by Linux
 
 ddr_mem_addr_hi_phy = 0x880000000;
@@ -146,9 +146,9 @@ c7x_1_l2_aux_as_l1_size  = 16*KB;
 #
 # L2 main - 2MB SRAM
 # L2 aux  - 256KB SRAM
-c7x_2_l2_main_addr  = 0x7e000000;
+c7x_2_l2_main_addr  = 0x7e200000;
 c7x_2_l2_main_size  = 2*MB;
-c7x_2_l2_aux_addr  = 0x7f000000;
+c7x_2_l2_aux_addr  = 0x7f800000;
 c7x_2_l2_aux_size  = 240*KB;
 c7x_2_l2_aux_as_l1_addr  = c7x_2_l2_aux_addr + c7x_2_l2_aux_size;
 c7x_2_l2_aux_as_l1_size  = 16*KB;
@@ -464,6 +464,7 @@ html_mmap = MemoryMap("System Memory Map for Linux+RTOS mode");
 html_mmap.addMemSection( c7x_1_l3           );
 html_mmap.addMemSection( c7x_1_l2           );
 html_mmap.addMemSection( c7x_1_l1           );
+html_mmap.addMemSection( c7x_2_l3           );
 html_mmap.addMemSection( c7x_2_l2           );
 html_mmap.addMemSection( c7x_2_l1           );
 html_mmap.addMemSection( mcu1_0_ddr_ipc     );

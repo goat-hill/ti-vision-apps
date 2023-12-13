@@ -28,6 +28,10 @@ CFLAGS      += -DBUILD_CT_TIOVX_INTERNAL
 CFLAGS      += -DBUILD_CT_KHR
 CFLAGS      += -DBUILD_CT_TIOVX_HWA
 
+ifeq ($(SOC),j722s)
+SKIPBUILD=1
+endif
+
 include $(FINALE)
 
 endif

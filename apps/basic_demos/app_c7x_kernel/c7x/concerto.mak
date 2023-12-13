@@ -11,7 +11,7 @@ CFLAGS += --std=c++14 -D_HOST_EMULATION -pedantic -fPIC -w -c -g
 CFLAGS += -Wno-sign-compare
 endif
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

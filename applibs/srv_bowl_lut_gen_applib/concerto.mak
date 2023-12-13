@@ -7,7 +7,7 @@ CSOURCES    := $(call all-c-files)
 
 IDIRS       += $(VISION_APPS_PATH)/kernels/srv/include
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

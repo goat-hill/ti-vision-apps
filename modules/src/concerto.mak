@@ -25,7 +25,7 @@ IDIRS       += $(VISION_APPS_PATH)/kernels/fileio/include
 IDIRS       += $(TIDL_PATH)/ti_dl/inc
 IDIRS       += $(VISION_APPS_PATH)/modules/include
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

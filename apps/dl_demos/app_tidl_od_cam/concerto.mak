@@ -60,7 +60,7 @@ IDIRS += $(VISION_APPS_PATH)/modules/include
 STATIC_LIBS += $(TIADALG_LIBS)
 STATIC_LIBS += vx_app_modules
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

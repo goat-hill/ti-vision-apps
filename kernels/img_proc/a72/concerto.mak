@@ -12,7 +12,7 @@ IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/include
 IDIRS       += $(VISION_APPS_PATH)/kernels/img_proc/host
 IDIRS       += $(TIOVX_PATH)/kernels/ivision/include
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

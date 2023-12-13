@@ -72,7 +72,7 @@ endif
 
 endif
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 

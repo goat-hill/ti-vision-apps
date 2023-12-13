@@ -67,11 +67,11 @@
 MEMORY
 {
     /* L3 for C7x_2 [ size  2.00 MB ] */
-    L2RAM_C7x_2_MAIN         ( RWIX ) : ORIGIN = 0x7E000000 , LENGTH = 0x00200000
+    L2RAM_C7x_2_MAIN         ( RWIX ) : ORIGIN = 0x7E200000 , LENGTH = 0x00200000
     /* L2 for C7x_2 [ size 240.00 KB ] */
-    L2RAM_C7x_2_AUX          ( RWIX ) : ORIGIN = 0x7F000000 , LENGTH = 0x0003C000
+    L2RAM_C7x_2_AUX          ( RWIX ) : ORIGIN = 0x7F800000 , LENGTH = 0x0003C000
     /* L1 for C7x_2 [ size 16.00 KB ] */
-    L2RAM_C7x_2_AUX_AS_L1    ( RWIX ) : ORIGIN = 0x7F03C000 , LENGTH = 0x00004000
+    L2RAM_C7x_2_AUX_AS_L1    ( RWIX ) : ORIGIN = 0x7F83C000 , LENGTH = 0x00004000
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */
     IPC_VRING_MEM                     : ORIGIN = 0xA8000000 , LENGTH = 0x02000000
     /* Memory for remote core logging [ size 256.00 KB ] */

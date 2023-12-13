@@ -33,7 +33,7 @@ STATIC_LIBS += app_utils_omax_wrapper
 
 endif
 
-ifeq ($(SOC), j722s)
+ifeq ($(SOC),j722s)
 SKIPBUILD=1
 endif
 
