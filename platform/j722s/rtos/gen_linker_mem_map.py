@@ -178,7 +178,7 @@ mcu2_0_ddr_size = 32*MB - (mcu2_0_ddr_addr-mcu2_0_ddr_ipc_addr);
 #
 
 # Hardcoding this value, as this cannot be different from IPC echo test value
-ipc_vring_mem_addr      = 0xA8000000;
+ipc_vring_mem_addr      = 0xA5000000;
 ipc_vring_mem_size      = 32*MB;
 
 app_log_mem_addr        = ipc_vring_mem_addr + ipc_vring_mem_size;
@@ -256,7 +256,7 @@ c7x_2_ddr_scratch_size     = 112*MB;
 c7x_core_heap_hi_size     += c7x_2_ddr_scratch_size
 
 # Shared memory for DMA Buf FD carveout (located in high mem)
-ddr_shared_mem_addr_phys  = 0x900000000; # TODO: Clean this up
+ddr_shared_mem_addr_phys  = 0xC0000000; # TODO: Clean this up
 ddr_shared_mem_size       = 512*MB;
 
 #

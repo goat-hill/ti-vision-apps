@@ -112,52 +112,56 @@
 #define DDR_MCU2_0_DTS_SIZE (0x01F00000u)
 
 /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */
-#define IPC_VRING_MEM_ADDR (0xA8000000u)
+#define IPC_VRING_MEM_ADDR (0xA5000000u)
 #define IPC_VRING_MEM_SIZE (0x02000000u)
 
 /* Memory for remote core logging [ size 256.00 KB ] */
-#define APP_LOG_MEM_ADDR (0xAA000000u)
+#define APP_LOG_MEM_ADDR (0xA7000000u)
 #define APP_LOG_MEM_SIZE (0x00040000u)
 
 /* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 63.75 MB ] */
-#define TIOVX_OBJ_DESC_MEM_ADDR (0xAA040000u)
+#define TIOVX_OBJ_DESC_MEM_ADDR (0xA7040000u)
 #define TIOVX_OBJ_DESC_MEM_SIZE (0x03FC0000u)
 
 /* Memory for remote core file operations [ size  4.00 MB ] */
-#define APP_FILEIO_MEM_ADDR (0xAE000000u)
+#define APP_FILEIO_MEM_ADDR (0xAB000000u)
 #define APP_FILEIO_MEM_SIZE (0x00400000u)
 
 /* Memory for TI OpenVX shared memory for Run-time logging. MUST be non-cached or cache-coherent [ size 28.00 MB ] */
-#define TIOVX_LOG_RT_MEM_ADDR (0xAE400000u)
+#define TIOVX_LOG_RT_MEM_ADDR (0xAB400000u)
 #define TIOVX_LOG_RT_MEM_SIZE (0x01C00000u)
 
 /* DDR for C7x_1 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_C7x_1_IPC_ADDR (0xB0000000u)
+#define DDR_C7x_1_IPC_ADDR (0xAD000000u)
 #define DDR_C7x_1_IPC_SIZE (0x00100000u)
 
 /* DDR for C7x_1 for all sections, used for reserving memory in DTS file [ size 63.00 MB ] */
-#define DDR_C7x_1_DTS_ADDR (0xB0100000u)
+#define DDR_C7x_1_DTS_ADDR (0xAD100000u)
 #define DDR_C7x_1_DTS_SIZE (0x03F00000u)
 
 /* DDR for C7x_2 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_C7x_2_IPC_ADDR (0xB4000000u)
+#define DDR_C7x_2_IPC_ADDR (0xB1000000u)
 #define DDR_C7x_2_IPC_SIZE (0x00100000u)
 
 /* DDR for C7x_2 for all sections, used for reserving memory in DTS file [ size 63.00 MB ] */
-#define DDR_C7x_2_DTS_ADDR (0xB4100000u)
+#define DDR_C7x_2_DTS_ADDR (0xB1100000u)
 #define DDR_C7x_2_DTS_SIZE (0x03F00000u)
 
 /* DDR for MCU1_0 for local heap [ size  8.00 MB ] */
-#define DDR_MCU1_0_LOCAL_HEAP_ADDR (0xB8000000u)
+#define DDR_MCU1_0_LOCAL_HEAP_ADDR (0xB5000000u)
 #define DDR_MCU1_0_LOCAL_HEAP_SIZE (0x00800000u)
 
 /* DDR for MCU2_0 for local heap [ size 32.00 MB ] */
-#define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xB8800000u)
+#define DDR_MCU2_0_LOCAL_HEAP_ADDR (0xB5800000u)
 #define DDR_MCU2_0_LOCAL_HEAP_SIZE (0x02000000u)
 
 /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
 #define DDR_SHARED_MEM_ADDR (0xC0000000u)
 #define DDR_SHARED_MEM_SIZE (0x20000000u)
+
+/* Physical address of memory for shared memory buffers in DDR [ size 512.00 MB ] */
+#define DDR_SHARED_MEM_PHYS_ADDR (0xC0000000u)
+#define DDR_SHARED_MEM_PHYS_SIZE (0x20000000u)
 
 /* DDR for c7x_1 for non cacheable local heap [ size 16.00 MB ] */
 #define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x100000000u)
@@ -190,10 +194,6 @@
 /* DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
 #define DDR_C7X_2_SCRATCH_ADDR (0x119000000u)
 #define DDR_C7X_2_SCRATCH_SIZE (0x07000000u)
-
-/* Physical address of memory for shared memory buffers in DDR [ size 512.00 MB ] */
-#define DDR_SHARED_MEM_PHYS_ADDR (0x900000000u)
-#define DDR_SHARED_MEM_PHYS_SIZE (0x20000000u)
 
 /* Main OCRAM Physical Address for MCU2_0 [ size 512.00 KB ] */
 #define MAIN_OCRAM_MCU2_0_PHYS_ADDR (0x4F02000000u)

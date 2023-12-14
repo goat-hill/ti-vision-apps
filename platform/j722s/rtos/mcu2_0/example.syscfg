@@ -50,7 +50,7 @@ mpu_armv74.baseAddr          = 0x79100000;
 mpu_armv74.size              = 19;
 mpu_armv74.$name             = "CONFIG_MPU_MCU_MSRAM";
 
-mpu_armv75.baseAddr          = 0x9C800000;
+mpu_armv75.baseAddr          = 0xA2000000;
 mpu_armv75.size              = 21;
 mpu_armv75.$name             = "IPC_VRING_RESOURCE_TABLE_LINUX";
 mpu_armv75.attributes        = "CUSTOM";
@@ -59,7 +59,7 @@ mpu_armv75.isCacheable       = false;
 mpu_armv75.isBufferable      = false;
 mpu_armv75.allowExecute      = false;
 
-mpu_armv76.baseAddr          = 0xA0000000;
+mpu_armv76.baseAddr          = 0xA5000000;
 mpu_armv76.allowExecute      = false;
 mpu_armv76.$name             = "IPC_RTOS_VRING_TIOVX";
 mpu_armv76.attributes        = "CUSTOM";
@@ -74,7 +74,7 @@ mpu_armv77.attributes        = "CUSTOM";
 mpu_armv77.isCacheable       = false;
 mpu_armv77.isBufferable      = false;
 mpu_armv77.tex               = 0;
-mpu_armv77.baseAddr          = 0xA1000000;
+mpu_armv77.baseAddr          = 0xA7000000;
 mpu_armv77.size              = 24;
 
 mpu_armv78.$name             = "TIOVX_RUN_TIME_LOGGING2";
@@ -83,7 +83,7 @@ mpu_armv78.attributes        = "CUSTOM";
 mpu_armv78.isCacheable       = false;
 mpu_armv78.isBufferable      = false;
 mpu_armv78.tex               = 0;
-mpu_armv78.baseAddr          = 0xA2000000;
+mpu_armv78.baseAddr          = 0xAB000000;
 mpu_armv78.size              = 24;
 
 /**

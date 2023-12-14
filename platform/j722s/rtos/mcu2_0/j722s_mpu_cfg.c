@@ -122,22 +122,8 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         .memAttr          = 0U,
     },
     {
-        /* Region 5 configuration: make all MSMC as cacheable */
+        /* Region 5 configuration: 2 GB DDR RAM */
         .regionId         = 5U,
-        .enable           = 1U,
-        .baseAddr         = 0x70000000,
-        .size             = CSL_ARM_R5_MPU_REGION_SIZE_4MB,
-        .subRegionEnable  = CSL_ARM_R5_MPU_SUB_REGION_ENABLE_ALL,
-        .exeNeverControl  = 0U,
-        .accessPermission = CSL_ARM_R5_ACC_PERM_PRIV_USR_RD_WR,
-        .shareable        = 0U,
-        .cacheable        = (uint32_t)TRUE,
-        .cachePolicy      = CSL_ARM_R5_CACHE_POLICY_WB_WA,
-        .memAttr          = 0U,
-    },
-    {
-        /* Region 6 configuration: 2 GB DDR RAM */
-        .regionId         = 6U,
         .enable           = 1U,
         .baseAddr         = 0x80000000,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_2GB,
@@ -150,8 +136,8 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         .memAttr          = 0U,
     },
     {
-        /* Region 7 configuration: Ring buffer */
-        .regionId         = 7U,
+        /* Region 6 configuration: Ring buffer */
+        .regionId         = 6U,
         .enable           = 1U,
         .baseAddr         = IPC_VRING_MEM_ADDR,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_128MB,
@@ -164,8 +150,8 @@ const CSL_ArmR5MpuRegionCfg  gCslR5MpuCfg[CSL_ARM_R5F_MPU_REGIONS_MAX] =
         .memAttr          = 0U,
     },
     {
-        /* Region 8 configuration: Ring buffer */
-        .regionId         = 8U,
+        /* Region 7 configuration: Ring buffer */
+        .regionId         = 7U,
         .enable           = 1U,
         .baseAddr         = DDR_MCU2_0_IPC_ADDR,
         .size             = CSL_ARM_R5_MPU_REGION_SIZE_1MB,

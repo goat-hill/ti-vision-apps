@@ -87,7 +87,7 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
         .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
     },
     {
-        /* Region 3 configuration: ATCM memory */
+        /* Region 1 configuration: ATCM memory */
         /* ulRegionNumber */
         .ulRegionNumber         = 2U,
         /* Starting address */
@@ -127,29 +127,9 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
         .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
     },
     {
-        /* Region 3 configuration: 2 MB MCMS3 RAM */
+        /* Region 3 configuration: 2 GB DDR RAM */
         /* ulRegionNumber */
         .ulRegionNumber         = 4U,
-        /* Starting address */
-        .ulRegionBeginAddress   = 0x70000000,
-        /* Access permission */
-        {
-            .ulexeNeverControl  = 0U,
-            .ulaccessPermission = CSL_ARM_R5_ACC_PERM_PRIV_USR_RD_WR,
-            .ulshareable        = 0U,
-            .ulcacheable        = 1U,
-            .ulcachePolicy      = CSL_ARM_R5_CACHE_POLICY_WB_WA,
-            .ulmemAttr          = 0U,
-        },
-        /* Size is 8MB */
-        .ulRegionSize           = (4U * 1024U * 1024U),
-        /* ulSubRegionDisable */
-        .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
-    },
-    {
-        /* Region 4 configuration: 2 GB DDR RAM */
-        /* ulRegionNumber */
-        .ulRegionNumber         = 5U,
         /* Starting address */
         .ulRegionBeginAddress   = 0x80000000,
         /* Access permission */
@@ -167,7 +147,7 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
         .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
     },
     {
-        /* Region 5 configuration: 32 KB BTCM */
+        /* Region 4 configuration: 32 KB BTCM */
         /* Address of ATCM/BTCM are configured via MCU_SEC_MMR registers
            It can either be '0x0' or '0x41010000'. Application/Boot-loader shall
            take care this configurations and linker command file shall be
@@ -177,7 +157,7 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
            Application can chose to overwrite this MPU configuration if needed.
            The same is true for the region corresponding to ATCM. */
         /* ulRegionNumber */
-        .ulRegionNumber         = 6U,
+        .ulRegionNumber         = 5U,
         /* Starting address */
         .ulRegionBeginAddress   = 0x41010000,
         /* Access permission */
@@ -195,9 +175,9 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
         .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
     },
     {
-        /* Region 6 configuration: 128 MB FSS DAT */
+        /* Region 5 configuration: 128 MB FSS DAT */
         /* ulRegionNumber */
-        .ulRegionNumber         = 7U,
+        .ulRegionNumber         = 6U,
         /* Starting address */
         .ulRegionBeginAddress   = 0x50000000,
         /* Access permission */
@@ -215,9 +195,9 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
         .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
     },
     {
-        /* Region 7 configuration: Ring buffer */
+        /* Region 6 configuration: Ring buffer */
         /* ulRegionNumber */
-        .ulRegionNumber         = 8U,
+        .ulRegionNumber         = 7U,
         /* Starting address */
         .ulRegionBeginAddress   = IPC_VRING_MEM_ADDR,
         /* Access permission */
@@ -235,9 +215,9 @@ xMPU_CONFIG_PARAMETERS __attribute__((section(".startupData"))) __attribute__((w
         .ulSubRegionDisable     = mpuREGION_ALL_SUB_REGIONS_ENABLED,
     },
     {
-        /* Region 8 configuration: Ring buffer */
+        /* Region 7 configuration: Ring buffer */
         /* ulRegionNumber */
-        .ulRegionNumber         = 9U,
+        .ulRegionNumber         = 8U,
         /* Starting address */
         .ulRegionBeginAddress   = DDR_MCU2_0_IPC_ADDR,
         /* Access permission */
