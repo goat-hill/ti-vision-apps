@@ -1,10 +1,12 @@
 DEFS+=CPU_mcu2_0
-DEFS+=BUILD_MCU2_0
-DEFS+=BUILD_MCU
-DEFS+=VIM_DIRECT_REGISTRATION
+DEFS+=BUILD_MAIN_R5
+DEFS+=SOC_J722S
+
+#DEFS+=BUILD_MCU
+#DEFS+=VIM_DIRECT_REGISTRATION
 
 # This enables ARM Thumb mode which reduces firmware size and enables faster boot
-COPT +=--code_state=16
+#COPT +=--code_state=16
 ifeq ($(RTOS),FREERTOS)
 	CSOURCES += generated/ti_board_config.c
 	CSOURCES += generated/ti_board_open_close.c

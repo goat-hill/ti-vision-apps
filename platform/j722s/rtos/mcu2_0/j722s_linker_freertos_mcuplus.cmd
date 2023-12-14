@@ -14,6 +14,7 @@
 --fill_value=0
 --stack_size=0x8000
 --heap_size=0x10000
+-e_vectors  /* This is the entry of the application, _vector MUST be plabed starting address 0x0 */
 
 -stack  0x8000  /* SOFTWARE STACK SIZE */
 -heap   0x10000 /* HEAP AREA SIZE      */
@@ -32,7 +33,7 @@ __SVC_STACK_SIZE   = 0x0100;
 /*--------------------------------------------------------------*/
 SECTIONS
 {
-    .freertosrstvectors : {} palign(8)      > R5F_TCMA_VECS
+    .vectors : {} palign(8)      > R5F_TCMA_VECS
 
     .bootCode           : {} palign(8)      > R5F_TCMA
     .startupCode        : {} palign(8)      > R5F_TCMA
@@ -51,12 +52,14 @@ SECTIONS
     .mpu_cfg                                > DDR_MCU2_0
     .cinit              : {} palign(8)      > DDR_MCU2_0
     .pinit              : {} palign(8)      > R5F_TCMA
-    .bss                : {} align(4)       > DDR_MCU2_0
-    RUN_START(__BSS_START)
-    RUN_END(__BSS_END)
-    .data               : {} palign(128)    > DDR_MCU2_0
-    .sysmem             : {} align(8)       > DDR_MCU2_0
-    .stack              : {} align(4)       > DDR_MCU2_0
+    /* This is rest of uninitialized data. This can be placed in DDR if DDR is available and needed */
+    GROUP {
+        .bss:    {} palign(8)   /* This is where uninitialized globals go */
+        RUN_START(__BSS_START)
+        RUN_END(__BSS_END)
+        .sysmem: {} palign(8)   /* This is where the malloc heap goes */
+        .stack:  {} palign(8)   /* This is where the main() stack goes */
+    } > DDR_MCU2_0
     .bss.devgroup     : {*(.bss.devgroup*)} align(4)       > DDR_MCU2_0
     .bss:taskStackSection > DDR_MCU2_0
 
