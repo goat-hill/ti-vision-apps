@@ -16,6 +16,7 @@ CSOURCES    := $(call all-c-files)
 
 include $($(_MODULE)_SDIR)/concerto_c7x_1_inc.mak
 
+IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common_linux
 

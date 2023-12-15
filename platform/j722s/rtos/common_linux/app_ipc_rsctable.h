@@ -148,8 +148,10 @@ const Ipc_ResourceTable ti_ipc_remoteproc_ResourceTable __attribute__ ((section 
 #endif 
 
     {
-#if defined(CPU_c7x_1) || defined(CPU_c7x_2)
-        (TRACE_INTS_VER1 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:r5f0",
+#if defined (CPU_c7x_1)
+        (TRACE_INTS_VER1 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:c7x_1",
+#elif defined (CPU_c7x_2)
+        (TRACE_INTS_VER1 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:c7x_2",
 #else
         (TRACE_INTS_VER0 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:r5f0",
 #endif

@@ -84,6 +84,8 @@ MEMORY
     DDR_C7x_2_IPC            ( RWIX ) : ORIGIN = 0xB1000000 , LENGTH = 0x00100000
     /* DDR for C7x_2 for Linux resource table [ size 1024 B ] */
     DDR_C7x_2_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xB1100000 , LENGTH = 0x00000400
+    /* DDR for C7x_2 for Linux IPC trace [ size 1023.00 KB ] */
+    DDR_C7x_2_IPC_TRACE      ( RWIX ) : ORIGIN = 0xB1100400 , LENGTH = 0x000FFC00
     /* DDR for C7x_2 for boot section [ size 1024 B ] */
     DDR_C7x_2_BOOT           ( RWIX ) : ORIGIN = 0xB1200000 , LENGTH = 0x00000400
     /* DDR for C7x_2 for vecs section [ size 16.00 KB ] */
@@ -95,11 +97,11 @@ MEMORY
     /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x20000000
     /* DDR for c7x_2 for non cacheable local heap [ size 16.00 MB ] */
-    DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE ( RWIX ) : ORIGIN = 0x110000000 , LENGTH = 0x01000000
+    DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE ( RWIX ) : ORIGIN = 0xF0000000 , LENGTH = 0x01000000
     /* DDR for c7x_2 for non cacheable scratch Memory [ size 16.00 MB ] */
-    DDR_C7X_2_SCRATCH_NON_CACHEABLE ( RWIX ) : ORIGIN = 0x111000000 , LENGTH = 0x01000000
+    DDR_C7X_2_SCRATCH_NON_CACHEABLE ( RWIX ) : ORIGIN = 0xF1000000 , LENGTH = 0x01000000
     /* DDR for c7x_2 for local heap [ size 112.00 MB ] */
-    DDR_C7X_2_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0x112000000 , LENGTH = 0x07000000
+    DDR_C7X_2_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0xF2000000 , LENGTH = 0x07000000
     /* DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
-    DDR_C7X_2_SCRATCH        ( RWIX ) : ORIGIN = 0x119000000 , LENGTH = 0x07000000
+    DDR_C7X_2_SCRATCH        ( RWIX ) : ORIGIN = 0xF9000000 , LENGTH = 0x07000000
 }

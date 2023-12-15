@@ -111,6 +111,7 @@ SECTIONS
     ipc_data_buffer:       > DDR_C7x_1
     .tracebuf                : {} align(1024)   > DDR_C7x_1
     .resource_table > DDR_C7x_1_RESOURCE_TABLE
+    .bss.debug_mem_trace_buf > DDR_C7x_1_IPC_TRACE
 
     GROUP:              >  DDR_C7x_1
     {

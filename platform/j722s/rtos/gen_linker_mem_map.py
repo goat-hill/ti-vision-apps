@@ -116,9 +116,9 @@ GB = KB*MB;
 ddr_mem_addr  = 0xa1000000;
 ddr_mem_size  = 1*GB + 448*MB; # Last 64MB is used by Linux
 
-ddr_mem_addr_hi_phy = 0x880000000;
-ddr_mem_addr_hi = 0x100000000;
-ddr_mem_size_hi = 736*MB;
+#ddr_mem_addr_hi_phy = 0x880000000;
+#ddr_mem_addr_hi = 0x100000000;
+#ddr_mem_size_hi = 736*MB;
 
 main_ocram_mem_addr = 0x60000000; # Note: uses RAT to translate to proper address
 main_ocram_mem_addr_phys = 0x4F02000000;
@@ -128,6 +128,7 @@ main_ocram_mem_addr_phys = 0x4F02000000;
 #
 linux_ddr_ipc_size = 1*MB;
 linux_ddr_resource_table_size = 1*KB;
+linux_ddr_ipc_trace_size = 1*MB - 1*KB;
 
 #
 # C7x L1, L2 memory allocation
@@ -193,6 +194,7 @@ tiovx_log_rt_mem_size   = 32*MB - app_fileio_mem_size;
 
 c7x_1_ddr_ipc_addr =tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
 c7x_1_ddr_resource_table_addr = c7x_1_ddr_ipc_addr + linux_ddr_ipc_size;
+c7x_1_ddr_ipc_trace_addr = c7x_1_ddr_resource_table_addr + linux_ddr_resource_table_size;
 c7x_1_ddr_boot_addr = c7x_1_ddr_resource_table_addr + 1*MB;
 c7x_1_ddr_boot_size = 1*KB;
 c7x_1_ddr_vecs_addr = c7x_1_ddr_resource_table_addr + 3*MB;
@@ -204,6 +206,7 @@ c7x_1_ddr_size = 64*MB - (c7x_1_ddr_addr-c7x_1_ddr_ipc_addr);
 
 c7x_2_ddr_ipc_addr = c7x_1_ddr_addr  + c7x_1_ddr_size;
 c7x_2_ddr_resource_table_addr = c7x_2_ddr_ipc_addr + linux_ddr_ipc_size;
+c7x_2_ddr_ipc_trace_addr = c7x_2_ddr_resource_table_addr + linux_ddr_resource_table_size;
 c7x_2_ddr_boot_addr = c7x_2_ddr_resource_table_addr + 1*MB;
 c7x_2_ddr_boot_size = 1*KB;
 c7x_2_ddr_vecs_addr = c7x_2_ddr_resource_table_addr + 3*MB;
@@ -223,7 +226,7 @@ ddr_shared_mem_addr     = 0xC0000000; # This will be the virtual address used fo
 ddr_shared_mem_size     = 512*MB;
 
 c7x_core_heap_hi_size = 0
-c7x_1_ddr_local_heap_non_cacheable_addr = ddr_mem_addr_hi;
+c7x_1_ddr_local_heap_non_cacheable_addr = ddr_shared_mem_addr + ddr_shared_mem_size;
 c7x_1_ddr_local_heap_non_cacheable_size = 16*MB;
 c7x_core_heap_hi_size                   += c7x_1_ddr_local_heap_non_cacheable_size
 
@@ -256,7 +259,7 @@ c7x_2_ddr_scratch_size     = 112*MB;
 c7x_core_heap_hi_size     += c7x_2_ddr_scratch_size
 
 # Shared memory for DMA Buf FD carveout (located in high mem)
-ddr_shared_mem_addr_phys  = 0xC0000000; # TODO: Clean this up
+ddr_shared_mem_addr_phys  = 0x900000000; # TODO: Clean this up
 ddr_shared_mem_size       = 512*MB;
 
 #
@@ -310,6 +313,7 @@ mcu2_0_ddr_total.setDtsName("vision_apps_main_r5fss0_core0_memory_region", "visi
 c7x_2_ddr_ipc             = MemSection("DDR_C7x_2_IPC", "RWIX", c7x_2_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for C7x_2 for Linux IPC");
 c7x_2_ddr_ipc.setDtsName("vision_apps_c71_1_dma_memory_region", "vision-apps-c71_1-dma-memory");
 c7x_2_ddr_resource_table  = MemSection("DDR_C7x_2_RESOURCE_TABLE", "RWIX", c7x_2_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for C7x_2 for Linux resource table");
+c7x_2_ddr_ipc_trace       = MemSection("DDR_C7x_2_IPC_TRACE", "RWIX", c7x_2_ddr_ipc_trace_addr, linux_ddr_ipc_trace_size, "DDR for C7x_2 for Linux IPC trace");
 c7x_2_ddr_boot            = MemSection("DDR_C7x_2_BOOT", "RWIX", c7x_2_ddr_boot_addr, c7x_2_ddr_boot_size, "DDR for C7x_2 for boot section");
 c7x_2_ddr_vecs            = MemSection("DDR_C7x_2_VECS", "RWIX", c7x_2_ddr_vecs_addr, c7x_2_ddr_vecs_size, "DDR for C7x_2 for vecs section");
 c7x_2_ddr_secure_vecs     = MemSection("DDR_C7x_2_SECURE_VECS", "RWIX", c7x_2_ddr_secure_vecs_addr, c7x_2_ddr_secure_vecs_size, "DDR for C7x_2 for secure vecs section");
@@ -329,6 +333,7 @@ c7x_2_ddr_total.setDtsName("vision_apps_c71_1_memory_region", "vision-apps-c71_1
 c7x_1_ddr_ipc             = MemSection("DDR_C7x_1_IPC", "RWIX", c7x_1_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for C7x_1 for Linux IPC");
 c7x_1_ddr_ipc.setDtsName("vision_apps_c71_0_dma_memory_region", "vision-apps-c71-dma-memory");
 c7x_1_ddr_resource_table  = MemSection("DDR_C7x_1_RESOURCE_TABLE", "RWIX", c7x_1_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for C7x_1 for Linux resource table");
+c7x_1_ddr_ipc_trace       = MemSection("DDR_C7x_1_IPC_TRACE", "RWIX", c7x_1_ddr_ipc_trace_addr, linux_ddr_ipc_trace_size, "DDR for C7x_1 for Linux IPC trace");
 c7x_1_ddr_boot            = MemSection("DDR_C7x_1_BOOT", "RWIX", c7x_1_ddr_boot_addr, c7x_1_ddr_boot_size, "DDR for C7x_1 for boot section");
 c7x_1_ddr_vecs            = MemSection("DDR_C7x_1_VECS", "RWIX", c7x_1_ddr_vecs_addr, c7x_1_ddr_vecs_size, "DDR for C7x_1 for vecs section");
 c7x_1_ddr_secure_vecs     = MemSection("DDR_C7x_1_SECURE_VECS", "RWIX", c7x_1_ddr_secure_vecs_addr, c7x_1_ddr_secure_vecs_size, "DDR for C7x_1 for secure vecs section");
@@ -366,21 +371,27 @@ vision_apps_core_heaps_lo.concat(mcu1_0_ddr_local_heap);
 vision_apps_core_heaps_lo.concat(mcu2_0_ddr_local_heap);
 vision_apps_core_heaps_lo.setDtsName("vision_apps_core_heaps_lo", "vision-apps-core-heap-memory-lo");
 
-c7x_1_ddr_local_heap_phy  = MemSection("DDR_C7X_1_LOCAL_HEAP", "RWIX", ddr_mem_addr_hi_phy, c7x_core_heap_hi_size, "DDR for c7x_1, c7x_2 for scratch memory and local heap");
+#c7x_1_ddr_local_heap_phy  = MemSection("DDR_C7X_1_LOCAL_HEAP", "RWIX", ddr_mem_addr_hi_phy, c7x_core_heap_hi_size, "DDR for c7x_1, c7x_2 for scratch memory and local heap");
 
-c7x_ddr_heaps_hi = MemSection("DDR_VISION_APPS_CORE_HEAPS_HI_DTS", "", 0, 0, "Vision Apps Core Heaps in 40bit address range of DDR");
-c7x_ddr_heaps_hi.concat(c7x_1_ddr_local_heap_phy);
-c7x_ddr_heaps_hi.setDtsName("c7x_ddr_heaps_hi", "c7x_ddr_heaps_hi-apps-core-heap-memory-hi");
-c7x_ddr_heaps_hi.splitOrigin(True)
+#c7x_ddr_heaps_hi = MemSection("DDR_VISION_APPS_CORE_HEAPS_HI_DTS", "", 0, 0, "Vision Apps Core Heaps in 40bit address range of DDR");
+#c7x_ddr_heaps_hi.concat(c7x_1_ddr_local_heap_phy);
+#c7x_ddr_heaps_hi.setDtsName("c7x_ddr_heaps_hi", "c7x_ddr_heaps_hi-apps-core-heap-memory-hi");
+#c7x_ddr_heaps_hi.splitOrigin(True)
 
 # this region should NOT have the "no-map" flag since we want ION to map this memory and do cache ops on it as needed
 ddr_shared_mem     = MemSection("DDR_SHARED_MEM"    , "", ddr_shared_mem_addr    , ddr_shared_mem_size    , "Memory for shared memory buffers in DDR");
-ddr_shared_mem_phys  = MemSection("DDR_SHARED_MEM_PHYS"    , "", ddr_shared_mem_addr_phys  , ddr_shared_mem_size    , "Physical address of memory for shared memory buffers in DDR");
-ddr_shared_mem_phys.setDtsName("vision_apps_shared_region", "vision_apps_shared-memories");
-ddr_shared_mem_phys.setCompatibility("dma-heap-carveout");
-ddr_shared_mem_phys.setNoMap(False);
-ddr_shared_mem_phys.setOriginTag(False);
-ddr_shared_mem_phys.splitOrigin(True)
+ddr_shared_mem.setDtsName("vision_apps_shared_region", "vision_apps_shared-memories");
+ddr_shared_mem.setCompatibility("dma-heap-carveout");
+ddr_shared_mem.setNoMap(False);
+ddr_shared_mem.setOriginTag(False);
+ddr_shared_mem.splitOrigin(True)
+
+ddr_shared_mem_high  = MemSection("DDR_SHARED_MEM_PHYS"    , "", ddr_shared_mem_addr_phys  , ddr_shared_mem_size    , "Physical address of memory for shared memory buffers in DDR");
+ddr_shared_mem_high.setDtsName("vision_apps_shared_region_high", "vision_apps_shared-memories-high");
+ddr_shared_mem_high.setCompatibility("dma-heap-carveout");
+ddr_shared_mem_high.setNoMap(False);
+ddr_shared_mem_high.setOriginTag(False);
+ddr_shared_mem_high.splitOrigin(True)
 
 #
 # Create CPU specific memory maps using memory sections created above
@@ -424,6 +435,7 @@ c7x_1_mmap.addMemSection( c7x_1_l2           );
 c7x_1_mmap.addMemSection( c7x_1_l1           );
 c7x_1_mmap.addMemSection( c7x_1_ddr_ipc      );
 c7x_1_mmap.addMemSection( c7x_1_ddr_resource_table      );
+c7x_1_mmap.addMemSection( c7x_1_ddr_ipc_trace      );
 c7x_1_mmap.addMemSection( c7x_1_ddr_boot     );
 c7x_1_mmap.addMemSection( c7x_1_ddr_vecs     );
 c7x_1_mmap.addMemSection( c7x_1_ddr_secure_vecs     );
@@ -445,6 +457,7 @@ c7x_2_mmap.addMemSection( c7x_2_l2           );
 c7x_2_mmap.addMemSection( c7x_2_l1           );
 c7x_2_mmap.addMemSection( c7x_2_ddr_ipc      );
 c7x_2_mmap.addMemSection( c7x_2_ddr_resource_table      );
+c7x_2_mmap.addMemSection( c7x_2_ddr_ipc_trace      );
 c7x_2_mmap.addMemSection( c7x_2_ddr_boot     );
 c7x_2_mmap.addMemSection( c7x_2_ddr_vecs     );
 c7x_2_mmap.addMemSection( c7x_2_ddr_secure_vecs     );
@@ -477,6 +490,7 @@ html_mmap.addMemSection( mcu2_0_ddr         );
 html_mmap.addMemSection( mcu2_0_ddr_local_heap );
 html_mmap.addMemSection( c7x_1_ddr_ipc     );
 html_mmap.addMemSection( c7x_1_ddr_resource_table     );
+html_mmap.addMemSection( c7x_1_ddr_ipc_trace      );
 html_mmap.addMemSection( c7x_1_ddr_boot    );
 html_mmap.addMemSection( c7x_1_ddr_vecs    );
 html_mmap.addMemSection( c7x_1_ddr_secure_vecs    );
@@ -487,6 +501,7 @@ html_mmap.addMemSection( c7x_1_ddr_local_heap         );
 html_mmap.addMemSection( c7x_1_ddr_scratch );
 html_mmap.addMemSection( c7x_2_ddr_ipc     );
 html_mmap.addMemSection( c7x_2_ddr_resource_table     );
+html_mmap.addMemSection( c7x_2_ddr_ipc_trace      );
 html_mmap.addMemSection( c7x_2_ddr_boot    );
 html_mmap.addMemSection( c7x_2_ddr_vecs    );
 html_mmap.addMemSection( c7x_2_ddr_secure_vecs    );
@@ -536,7 +551,7 @@ c_header_mmap.addMemSection( tiovx_obj_desc_mem );
 c_header_mmap.addMemSection( app_fileio_mem        );
 c_header_mmap.addMemSection( ipc_vring_mem      );
 c_header_mmap.addMemSection( ddr_shared_mem     );
-c_header_mmap.addMemSection( ddr_shared_mem_phys     );
+c_header_mmap.addMemSection( ddr_shared_mem_high     );
 c_header_mmap.addMemSection( mcu2_0_main_ocram  );
 c_header_mmap.addMemSection( mcu2_0_main_ocram_phys  );
 c_header_mmap.checkOverlap();
@@ -553,8 +568,9 @@ dts_mmap.addMemSection( c7x_2_ddr_total    );
 dts_mmap.addMemSection( vision_apps_ddr_total );
 dts_mmap.addMemSection( ipc_vring_mem      );
 dts_mmap.addMemSection( vision_apps_core_heaps_lo );
-dts_mmap.addMemSection( c7x_ddr_heaps_hi );
-dts_mmap.addMemSection( ddr_shared_mem_phys );
+#dts_mmap.addMemSection( c7x_ddr_heaps_hi );
+dts_mmap.addMemSection( ddr_shared_mem );
+dts_mmap.addMemSection( ddr_shared_mem_high );
 dts_mmap.checkOverlap();
 
 #

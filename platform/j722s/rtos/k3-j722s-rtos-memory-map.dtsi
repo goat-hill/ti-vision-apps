@@ -75,9 +75,8 @@
 		compatible = "dma-heap-carveout";
 		reg = <0x00 0xc0000000 0x00 0x20000000>;
 	};
-	c7x_ddr_heaps_hi: c7x_ddr_heaps_hi-apps-core-heap-memory-hi@880000000 {
-		compatible = "shared-dma-pool";
-		reg = <0x08 0x80000000 0x00 0x20000000>;
-		no-map;
+	vision_apps_shared_region_high: vision_apps_shared-memories-high {
+		compatible = "dma-heap-carveout";
+		reg = <0x09 0x00000000 0x00 0x20000000>;
 	};
 
