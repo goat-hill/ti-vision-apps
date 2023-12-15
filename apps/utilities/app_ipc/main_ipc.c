@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
                             printf("APP IPC: ERROR: Send msg %d to CPU [%s] failed !!!\n", msg+1, appIpcGetCpuName(i));
                             break;
                         }
-                        /* appLogWaitMsecs(10); */
+                        appLogWaitMsecs(10);
                     }
                 }
             }
