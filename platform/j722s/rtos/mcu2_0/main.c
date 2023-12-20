@@ -131,7 +131,7 @@ int main(void)
     StartupEmulatorWaitFxn();
 
     System_init();
-    Board_init(); 
+    Board_init();
 
     appPerfStatsInit();
 

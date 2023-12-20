@@ -69,24 +69,27 @@
 #include <HwiP.h>
 #include <CacheP.h>
 #include <app_mem_map.h>
+#include <utils/perf_stats/include/app_perf_stats.h>
 #include <app_ipc_rsctable.h>
 
-#include <DebugP.h>
-#include <kernel/dpl/ClockP.h>
-#include <hw_include/cslr_soc.h>
-#include <hw_include/csl_clec.h>
-#include <hw_include/am62ax/cslr_soc_baseaddress.h>
-
-#include <kernel/nortos/dpl/c75/CacheP_c75.h>
-#include <kernel/nortos/dpl/c75/HwiP_c75.h>
-#include <kernel/nortos/dpl/c75/MmuP_c75.h>
+#include "ti_drivers_config.h"
+#include "ti_board_config.h"
+#include "ti_drivers_open_close.h"
+#include "ti_board_open_close.h"
 #include <ipc_notify.h>
 #include <ipc_notify/v0/ipc_notify_v0.h>
-#include <soc.h>
-#include <ClockP.h>
-#include <SystemP.h>
 
 extern void vTaskStartScheduler( void );
+
+void IpcNotify_getConfig(IpcNotify_InterruptConfig **interruptConfig, uint32_t *interruptConfigNum)
+{
+    /* extern globals that are specific to this core */
+    extern IpcNotify_InterruptConfig gIpcNotifyInterruptConfig_c75ss1_0[];
+    extern uint32_t gIpcNotifyInterruptConfigNum_c75ss1_0;
+
+    *interruptConfig = &gIpcNotifyInterruptConfig_c75ss1_0[0];
+    *interruptConfigNum = gIpcNotifyInterruptConfigNum_c75ss1_0;
+}
 
 static void appMain(void* arg0, void* arg1)
 {
@@ -128,6 +131,11 @@ int main(void)
     app_rtos_task_handle_t task;
 
     StartupEmulatorWaitFxn();
+
+    System_init();
+    Board_init();
+
+    appPerfStatsInit();
 
     appRtosTaskParamsInit(&tskParams);
     tskParams.priority = 8u;
