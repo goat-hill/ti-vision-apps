@@ -122,7 +122,7 @@ mmu_armv86.size              = 0x100000;
 mmu_armv86.attribute         = "MAIR0";
 
 /**
- * C7X_1 L2 MAIN
+ * C7X_2 L2 MAIN
  * Region start: 0x7E000000
  * Region end: 0x7E200000
  * Read and write for both privileged and user modes.
@@ -135,7 +135,7 @@ mmu_armv87.size              = 0x1000000;
 mmu_armv87.attribute         = "MAIR0";
 
 /**
- * C7X_1 L2 AUX
+ * C7X_2 L2 AUX
  * Region start: 0x7F000000
  * Region end: 0x7F040000
  * Read and write for both privileged and user modes.
