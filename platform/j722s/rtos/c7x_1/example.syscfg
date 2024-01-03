@@ -180,7 +180,7 @@ mmu_armv810.attribute         = "MAIR7";
  */
 mmu_armv811.$name             = "DDR_C7X_HEAP_SCRATCH";
 mmu_armv811.vAddr             = 0x102000000;
-mmu_armv811.pAddr             = 0x902000000;
+mmu_armv811.pAddr             = 0x882000000;
 mmu_armv811.size              = 0xE000000;
 mmu_armv811.attribute         = "MAIR7";
 
@@ -219,6 +219,6 @@ mmu_armv813.attribute         = "MAIR4";
  */
 mmu_armv814.$name             = "DDR_C7X_HEAP_SCRATCH_NON_CACHED";
 mmu_armv814.vAddr             = 0x100000000;
-mmu_armv814.pAddr             = 0x900000000;
+mmu_armv814.pAddr             = 0x880000000;
 mmu_armv814.size              = 0x2000000;
 mmu_armv814.attribute         = "MAIR4";
