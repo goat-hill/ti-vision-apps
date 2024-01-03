@@ -97,11 +97,11 @@ MEMORY
     /* Memory for shared memory buffers in DDR [ size 512.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x20000000
     /* DDR for c7x_1 for non cacheable local heap [ size 16.00 MB ] */
-    DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE ( RWIX ) : ORIGIN = 0xE0000000 , LENGTH = 0x01000000
+    DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE ( RWIX ) : ORIGIN = 0x100000000 , LENGTH = 0x01000000
     /* DDR for c7x_1 for non cacheable scratch Memory [ size 16.00 MB ] */
-    DDR_C7X_1_SCRATCH_NON_CACHEABLE ( RWIX ) : ORIGIN = 0xE1000000 , LENGTH = 0x01000000
+    DDR_C7X_1_SCRATCH_NON_CACHEABLE ( RWIX ) : ORIGIN = 0x101000000 , LENGTH = 0x01000000
     /* DDR for c7x_1 for local heap [ size 112.00 MB ] */
-    DDR_C7X_1_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0xE2000000 , LENGTH = 0x07000000
+    DDR_C7X_1_LOCAL_HEAP     ( RWIX ) : ORIGIN = 0x102000000 , LENGTH = 0x07000000
     /* DDR for c7x_1 for Scratch Memory [ size 112.00 MB ] */
-    DDR_C7X_1_SCRATCH        ( RWIX ) : ORIGIN = 0xE9000000 , LENGTH = 0x07000000
+    DDR_C7X_1_SCRATCH        ( RWIX ) : ORIGIN = 0x109000000 , LENGTH = 0x07000000
 }

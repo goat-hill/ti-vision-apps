@@ -179,8 +179,8 @@ mmu_armv810.attribute         = "MAIR7";
  * Attribute is MAIR7.
  */
 mmu_armv811.$name             = "DDR_C7X_2_HEAP_SCRATCH";
-mmu_armv811.vAddr             = 0xF2000000;
-mmu_armv811.pAddr             = 0xF2000000;
+mmu_armv811.vAddr             = 0x112000000;
+mmu_armv811.pAddr             = 0x912000000;
 mmu_armv811.size              = 0xE000000;
 mmu_armv811.attribute         = "MAIR7";
 
@@ -218,7 +218,7 @@ mmu_armv813.attribute         = "MAIR4";
  * Attribute is MAIR4.
  */
 mmu_armv814.$name             = "DDR_C7X_HEAP_SCRATCH_NON_CACHED";
-mmu_armv814.vAddr             = 0xF0000000;
-mmu_armv814.pAddr             = 0xF0000000;
+mmu_armv814.vAddr             = 0x110000000;
+mmu_armv814.pAddr             = 0x910000000;
 mmu_armv814.size              = 0x2000000;
 mmu_armv814.attribute         = "MAIR4";

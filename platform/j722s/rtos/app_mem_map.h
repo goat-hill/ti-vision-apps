@@ -159,41 +159,41 @@
 #define DDR_SHARED_MEM_ADDR (0xC0000000u)
 #define DDR_SHARED_MEM_SIZE (0x20000000u)
 
+/* memory for shared memory buffers in high DDR [ size 512.00 MB ] */
+#define DDR_SHARED_MEM_PHYS_ADDR (0xC0000000u)
+#define DDR_SHARED_MEM_PHYS_SIZE (0x20000000u)
+
 /* DDR for c7x_1 for non cacheable local heap [ size 16.00 MB ] */
-#define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR (0xE0000000u)
+#define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x100000000u)
 #define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
 
 /* DDR for c7x_1 for non cacheable scratch Memory [ size 16.00 MB ] */
-#define DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR (0xE1000000u)
+#define DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR (0x101000000u)
 #define DDR_C7X_1_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
 
 /* DDR for c7x_1 for local heap [ size 112.00 MB ] */
-#define DDR_C7X_1_LOCAL_HEAP_ADDR (0xE2000000u)
+#define DDR_C7X_1_LOCAL_HEAP_ADDR (0x102000000u)
 #define DDR_C7X_1_LOCAL_HEAP_SIZE (0x07000000u)
 
 /* DDR for c7x_1 for Scratch Memory [ size 112.00 MB ] */
-#define DDR_C7X_1_SCRATCH_ADDR (0xE9000000u)
+#define DDR_C7X_1_SCRATCH_ADDR (0x109000000u)
 #define DDR_C7X_1_SCRATCH_SIZE (0x07000000u)
 
 /* DDR for c7x_2 for non cacheable local heap [ size 16.00 MB ] */
-#define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_ADDR (0xF0000000u)
+#define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x110000000u)
 #define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
 
 /* DDR for c7x_2 for non cacheable scratch Memory [ size 16.00 MB ] */
-#define DDR_C7X_2_SCRATCH_NON_CACHEABLE_ADDR (0xF1000000u)
+#define DDR_C7X_2_SCRATCH_NON_CACHEABLE_ADDR (0x111000000u)
 #define DDR_C7X_2_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
 
 /* DDR for c7x_2 for local heap [ size 112.00 MB ] */
-#define DDR_C7X_2_LOCAL_HEAP_ADDR (0xF2000000u)
+#define DDR_C7X_2_LOCAL_HEAP_ADDR (0x112000000u)
 #define DDR_C7X_2_LOCAL_HEAP_SIZE (0x07000000u)
 
 /* DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
-#define DDR_C7X_2_SCRATCH_ADDR (0xF9000000u)
+#define DDR_C7X_2_SCRATCH_ADDR (0x119000000u)
 #define DDR_C7X_2_SCRATCH_SIZE (0x07000000u)
-
-/* Physical address of memory for shared memory buffers in DDR [ size 512.00 MB ] */
-#define DDR_SHARED_MEM_PHYS_ADDR DDR_SHARED_MEM_ADDR
-#define DDR_SHARED_MEM_PHYS_SIZE DDR_SHARED_MEM_SIZE
 
 /* Main OCRAM Physical Address for MCU2_0 [ size 512.00 KB ] */
 #define MAIN_OCRAM_MCU2_0_PHYS_ADDR (0x4F02000000u)
