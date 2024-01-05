@@ -85,6 +85,7 @@ ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), J721E J721S2 J784S4 AM62A
             SYSIDIRS += $(MCU_PLUS_SDK_PATH)/source
             SYSIDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers
             SYSIDIRS += $(MCU_PLUS_SDK_PATH)/source/kernel/dpl
+            SYSDEFS  += MCU_PLUS_SDK
         endif
     endif
 
