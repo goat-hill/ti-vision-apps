@@ -153,7 +153,12 @@ endif
 STATIC_LIBS += $(MMA_LIBS)
 STATIC_LIBS += $(TIOVX_LIBS)
 STATIC_LIBS += vxlib_$(TARGET_CPU) c6xsim_$(TARGET_CPU)_C66
-STATIC_LIBS += C7100-host-emulation
+
+ifeq ($(SOC), j722s)
+STATIC_LIBS += C7524-MMA2_256-host-emulation
+else
+STATIC_LIBS += $(C7X_VERSION)-host-emulation
+endif
 
 include $(TIOVX_PATH)/conformance_tests/kernels/concerto_inc.mak
 
