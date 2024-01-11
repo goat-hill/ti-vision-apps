@@ -54,28 +54,28 @@ TIOVX_LIBS += vx_kernels_openvx_core vx_target_kernels_openvx_core
 TIOVX_LIBS += vx_kernels_openvx_ext vx_target_kernels_openvx_ext
 TIOVX_LIBS += vx_target_kernels_dsp
 TIOVX_LIBS += vx_target_kernels_tutorial
-TIOVX_LIBS += vx_app_c7x_target_kernel
+#TIOVX_LIBS += vx_app_c7x_target_kernel
 TIOVX_LIBS += vx_utils
 TIOVX_LIBS += vx_kernels_tidl vx_nested_kernels_tidl
 
-IMAGING_LIBS = vx_kernels_imaging
-IMAGING_LIBS += app_utils_iss
-IMAGING_LIBS += ti_imaging_aealg
-IMAGING_LIBS += ti_imaging_awbalg
-IMAGING_LIBS += ti_imaging_dcc
-IMAGING_LIBS += vx_target_kernels_imaging_aewb
+#IMAGING_LIBS = vx_kernels_imaging
+#IMAGING_LIBS += app_utils_iss
+#IMAGING_LIBS += ti_imaging_aealg
+#IMAGING_LIBS += ti_imaging_awbalg
+#IMAGING_LIBS += ti_imaging_dcc
+#IMAGING_LIBS += vx_target_kernels_imaging_aewb
 
 TIADALG_LIBS  =
-TIADALG_LIBS += tiadalg_fisheye_transformation
-TIADALG_LIBS += tiadalg_image_preprocessing
-TIADALG_LIBS += tiadalg_dof_plane_seperation
-TIADALG_LIBS += tiadalg_visual_localization
-TIADALG_LIBS += tiadalg_select_top_feature
-TIADALG_LIBS += tiadalg_solve_pnp
-TIADALG_LIBS += tiadalg_sparse_upsampling
-TIADALG_LIBS += tiadalg_image_color_blending
-TIADALG_LIBS += tiadalg_image_recursive_nms
-TIADALG_LIBS += tiadalg_structure_from_motion
+#TIADALG_LIBS += tiadalg_fisheye_transformation
+#TIADALG_LIBS += tiadalg_image_preprocessing
+#TIADALG_LIBS += tiadalg_dof_plane_seperation
+#TIADALG_LIBS += tiadalg_visual_localization
+#TIADALG_LIBS += tiadalg_select_top_feature
+#TIADALG_LIBS += tiadalg_solve_pnp
+#TIADALG_LIBS += tiadalg_sparse_upsampling
+#TIADALG_LIBS += tiadalg_image_color_blending
+#TIADALG_LIBS += tiadalg_image_recursive_nms
+#TIADALG_LIBS += tiadalg_structure_from_motion
 ifeq ($(SOC),j721e)
 TIADALG_LIBS += c6xsim
 endif
@@ -86,8 +86,8 @@ VISION_APPS_UTILS_LIBS += app_utils_mem
 VISION_APPS_UTILS_LIBS += app_utils_perf_stats
 VISION_APPS_UTILS_LIBS += app_utils_console_io
 VISION_APPS_UTILS_LIBS += app_utils_file_io
-VISION_APPS_UTILS_LIBS += app_utils_grpx
-VISION_APPS_UTILS_LIBS += app_utils_hwa
+#VISION_APPS_UTILS_LIBS += app_utils_grpx
+#VISION_APPS_UTILS_LIBS += app_utils_hwa
 VISION_APPS_UTILS_LIBS += app_utils_init
 
 VISION_APPS_SRV_LIBS  =
@@ -124,25 +124,28 @@ VISION_APPS_STEREO_LIBS += vx_target_kernels_stereo
 TEST_LIBS =
 TEST_LIBS += vx_tiovx_tests vx_tiovx_internal_tests vx_conformance_tests vx_conformance_engine vx_conformance_tests_testmodule
 TEST_LIBS += vx_kernels_openvx_ext_tests
-TEST_LIBS += vx_kernels_hwa_tests vx_kernels_video_io_tests vx_tiovx_tidl_tests
-TEST_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
+#TEST_LIBS += vx_kernels_hwa_tests 
+TEST_LIBS += vx_kernels_video_io_tests
+TEST_LIBS += vx_tiovx_tidl_tests
+TEST_LIBS += vx_kernels_test_kernels_tests
+TEST_LIBS += vx_kernels_test_kernels
 TEST_LIBS += vx_target_kernels_source_sink
-TEST_LIBS += vx_kernels_srv_tests
-TEST_LIBS += vx_applib_tests
-
-PDK_LIBS =
-PDK_LIBS += dmautils.lib
-PDK_LIBS += udma.lib
-PDK_LIBS += sciclient.lib
-PDK_LIBS += ti.csl.lib
-PDK_LIBS += ti.osal.lib
+#TEST_LIBS += vx_kernels_srv_tests
+#TEST_LIBS += vx_applib_tests
 
 MMA_LIBS =
 MMA_LIBS += mmalib_cn_x86_64
 MMA_LIBS += mmalib_x86_64
 MMA_LIBS += common_x86_64
 
-ifneq ($(SOC),am62a)
+PDK_LIBS =
+ifneq ($(SOC),$(filter $(SOC), am62a j722s))
+#PDK_LIBS += dmautils.lib
+#PDK_LIBS += udma.lib
+#PDK_LIBS += sciclient.lib
+#PDK_LIBS += ti.csl.lib
+#PDK_LIBS += ti.osal.lib
+
 ADDITIONAL_STATIC_LIBS += $(PDK_LIBS)
 STATIC_LIBS += $(VISION_APPS_UTILS_LIBS)
 endif
