@@ -39,13 +39,17 @@ STATIC_LIBS += app_utils_init
 PDK_LIBS =
 
 ifeq ($(RTOS_SDK), mcu_plus_sdk)
-	PDK_LIBS += dmautils.am62ax.c75x.ti-c7x-hostemu.$(TARGET_BUILD).lib
+  ifeq ($(TARGET_SOC),$(filter $(TARGET_SOC), AM62A am62a))
+    PDK_LIBS += dmautils.am62ax.c75x.ti-c7x-hostemu.$(TARGET_BUILD).lib
+  else ifeq ($(TARGET_SOC),$(filter $(TARGET_SOC), J722S j722s))
+    PDK_LIBS += dmautils.j722s.c75ssx-0.ti-c7x-hostemu.$(TARGET_BUILD).lib
+  endif
 else
 	PDK_LIBS += dmautils.lib
 	PDK_LIBS += ti.csl.lib
 endif
 
-ifneq ($(SOC),am62a)
+ifneq ($(SOC),$(filter $(SOC), am62a j722s))
 PDK_LIBS += udma.lib
 PDK_LIBS += sciclient.lib
 PDK_LIBS += ti.osal.lib
