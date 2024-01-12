@@ -24,6 +24,7 @@ LDIRS += $(VXLIB_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/NO_OS/$(TARGET_BUILD
 LDIRS += $(VISION_APPS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(MMALIB_PATH)/lib/$(C7X_VERSION)/release
+LDIRS += $(TIDL_PATH)/ti_dl/lib/$(TARGET_PLATFORM)/dsp/algo/$(TARGET_BUILD)
 LDIRS += $(TIADALG_PATH)/lib/$(TARGET_CPU)/$(TARGET_BUILD)
 LDIRS += $(TIDL_PATH)/arm-tidl/tiovx_kernels/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 
@@ -42,17 +43,31 @@ APP_UTILS_LIBS += app_utils_perf_stats
 SYS_STATIC_LIBS += $(APP_UTILS_LIBS)
 
 TIOVX_LIBS =
+TIOVX_LIBS += vx_target_kernels_tidl
+#TIOVX_LIBS += vx_target_kernels_tvm
+#TIOVX_LIBS += vx_target_kernels_tvm_dynload
 TIOVX_LIBS += vx_target_kernels_ivision_common
 TIOVX_LIBS += vx_framework vx_platform_psdk_j7_rtos vx_kernels_target_utils
 TIOVX_LIBS += vx_target_kernels_tutorial
 TIOVX_LIBS += vx_target_kernels_openvx_core
 TIOVX_LIBS += vx_target_kernels_dsp
+#TIOVX_LIBS += vx_target_kernels_j7_arm
 
-SYS_STATIC_LIBS += $(TIOVX_LIBS)
+TIDL_LIBS =
+TIDL_LIBS += common_C7524
+TIDL_LIBS += mmalib_C7524
+TIDL_LIBS += mmalib_cn_C7524
+TIDL_LIBS += tidl_algo
+TIDL_LIBS += tidl_priv_algo
+TIDL_LIBS += tidl_obj_algo
+TIDL_LIBS += tidl_custom
+
+SYS_STATIC_LIBS += $(TIOVX_LIBS) $(TIDL_LIBS)
 
 ADDITIONAL_STATIC_LIBS += vxlib_C7524.lib
 
 ADDITIONAL_STATIC_LIBS += board.j722s.c75x.ti-c7000.${TARGET_BUILD}.lib
+ADDITIONAL_STATIC_LIBS += dmautils.j722s.c75ss0-0.ti-c7000.${TARGET_BUILD}.lib
 
 ifeq ($(RTOS),FREERTOS)
 	ADDITIONAL_STATIC_LIBS += freertos.j722s.c75x.ti-c7000.${TARGET_BUILD}.lib

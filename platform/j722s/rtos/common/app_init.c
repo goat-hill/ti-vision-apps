@@ -804,8 +804,8 @@ static void appRegisterOpenVXTargetKernels()
         #ifdef C7524
         #if defined(CPU_c7x_1) || defined(CPU_c7x_2)
             {
-            void app_c7x_target_kernel_img_add_register(void);
-            app_c7x_target_kernel_img_add_register();
+            //void app_c7x_target_kernel_img_add_register(void);
+            //app_c7x_target_kernel_img_add_register();
             }
             tivxRegisterTIDLTargetKernels();
         /* tivxRegisterTVMTargetKernels(); */
