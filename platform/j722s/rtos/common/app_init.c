@@ -769,82 +769,120 @@ void appDeInit()
 static void appRegisterOpenVXTargetKernels()
 {
     #ifdef ENABLE_TIOVX
-    appLogPrintf("APP: OpenVX Target kernel init ... !!!\n");
+        appLogPrintf("APP: OpenVX Target kernel init ... !!!\n");
+        
         #ifdef ENABLE_VHWA_VPAC
         tivxRegisterHwaTargetVpacMscKernels();
         tivxRegisterHwaTargetVpacLdcKernels();
         tivxRegisterHwaTargetVpacVissKernels();
         #endif
+
         #ifdef ENABLE_VHWA_DMPAC
         tivxRegisterHwaTargetDmpacSdeKernels();
         tivxRegisterHwaTargetDmpacDofKernels();
         tivxRegisterHwaTargetArmKernels();
         #endif
+
         #ifdef ENABLE_CSI2RX
         tivxRegisterVideoIOTargetCaptureKernels();
         #endif
+
         #ifdef ENABLE_CSI2TX
         tivxRegisterVideoIOTargetCsitxKernels();
         #endif
+
         #if defined(ENABLE_DSS_SINGLE) || defined(ENABLE_DSS_DUAL)
         tivxRegisterVideoIOTargetDisplayKernels();
         tivxRegisterVideoIOTargetDisplayM2MKernels();
         #endif
+
         #ifdef ENABLE_VHWA_VPAC
         tivxRegisterImgProcTargetR5FKernels();
         tivxRegisterImagingTargetAewbKernels();
         #endif
-    appLogPrintf("APP: OpenVX Target kernel init ... Done !!!\n");
+
+        #ifdef C7524
+        #if defined(CPU_c7x_1) || defined(CPU_c7x_2)
+            {
+            void app_c7x_target_kernel_img_add_register(void);
+            app_c7x_target_kernel_img_add_register();
+            }
+            tivxRegisterTIDLTargetKernels();
+        /* tivxRegisterTVMTargetKernels(); */
+        #endif
+
+        #ifdef CPU_c7x_1
+        /* tivxRegisterImgProcTargetC71Kernels(); */
+        #endif
+
+        #ifdef CPU_c7x_2
+        /* tivxRegisterStereoTargetKernels(); */
+        /* tivxRegisterSrvTargetC66Kernels(); */
+        /* tivxRegisterHwaTargetArmKernels(); */
+        /* tivxRegisterImgProcTargetC66Kernels(); */
+        #endif
+        #endif
+        appLogPrintf("APP: OpenVX Target kernel init ... Done !!!\n");
     #endif
 }
 
 static void appUnRegisterOpenVXTargetKernels()
 {
     #ifdef ENABLE_TIOVX
-    appLogPrintf("APP: OpenVX Target kernel deinit ... !!!\n");
+        appLogPrintf("APP: OpenVX Target kernel deinit ... !!!\n");
+
         #ifdef ENABLE_VHWA_VPAC
         tivxUnRegisterHwaTargetVpacMscKernels();
         tivxUnRegisterHwaTargetVpacLdcKernels();
         tivxUnRegisterHwaTargetVpacVissKernels();
         #endif
+
         #ifdef ENABLE_VHWA_DMPAC
         tivxUnRegisterHwaTargetDmpacSdeKernels();
         tivxUnRegisterHwaTargetDmpacDofKernels();
         tivxUnRegisterHwaTargetArmKernels();
         #endif
+
         #if defined(ENABLE_DSS_SINGLE) || defined(ENABLE_DSS_DUAL)
         tivxUnRegisterVideoIOTargetDisplayKernels();
         tivxUnRegisterVideoIOTargetDisplayM2MKernels();
         #endif
+
         #ifdef ENABLE_CSI2RX
         tivxUnRegisterVideoIOTargetCaptureKernels();
         #endif
+
         #ifdef ENABLE_CSI2TX
         tivxUnRegisterVideoIOTargetCsitxKernels();
         #endif
-        #ifdef C7524
-        #ifdef CPU_c7x_1
-        {
-            void app_c7x_target_kernel_img_add_unregister(void);
 
+        #ifdef C7524
+        #if defined(CPU_c7x_1) || defined(CPU_c7x_2)
+            {
+            /*
+            void app_c7x_target_kernel_img_add_unregister(void);
             app_c7x_target_kernel_img_add_unregister();
-        }
-        tivxUnRegisterTIDLTargetKernels();
-        tivxUnRegisterTVMTargetKernels();
-        tivxUnRegisterImgProcTargetC71Kernels();
+            */
+            }
+            tivxUnRegisterTIDLTargetKernels();
+        /* tivxUnRegisterTVMTargetKernels(); */
+        /* tivxUnRegisterImgProcTargetC71Kernels(); */
         #endif
+
         #ifdef CPU_c7x_2
-        tivxUnRegisterStereoTargetKernels();
-        tivxUnRegisterSrvTargetC66Kernels();
-        tivxUnRegisterHwaTargetArmKernels();
-        tivxUnRegisterImgProcTargetC66Kernels();
+        /* tivxUnRegisterStereoTargetKernels(); */
+        /* tivxUnRegisterSrvTargetC66Kernels(); */
+        /* tivxUnRegisterHwaTargetArmKernels(); */
+        /* tivxUnRegisterImgProcTargetC66Kernels(); */
         #endif
         #endif
+
         #ifdef ENABLE_VHWA_VPAC
         tivxUnRegisterImgProcTargetR5FKernels();
         tivxUnRegisterImagingTargetAewbKernels();
         #endif
-    appLogPrintf("APP: OpenVX Target kernel deinit ... Done !!!\n");
+
+        appLogPrintf("APP: OpenVX Target kernel deinit ... Done !!!\n");
     #endif
 }
 
