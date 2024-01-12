@@ -128,8 +128,8 @@ TIOVX_LIBS += vx_utils
 TIOVX_LIBS += vx_tutorial
 TIOVX_LIBS += vx_kernels_video_io
 #TIOVX_LIBS += vx_kernels_hwa 
-#TIOVX_LIBS += vx_kernels_tidl vx_nested_kernels_tidl
-#TIOVX_LIBS += vx_kernels_tvm 
+TIOVX_LIBS += vx_kernels_tidl vx_nested_kernels_tidl
+TIOVX_LIBS += vx_kernels_tvm 
 
 #IMAGING_LIBS += app_utils_iss
 
