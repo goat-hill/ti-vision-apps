@@ -75,6 +75,7 @@
 #define DDR_SCRATCH_NON_CACHE_SIZE    (DDR_C7X_1_SCRATCH_NON_CACHEABLE_SIZE)
 
 /* dont need this in C7x as of now */
+#define ENABLE_UDMA
 #undef ENABLE_UDMA_COPY
 
 #endif /* APP_CFG_C7x_1_H_ */

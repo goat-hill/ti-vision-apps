@@ -115,6 +115,8 @@
 
 #endif
 
+#undef ENABLE_UDMA
+#undef ENABLE_UDMA_COPY
 
 #undef ENABLE_FVID2
 #undef ENABLE_VHWA_VPAC
