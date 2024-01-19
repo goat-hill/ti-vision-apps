@@ -159,10 +159,10 @@ int main(int argc, char *argv[])
     {
         core_id[0] = APP_IPC_CPU_C7x_1;
 
-        #if defined(SOC_J721S2)
+        #if defined(SOC_J721S2) || defined(SOC_J722S)
         core_id[1] = APP_IPC_CPU_C7x_2;
         #endif
-        #if defined(SOC_J721E) || defined(SOC_AM62A) || defined(SOC_J722S)
+        #if defined(SOC_J721E) || defined(SOC_AM62A)
         core_cnt = 1;
         #endif
         #if defined(SOC_J784S4)
