@@ -79,6 +79,9 @@
 #include <ipc_notify.h>
 #include <ipc_notify/v0/ipc_notify_v0.h>
 
+#include <drivers/hw_include/cslr_soc.h>
+#include <kernel/nortos/dpl/c75/csl_clec.h>
+
 extern void vTaskStartScheduler( void );
 
 void IpcNotify_getConfig(IpcNotify_InterruptConfig **interruptConfig, uint32_t *interruptConfigNum)
@@ -114,6 +117,51 @@ void StartupEmulatorWaitFxn (void)
     }while (enableDebug);
 }
 
+static void appC7xClecInitDru(void)
+{
+    CSL_ClecEventConfig   cfgClec;
+    CSL_CLEC_EVTRegs   *clecBaseAddr;
+    int32_t status = SystemP_SUCCESS;
+    uint32_t clusterId;
+
+    clusterId=CSL_clecGetC7xClusterId();
+
+    if (clusterId == CSL_C75_CPU_CLUSTER_NUM_C75_1)
+    {
+        clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_C7X256V0_CLEC_BASE;
+    }
+    else if (clusterId == CSL_C75_CPU_CLUSTER_NUM_C75_2)
+    {
+        clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_C7X256V1_CLEC_BASE;
+    }
+    else
+    {
+        status = SystemP_FAILURE;
+    }
+
+    if (SystemP_SUCCESS == status)
+    {
+        uint32_t i;
+        uint32_t dru_input_start = 192;
+        uint32_t dru_input_num   = 16;
+        /* program CLEC events from DRU used for polling by TIDL
+         * to map to required events in C7x
+         */
+        for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
+        {
+            /* Configure CLEC */
+            cfgClec.secureClaimEnable = FALSE;
+            cfgClec.evtSendEnable     = TRUE;
+
+            /* cfgClec.rtMap value is different for each C7x */
+            cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_4;
+            cfgClec.extEvtNum         = 0;
+            cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
+            CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+        }
+    }
+}
+
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 16KB
@@ -134,6 +182,8 @@ int main(void)
 
     System_init();
     Board_init();
+
+    appC7xClecInitDru();
 
     appPerfStatsInit();
 
