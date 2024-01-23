@@ -167,33 +167,97 @@
 #define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x100000000u)
 #define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
 
+/* Virtual address of non-cacheable DDR for c7x_1 for local heap wrt c7x_2 [ size 16.00 MB ] */
+#define DDR_C7X_2_1_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x100000000u)
+#define DDR_C7X_2_1_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
+
 /* DDR for c7x_1 for non cacheable scratch Memory [ size 16.00 MB ] */
 #define DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR (0x101000000u)
 #define DDR_C7X_1_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
+
+/* Virtual address of non-cacheable DDR for c7x_1 for Scratch Memory wrt c7x_2 [ size 16.00 MB ] */
+#define DDR_C7X_2_1_SCRATCH_NON_CACHEABLE_ADDR (0x101000000u)
+#define DDR_C7X_2_1_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
 
 /* DDR for c7x_1 for local heap [ size 112.00 MB ] */
 #define DDR_C7X_1_LOCAL_HEAP_ADDR (0x102000000u)
 #define DDR_C7X_1_LOCAL_HEAP_SIZE (0x07000000u)
 
+/* Virtual address of cacheable DDR for c7x_1 for local heap wrt c7x_2 [ size 112.00 MB ] */
+#define DDR_C7X_2_1_LOCAL_HEAP_ADDR (0x102000000u)
+#define DDR_C7X_2_1_LOCAL_HEAP_SIZE (0x07000000u)
+
 /* DDR for c7x_1 for Scratch Memory [ size 112.00 MB ] */
 #define DDR_C7X_1_SCRATCH_ADDR (0x109000000u)
 #define DDR_C7X_1_SCRATCH_SIZE (0x07000000u)
+
+/* Virtual address of cacheable DDR for c7x_1 for Scratch Memory wrt c7x_2 [ size 112.00 MB ] */
+#define DDR_C7X_2_1_SCRATCH_ADDR (0x109000000u)
+#define DDR_C7X_2_1_SCRATCH_SIZE (0x07000000u)
+
+/* Virtual address of non-cacheable DDR for c7x_2 for local heap wrt c7x_1 [ size 16.00 MB ] */
+#define DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x110000000u)
+#define DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
 
 /* DDR for c7x_2 for non cacheable local heap [ size 16.00 MB ] */
 #define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_ADDR (0x110000000u)
 #define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_SIZE (0x01000000u)
 
+/* Virtual address of non-cacheable DDR for c7x_2 for Scratch Memory wrt c7x_1 [ size 16.00 MB ] */
+#define DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR (0x111000000u)
+#define DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
+
 /* DDR for c7x_2 for non cacheable scratch Memory [ size 16.00 MB ] */
 #define DDR_C7X_2_SCRATCH_NON_CACHEABLE_ADDR (0x111000000u)
 #define DDR_C7X_2_SCRATCH_NON_CACHEABLE_SIZE (0x01000000u)
+
+/* Virtual address of cacheable DDR for c7x_2 for local heap wrt c7x_1 [ size 112.00 MB ] */
+#define DDR_C7X_1_2_LOCAL_HEAP_ADDR (0x112000000u)
+#define DDR_C7X_1_2_LOCAL_HEAP_SIZE (0x07000000u)
 
 /* DDR for c7x_2 for local heap [ size 112.00 MB ] */
 #define DDR_C7X_2_LOCAL_HEAP_ADDR (0x112000000u)
 #define DDR_C7X_2_LOCAL_HEAP_SIZE (0x07000000u)
 
+/* Virtual address of cacheable DDR for c7x_2 for Scratch Memory wrt c7x_1 [ size 112.00 MB ] */
+#define DDR_C7X_1_2_SCRATCH_ADDR (0x119000000u)
+#define DDR_C7X_1_2_SCRATCH_SIZE (0x07000000u)
+
 /* DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
 #define DDR_C7X_2_SCRATCH_ADDR (0x119000000u)
 #define DDR_C7X_2_SCRATCH_SIZE (0x07000000u)
+
+/* Physical address of non-cacheable DDR for c7x_1 for local heap [ size 16.00 MB ] */
+#define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR (0x880000000u)
+#define DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE (0x01000000u)
+
+/* Physical address of non-cacheable DDR for c7x_1 for Scratch Memory [ size 16.00 MB ] */
+#define DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_ADDR (0x881000000u)
+#define DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_SIZE (0x01000000u)
+
+/* Physical address of cacheable DDR for c7x_1 for local heap [ size 112.00 MB ] */
+#define DDR_C7X_1_LOCAL_HEAP_PHYS_ADDR (0x882000000u)
+#define DDR_C7X_1_LOCAL_HEAP_PHYS_SIZE (0x07000000u)
+
+/* Physical address of cacheable DDR for c7x_1 for Scratch Memory [ size 112.00 MB ] */
+#define DDR_C7X_1_SCRATCH_PHYS_ADDR (0x889000000u)
+#define DDR_C7X_1_SCRATCH_PHYS_SIZE (0x07000000u)
+
+/* Non-cacheable DDR for c7x_2 for local heap [ size 16.00 MB ] */
+#define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR (0x890000000u)
+#define DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE (0x01000000u)
+
+/* Physical address of Non-cacheable DDR for c7x_2 for Scratch Memory [ size 16.00 MB ] */
+#define DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_ADDR (0x891000000u)
+#define DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_SIZE (0x01000000u)
+
+/* Physical address of Cacheable DDR for c7x_2 for local heap [ size 112.00 MB ] */
+#define DDR_C7X_2_LOCAL_HEAP_PHYS_ADDR (0x892000000u)
+#define DDR_C7X_2_LOCAL_HEAP_PHYS_SIZE (0x07000000u)
+
+/* Physical address of cacheable DDR for c7x_2 for Scratch Memory [ size 112.00 MB ] */
+#define DDR_C7X_2_SCRATCH_PHYS_ADDR (0x899000000u)
+#define DDR_C7X_2_SCRATCH_PHYS_SIZE (0x07000000u)
 
 /* Main OCRAM Physical Address for MCU2_0 [ size 512.00 KB ] */
 #define MAIN_OCRAM_MCU2_0_PHYS_ADDR (0x4F02000000u)

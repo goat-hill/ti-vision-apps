@@ -75,7 +75,7 @@
 		compatible = "dma-heap-carveout";
 		reg = <0x00 0xc0000000 0x00 0x20000000>;
 	};
-	c7x_ddr_heaps_hi: c7x_ddr_heaps_hi-apps-core-heap-memory-hi@880000000 {
+	c7x_ddr_heaps_hi: c7x-ddr-heaps-hi@880000000 {
 		compatible = "shared-dma-pool";
 		reg = <0x08 0x80000000 0x00 0x20000000>;
 		no-map;

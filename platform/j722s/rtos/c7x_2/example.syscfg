@@ -24,6 +24,8 @@ const mmu_armv811  = mmu_armv8.addInstance();
 const mmu_armv812  = mmu_armv8.addInstance();
 const mmu_armv813  = mmu_armv8.addInstance();
 const mmu_armv814  = mmu_armv8.addInstance();
+const mmu_armv815  = mmu_armv8.addInstance();
+const mmu_armv816  = mmu_armv8.addInstance();
 
 /**
  * Write custom configuration values to the imported modules.
@@ -172,30 +174,17 @@ mmu_armv810.size              = 0x20000000;
 mmu_armv810.attribute         = "MAIR7";
 
 /**
- * DDR_C7X_2_HEAP_SCRATCH
- * Region start: 0xF0000000
- * Region end: 0xF0000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR7.
- */
-mmu_armv811.$name             = "DDR_C7X_2_HEAP_SCRATCH";
-mmu_armv811.vAddr             = 0x112000000;
-mmu_armv811.pAddr             = 0x892000000;
-mmu_armv811.size              = 0xE000000;
-mmu_armv811.attribute         = "MAIR7";
-
-/**
  * DDR_C7X_2_SHARED_MEM_NON_CACHE
  * Region start: 0xA5000000
  * Region end: 0xA500000
  * Read and write for both privileged and user modes.
  * Attribute is MAIR4.
  */
-mmu_armv812.$name             = "DDR_C7X_2_SHARED_MEM_NON_CACHE";
-mmu_armv812.vAddr             = 0xA5000000;
-mmu_armv812.pAddr             = 0xA5000000;
-mmu_armv812.size              = 0x8000000;
-mmu_armv812.attribute         = "MAIR4";
+mmu_armv811.$name             = "DDR_C7X_2_SHARED_MEM_NON_CACHE";
+mmu_armv811.vAddr             = 0xA5000000;
+mmu_armv811.pAddr             = 0xA5000000;
+mmu_armv811.size              = 0x8000000;
+mmu_armv811.attribute         = "MAIR4";
 
 /**
  * DDR_C7X_2_IPC
@@ -204,21 +193,60 @@ mmu_armv812.attribute         = "MAIR4";
  * Read and write for both privileged and user modes.
  * Attribute is MAIR4.
  */
-mmu_armv813.$name             = "DDR_C7X_2_IPC";
-mmu_armv813.vAddr             = 0xB1000000;
-mmu_armv813.pAddr             = 0xB1000000;
-mmu_armv813.size              = 0x200000;
-mmu_armv813.attribute         = "MAIR4";
+mmu_armv812.$name             = "DDR_C7X_2_IPC";
+mmu_armv812.vAddr             = 0xB1000000;
+mmu_armv812.pAddr             = 0xB1000000;
+mmu_armv812.size              = 0x200000;
+mmu_armv812.attribute         = "MAIR4";
 
 /**
- * DDR_C7X_HEAP_SCRATCH_NON_CACHED
- * Region start: 0xF0000000
- * Region end: 0xF0000000
+ * DDR_C7X_1_HEAP_SCRATCH_NON_CACHEABLE
+ * Region start: 0x100000000
+ * Region end: 0x110000000
  * Read and write for both privileged and user modes.
  * Attribute is MAIR4.
  */
-mmu_armv814.$name             = "DDR_C7X_HEAP_SCRATCH_NON_CACHED";
-mmu_armv814.vAddr             = 0x110000000;
-mmu_armv814.pAddr             = 0x890000000;
-mmu_armv814.size              = 0x2000000;
-mmu_armv814.attribute         = "MAIR4";
+mmu_armv813.$name             = "DDR_C7X_1_HEAP_SCRATCH_NON_CACHEABLE";
+mmu_armv813.vAddr             = 0x100000000;
+mmu_armv813.pAddr             = 0x880000000;
+mmu_armv813.size              = 0x2000000;
+mmu_armv813.attribute         = "MAIR4";
+
+/**
+ * DDR_C7X_1_HEAP_SCRATCH_CACHEABLE
+ * Region start: 0x110000000
+ * Region end: 0x108000000
+ * Read and write for both privileged and user modes.
+ * Attribute is MAIR7.
+ */
+mmu_armv814.$name             = "DDR_C7X_1_HEAP_SCRATCH_CACHEABLE";
+mmu_armv814.vAddr             = 0x102000000;
+mmu_armv814.pAddr             = 0x882000000;
+mmu_armv814.size              = 0xE000000;
+mmu_armv814.attribute         = "MAIR7";
+
+/**
+ * DDR_C7X_2_HEAP_SCRATCH_NON_CACHEABLE
+ * Region start: 0x120000000
+ * Region end: 0x130000000
+ * Read and write for both privileged and user modes.
+ * Attribute is MAIR4.
+ */
+mmu_armv815.$name             = "DDR_C7X_2_HEAP_SCRATCH_NON_CACHEABLE";
+mmu_armv815.vAddr             = 0x110000000;
+mmu_armv815.pAddr             = 0x890000000;
+mmu_armv815.size              = 0x2000000;
+mmu_armv815.attribute         = "MAIR4";
+
+/**
+ * DDR_C7X_2_HEAP_SCRATCH_CACHEABLE
+ * Region start: 0x130000000
+ * Region end: 0x140000000
+ * Read and write for both privileged and user modes.
+ * Attribute is MAIR7.
+ */
+mmu_armv816.$name             = "DDR_C7X_2_HEAP_SCRATCH_CACHEABLE";
+mmu_armv816.vAddr             = 0x112000000;
+mmu_armv816.pAddr             = 0x892000000;
+mmu_armv816.size              = 0xE000000;
+mmu_armv816.attribute         = "MAIR7";

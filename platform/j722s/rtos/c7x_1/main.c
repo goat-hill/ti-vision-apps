@@ -205,17 +205,109 @@ int main(void)
     return 0;
 }
 
+/** Description : This function converts a virtual memory region address to physical memory region address given the base addresses of both memory regions
+ *  which are mapped using MMU in appMmuMap
+ *  Arguments:
+ *      - virtAddr : Virtual pointer
+ *      - virtBase   : Base address of virtual memory space
+ *      - physBase   : Base address of physical memory space
+ *      - size       : Size of memory space
+ *      - phyAddr :  Physical pointer to be returned after conversion if virtAddr belongs to memory space with base address virtBase
+ *                     else, phyAddr is returned as it is without any modification
+ */
+static void convertVirt2Phys(const void * virtAddr, uint64_t virtBase, uint64_t physBase, uint64_t size, uint64_t * phyAddr)
+{
+    if ( ((uint64_t)virtAddr >= virtBase) &&
+         ((uint64_t)virtAddr < (virtBase + size)) )
+    {
+        if (virtBase >= physBase)
+        {
+            *phyAddr = (uint64_t)virtAddr - (virtBase - physBase);
+        }
+        else
+        {
+            *phyAddr = (uint64_t)virtAddr + (physBase - virtBase);
+        }
+    }
+}
+
 uint64_t appUdmaVirtToPhyAddrConversion(const void *virtAddr,
                                       uint32_t chNum,
                                       void *appData)
 {
+    uint64_t phyAddr = (uint64_t)virtAddr; /* Default : Return virtAddr without any modification */
 
-  return (uint64_t)virtAddr;
+  /* Note: I think this is correct but needs review */
+    if ( ((uint64_t)virtAddr >= (uint64_t)DDR_SHARED_MEM_ADDR) &&
+        ((uint64_t)virtAddr < ((uint64_t)DDR_SHARED_MEM_ADDR+DDR_SHARED_MEM_SIZE)) )
+    {
+        if (DDR_SHARED_MEM_PHYS_ADDR >= DDR_SHARED_MEM_ADDR)
+        {
+            phyAddr = (uint64_t)virtAddr + (DDR_SHARED_MEM_PHYS_ADDR - DDR_SHARED_MEM_ADDR);
+        }
+        else
+        {
+            phyAddr = (uint64_t)virtAddr - (DDR_SHARED_MEM_ADDR - DDR_SHARED_MEM_PHYS_ADDR);
+        }
+    }
+    else
+    {
+        /* Below code converts c7x_1 virtual addresses of all cores to C7x DDR physical addresses
+           If virtAddr does not belong to any of the below defined virtual memory regions, it will be returned without any modification.
+           A virtAddr would belong to any one of the below memory spaces, so convertVirt2Phys call for that particular space would be executed
+           All other function calls would just pass through the phyAddr */
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
+
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_ADDR,
+            (uint64_t) DDR_C7X_1_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_PHYS_SIZE, &phyAddr);
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_ADDR,
+            (uint64_t) DDR_C7X_2_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_PHYS_SIZE, &phyAddr);
+
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
+
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_SCRATCH_ADDR,
+            (uint64_t) DDR_C7X_1_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_PHYS_SIZE, &phyAddr);
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_SCRATCH_ADDR,
+            (uint64_t) DDR_C7X_2_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_PHYS_SIZE, &phyAddr);
+    }
+    return phyAddr;
+}
+
+/** Description : This function converts a physical memory region address to virtual memory region address given the base addresses of both memory regions
+ *  which are mapped using MMU in appMmuMap
+ *  Arguments:
+ *      - shared_ptr : Physical pointer
+ *      - virtBase   : Base address of virtual memory space
+ *      - physBase   : Base address of physical memory space
+ *      - size       : Size of memory space
+ *      - target_ptr : Virtual pointer to be returned after conversion if shared_ptr belongs to memory space with base address physBase
+ *                     else, target_ptr is returned as it is without any modification
+ */
+static void convertPhys2Virt(uint64_t shared_ptr, uint64_t virtBase, uint64_t physBase, uint64_t size, uint64_t * target_ptr)
+{
+    if ( ((uint64_t)shared_ptr >= physBase) &&
+         ((uint64_t)shared_ptr < (physBase + size)) )
+    {
+        if (physBase >= virtBase)
+        {
+            *target_ptr = shared_ptr - (physBase - virtBase);
+        }
+        else
+        {
+            *target_ptr = (uint64_t)shared_ptr + (virtBase - physBase);
+        }
+    }
 }
 
 uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
 {
-    uint64_t target_ptr;
+    uint64_t target_ptr = shared_ptr; /* Default : Return shared_ptr without any modification */
 
     /* Note: I think this is correct but needs review */
     if ( ((uint64_t)shared_ptr >= DDR_SHARED_MEM_PHYS_ADDR) &&
@@ -232,8 +324,29 @@ uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
     }
     else
     {
-        target_ptr = (uint64_t)shared_ptr;
-    }
+        /* Below code converts C7x DDR physical addresses of all cores to c7x_1 virtual addresses
+           If shared_ptr does not belong to any of the below defined physical memory regions, it will be returned without any modification.
+           A shared_ptr would belong to any one of the below memory spaces, so convertPhys2Virt call for that particular space would be executed
+           All other function calls would just pass through the target_ptr */
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
 
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_ADDR,
+            (uint64_t) DDR_C7X_1_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_PHYS_SIZE, &target_ptr);
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_ADDR,
+            (uint64_t) DDR_C7X_2_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_PHYS_SIZE, &target_ptr);
+
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR,
+            (uint64_t) DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
+
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_SCRATCH_ADDR,
+            (uint64_t) DDR_C7X_1_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_PHYS_SIZE, &target_ptr);
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_SCRATCH_ADDR,
+            (uint64_t) DDR_C7X_2_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_PHYS_SIZE, &target_ptr);
+    }
     return target_ptr;
 }
