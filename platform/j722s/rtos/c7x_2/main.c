@@ -143,7 +143,7 @@ static void appC7xClecInitDru(void)
     if (SystemP_SUCCESS == status)
     {
         uint32_t i;
-        uint32_t dru_input_start = 208;
+        uint32_t dru_input_start = 144;
         uint32_t dru_input_num   = 12;
         /* program CLEC events from DRU used by any app running on C7x-2 (Upto 12 channels)
          */
@@ -154,7 +154,7 @@ static void appC7xClecInitDru(void)
             cfgClec.evtSendEnable     = TRUE;
 
             /* cfgClec.rtMap value is different for each C7x */
-            cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_5;
+            cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_ALL;
 
             cfgClec.extEvtNum         = 0;
             cfgClec.c7xEvtNum         = (i-dru_input_start)+32;

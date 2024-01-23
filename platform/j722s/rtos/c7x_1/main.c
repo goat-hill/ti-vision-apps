@@ -142,7 +142,7 @@ static void appC7xClecInitDru(void)
     if (SystemP_SUCCESS == status)
     {
         uint32_t i;
-        uint32_t dru_input_start = 192;
+        uint32_t dru_input_start = 128;
         uint32_t dru_input_num   = 16;
         /* program CLEC events from DRU used for polling by TIDL
          * to map to required events in C7x
@@ -154,7 +154,7 @@ static void appC7xClecInitDru(void)
             cfgClec.evtSendEnable     = TRUE;
 
             /* cfgClec.rtMap value is different for each C7x */
-            cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_4;
+            cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_ALL;
             cfgClec.extEvtNum         = 0;
             cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
             CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
