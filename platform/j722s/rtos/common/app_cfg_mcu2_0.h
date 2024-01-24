@@ -119,15 +119,10 @@
 #undef ENABLE_UDMA_COPY
 
 #define ENABLE_FVID2
+#define ENABLE_DSS_SINGLE
+#define ENABLE_DSS_HDMI
 #define ENABLE_VHWA_VPAC
 #define ENABLE_VHWA_DMPAC
-
-#if defined (ENABLE_DSS_DSI) && !defined(ENABLE_I2C)
-#error "DSI output depends on I2C, Include ENABLE_I2C"
-#endif
-#if defined (ENABLE_DSS_HDMI) && !defined(ENABLE_I2C)
-#error "HDMI output depends on I2C, Include ENABLE_I2C"
-#endif
 
 #if defined (ENABLE_DSS_DSI) && defined (ENABLE_CSI2TX)
 #error "CSI2TX and DSI cannot be active at the same time"

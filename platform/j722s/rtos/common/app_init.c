@@ -395,27 +395,6 @@ int32_t appInit()
 
     appPerfStatsInit();
 
-    #ifdef ENABLE_BOARD
-    {
-        app_pinmux_cfg_t pinmux_cfg;
-
-        appPinMuxCfgSetDefault(&pinmux_cfg);
-
-        #if defined(ENABLE_DSS_SINGLE)
-            pinmux_cfg.enable_i2c = TRUE; /* i2c is needed for on board HDMI mux config, eDP to HDMI adapter config */
-            #ifdef ENABLE_DSS_HDMI
-                pinmux_cfg.enable_hdmi = TRUE;
-            #endif
-        #endif
-        #if defined(ENABLE_DSS_DUAL)
-            pinmux_cfg.enable_hdmi = TRUE; /* enable HDMI unconditionally for dual display */
-            pinmux_cfg.enable_i2c = TRUE; /* i2c is needed for on board HDMI mux config, eDP to HDMI adapter config */
-        #endif
-
-        appSetPinmux(&pinmux_cfg);
-    }
-    #endif
-
     #ifdef ENABLE_UART
     status = appLogRdInit(&log_init_prm);
     APP_ASSERT_SUCCESS(status);
@@ -542,46 +521,12 @@ int32_t appInit()
     appI2cInit();
     #endif
 
-    /* TBD: Validate DSS settings for J722S */
     #ifdef ENABLE_DSS_SINGLE
     {
-        app_dss_default_prm_t prm;
+        app_dss_init_params_t prm;
 
-        appDssDefaultSetDefaultPrm(&prm);
+        status = appDssInit(&prm);
 
-        #ifdef ENABLE_DSS_HDMI
-        prm.display_type = APP_DSS_DEFAULT_DISPLAY_TYPE_DPI_HDMI;
-        #endif
-        #ifdef ENABLE_DSS_EDP
-        prm.display_type = APP_DSS_DEFAULT_DISPLAY_TYPE_EDP;
-        #endif
-
-        prm.enableM2m            = true;
-        /* Do not rely on "init". Always provide known good tmings */
-        prm.timings.width        = 1920U;
-        prm.timings.height       = 1080U;
-        prm.timings.hFrontPorch  = 88U;
-        prm.timings.hBackPorch   = 148U;
-        prm.timings.hSyncLen     = 44U;
-        prm.timings.vFrontPorch  = 4U;
-        prm.timings.vBackPorch   = 36U;
-        prm.timings.vSyncLen     = 5U;
-        prm.timings.pixelClock   = 148500000ULL;
-
-        #ifdef ENABLE_DSS_DSI
-            prm.display_type = APP_DSS_DEFAULT_DISPLAY_TYPE_DSI;
-
-            prm.timings.width        = 1280U;
-            prm.timings.height       = 800U;
-            prm.timings.hFrontPorch  = 110U;
-            prm.timings.hBackPorch   = 220U;
-            prm.timings.hSyncLen     = 40U;
-            prm.timings.vFrontPorch  = 5U;
-            prm.timings.vBackPorch   = 20U;
-            prm.timings.vSyncLen     = 5U;
-            prm.timings.pixelClock   = 74250000ULL;
-        #endif
-        status = appDssDefaultInit(&prm);
         APP_ASSERT_SUCCESS(status);
     }
     #endif
@@ -701,7 +646,7 @@ void appDeInit()
     appVhwaDmpacDeInit();
     #endif
     #ifdef ENABLE_DSS_SINGLE
-    appDssDefaultDeInit();
+    appDssDeInit();
     #endif
     #ifdef ENABLE_DSS_DUAL
     appDssDualDisplayDefaultDeInit();
@@ -792,8 +737,9 @@ static void appRegisterOpenVXTargetKernels()
         #endif
 
         #if defined(ENABLE_DSS_SINGLE) || defined(ENABLE_DSS_DUAL)
+        appLogPrintf("registering video io kernels\n");
         tivxRegisterVideoIOTargetDisplayKernels();
-        tivxRegisterVideoIOTargetDisplayM2MKernels();
+        /* tivxRegisterVideoIOTargetDisplayM2MKernels(); */
         #endif
 
         #ifdef ENABLE_VHWA_VPAC
@@ -846,7 +792,7 @@ static void appUnRegisterOpenVXTargetKernels()
 
         #if defined(ENABLE_DSS_SINGLE) || defined(ENABLE_DSS_DUAL)
         tivxUnRegisterVideoIOTargetDisplayKernels();
-        tivxUnRegisterVideoIOTargetDisplayM2MKernels();
+        /* tivxUnRegisterVideoIOTargetDisplayM2MKernels(); */
         #endif
 
         #ifdef ENABLE_CSI2RX
