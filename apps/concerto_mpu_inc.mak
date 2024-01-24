@@ -127,24 +127,24 @@ TIOVX_LIBS += vx_kernels_openvx_ext vx_target_kernels_openvx_ext
 TIOVX_LIBS += vx_utils
 TIOVX_LIBS += vx_tutorial
 TIOVX_LIBS += vx_kernels_video_io
-#TIOVX_LIBS += vx_kernels_hwa 
+TIOVX_LIBS += vx_kernels_hwa 
 TIOVX_LIBS += vx_kernels_tidl vx_nested_kernels_tidl
 TIOVX_LIBS += vx_kernels_tvm 
 
-#IMAGING_LIBS += app_utils_iss
+IMAGING_LIBS += app_utils_iss
 
 ifneq ($(TARGET_PLATFORM), AM62A)
-#IMAGING_LIBS += vx_kernels_imaging
+IMAGING_LIBS += vx_kernels_imaging
 endif
 
 ifeq ($(TARGET_OS), LINUX)
-#IMAGING_LIBS += ti_2a_wrapper
-#IMAGING_LIBS += ti_imaging_aealg
-#IMAGING_LIBS += ti_imaging_awbalg
-#IMAGING_LIBS += ti_imaging_dcc
-#IMAGING_LIBS += ti_imaging_ittsrvr
-#IMAGING_LIBS += app_utils_network_api
-#IMAGING_LIBS += app_utils_itt_server
+IMAGING_LIBS += ti_2a_wrapper
+IMAGING_LIBS += ti_imaging_aealg
+IMAGING_LIBS += ti_imaging_awbalg
+IMAGING_LIBS += ti_imaging_dcc
+IMAGING_LIBS += ti_imaging_ittsrvr
+IMAGING_LIBS += app_utils_network_api
+IMAGING_LIBS += app_utils_itt_server
 endif
 
 VISION_APPS_UTILS_LIBS += app_utils_mem
@@ -153,7 +153,7 @@ VISION_APPS_UTILS_LIBS += app_utils_console_io
 VISION_APPS_UTILS_LIBS += app_utils_file_io
 VISION_APPS_UTILS_LIBS += app_utils_remote_service
 VISION_APPS_UTILS_LIBS += app_utils_perf_stats
-#VISION_APPS_UTILS_LIBS += app_utils_hwa
+VISION_APPS_UTILS_LIBS += app_utils_hwa
 
 ifneq ($(TARGET_PLATFORM),AM62A)
 VISION_APPS_UTILS_LIBS += app_utils_grpx
@@ -189,10 +189,9 @@ endif
 TEST_LIBS += vx_tiovx_tests vx_tiovx_internal_tests vx_conformance_tests vx_conformance_engine vx_conformance_tests_testmodule
 TEST_LIBS += vx_kernels_openvx_ext_tests
 TEST_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
-TEST_LIBS += vx_target_kernels_source_sink
+TEST_LIBS += vx_target_kernels_source_sink vx_kernels_hwa_tests
 #TEST_LIBS += vx_kernels_video_io_tests
 #TEST_LIBS += vx_tiovx_tidl_tests
-#TEST_LIBS += app_utils_hwa_tests 
 #TEST_LIBS += vx_tiovx_tvm_tests
 
 ifneq ($(TARGET_PLATFORM), AM62A)

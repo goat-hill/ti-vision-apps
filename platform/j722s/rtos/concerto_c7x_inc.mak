@@ -51,7 +51,7 @@ TIOVX_LIBS += vx_framework vx_platform_psdk_j7_rtos vx_kernels_target_utils
 TIOVX_LIBS += vx_target_kernels_tutorial
 TIOVX_LIBS += vx_target_kernels_openvx_core
 TIOVX_LIBS += vx_target_kernels_dsp
-#TIOVX_LIBS += vx_target_kernels_j7_arm
+TIOVX_LIBS += vx_target_kernels_j7_arm
 
 TIDL_LIBS =
 TIDL_LIBS += common_C7524

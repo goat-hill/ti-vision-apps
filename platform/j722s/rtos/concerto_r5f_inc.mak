@@ -21,6 +21,8 @@ LDIRS += $(IMAGING_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TAR
 LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(VIDEO_IO_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 
+STATIC_LIBS += vx_target_kernels_img_proc_r5f
+
 APP_UTILS_LIBS =
 APP_UTILS_LIBS += app_utils_mem
 APP_UTILS_LIBS += app_utils_rtos
@@ -31,6 +33,7 @@ APP_UTILS_LIBS += app_utils_remote_service
 APP_UTILS_LIBS += app_utils_udma
 APP_UTILS_LIBS += app_utils_misc
 APP_UTILS_LIBS += app_utils_perf_stats
+# APP_UTILS_LIBS += app_utils_hwa
 
 SYS_STATIC_LIBS += $(APP_UTILS_LIBS)
 
@@ -40,9 +43,23 @@ TIOVX_LIBS += vx_tiovx_tests vx_tiovx_internal_tests vx_tutorial vx_utils
 TIOVX_LIBS += vx_framework vx_vxu vx_platform_psdk_j7_rtos vx_kernels_target_utils
 TIOVX_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
 TIOVX_LIBS += vx_target_kernels_source_sink
-TIOVX_LIBS += vx_kernels_host_utils vx_kernels_openvx_core
+TIOVX_LIBS += vx_kernels_hwa_tests vx_kernels_hwa
+TIOVX_LIBS += vx_target_kernels_vpac_viss vx_target_kernels_vpac_msc vx_target_kernels_vpac_ldc
+TIOVX_LIBS += vx_target_kernels_dmpac_dof vx_target_kernels_dmpac_sde
+TIOVX_LIBS += vx_target_kernels_j7_arm
+
+IMAGING_LIBS  = ti_imaging_awbalg
+IMAGING_LIBS += ti_imaging_dcc
+IMAGING_LIBS += vx_kernels_imaging
+IMAGING_LIBS += vx_target_kernels_imaging_aewb
+IMAGING_LIBS += ti_imaging_aealg
+# IMAGING_LIBS += ti_imaging_sensordrv
+IMAGING_LIBS += ti_imaging_ittsrvr
+# IMAGING_LIBS += app_utils_sensors
+IMAGING_LIBS += app_utils_iss
 
 SYS_STATIC_LIBS += $(TIOVX_LIBS)
+SYS_STATIC_LIBS += $(IMAGING_LIBS)
 
 
 ADDITIONAL_STATIC_LIBS += board.j722s.r5f.ti-arm-clang.${TARGET_BUILD}.lib

@@ -118,9 +118,9 @@
 #undef ENABLE_UDMA
 #undef ENABLE_UDMA_COPY
 
-#undef ENABLE_FVID2
-#undef ENABLE_VHWA_VPAC
-#undef ENABLE_VHWA_DMPAC
+#define ENABLE_FVID2
+#define ENABLE_VHWA_VPAC
+#define ENABLE_VHWA_DMPAC
 
 #if defined (ENABLE_DSS_DSI) && !defined(ENABLE_I2C)
 #error "DSI output depends on I2C, Include ENABLE_I2C"

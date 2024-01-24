@@ -44,6 +44,7 @@ endif
 
 LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
 LDIRS += $(MCU_PLUS_SDK_PATH)/source/board/lib/
+LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/vhwa/lib
 
 include $($(_MODULE)_SDIR)/../concerto_r5f_inc.mak
 
@@ -54,7 +55,9 @@ ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SAFERTOS))
 endif
 
 SYS_STATIC_LIBS += app_utils_sciclient
+SYS_STATIC_LIBS += app_utils_hwa
 
 ADDITIONAL_STATIC_LIBS += drivers.j722s.main-r5f.ti-arm-clang.${TARGET_BUILD}.lib
+ADDITIONAL_STATIC_LIBS += vhwa.j722s.main-r5fss0-0.ti-arm-clang.${TARGET_BUILD}.lib
 
 DEFS        += $(RTOS)
