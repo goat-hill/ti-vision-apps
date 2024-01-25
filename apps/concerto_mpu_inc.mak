@@ -191,7 +191,7 @@ TEST_LIBS += vx_kernels_openvx_ext_tests
 TEST_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
 TEST_LIBS += vx_target_kernels_source_sink vx_kernels_hwa_tests
 #TEST_LIBS += vx_kernels_video_io_tests
-#TEST_LIBS += vx_tiovx_tidl_tests
+TEST_LIBS += vx_tiovx_tidl_tests
 #TEST_LIBS += vx_tiovx_tvm_tests
 
 ifneq ($(TARGET_PLATFORM), AM62A)
