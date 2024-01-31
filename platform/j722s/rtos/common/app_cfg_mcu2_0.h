@@ -85,7 +85,7 @@
      * - When ENABLE_DSS_SINGLE is defined, only one of ENABLE_DSS_HDMI or ENABLE_DSS_EDP should be defined
      * - When ENABLE_DSS_DUAL is defined, ENABLE_DSS_HDMI and ENABLE_DSS_EDP are not used, both EDP and HDMI are enabled unconditionally
      */
-    #undef ENABLE_DSS_SINGLE
+    #define ENABLE_DSS_SINGLE
     #undef  ENABLE_DSS_DUAL
 
     /* define below to enable eDP display,
@@ -93,7 +93,7 @@
     #undef ENABLE_DSS_EDP
     /* define below to enable HDMI display,
        make sure to undef ENABLE_DSS_EDP & ENABLE_DSS_DSI as well */
-    #undef ENABLE_DSS_HDMI
+    #define ENABLE_DSS_HDMI
     /* define below to enable DSI display, make sure to undef ENABLE_DSS_HDMI
        & ENABLE_DSS_EDP as well */
     #undef ENABLE_DSS_DSI
@@ -119,8 +119,6 @@
 #undef ENABLE_UDMA_COPY
 
 #define ENABLE_FVID2
-#define ENABLE_DSS_SINGLE
-#define ENABLE_DSS_HDMI
 #define ENABLE_VHWA_VPAC
 #define ENABLE_VHWA_DMPAC
 
