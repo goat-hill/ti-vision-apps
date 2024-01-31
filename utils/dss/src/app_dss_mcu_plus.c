@@ -335,7 +335,9 @@ static void DispApp_initDssParams(Dss_Object *appObj)
     overlayParams->colorbarEnable =  gDssOverlayParams.colorbarEnable;
     overlayParams->overlayCfg.colorKeyEnable =  gDssOverlayParams.overlayCfg.colorKeyEnable;
     overlayParams->overlayCfg.colorKeySel =  gDssOverlayParams.overlayCfg.colorKeySel;
-    overlayParams->overlayCfg.backGroundColor =  gDssOverlayParams.overlayCfg.backGroundColor;
+
+    /* Note: explicitly setting background color to black */
+    overlayParams->overlayCfg.backGroundColor =  0x0;
 
     /* Configure Overlay Layer params */
     layerParams->overlayId = gDssOverlayLayerParams.overlayId;
