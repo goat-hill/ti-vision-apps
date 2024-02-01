@@ -56,7 +56,10 @@ endif
 
 SYS_STATIC_LIBS += app_utils_sciclient
 SYS_STATIC_LIBS += app_utils_hwa
+
+ifeq ($(BUILD_MCU_BOARD_DEPENDENCIES),yes)
 SYS_STATIC_LIBS += app_utils_dss
+endif
 
 ADDITIONAL_STATIC_LIBS += drivers.j722s.main-r5f.ti-arm-clang.${TARGET_BUILD}.lib
 ADDITIONAL_STATIC_LIBS += vhwa.j722s.main-r5fss0-0.ti-arm-clang.${TARGET_BUILD}.lib

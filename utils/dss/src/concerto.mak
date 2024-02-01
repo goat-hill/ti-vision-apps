@@ -1,3 +1,4 @@
+ifeq ($(BUILD_MCU_BOARD_DEPENDENCIES),yes)
 ifeq ($(TARGET_OS),$(filter $(TARGET_OS),SYSBIOS FREERTOS SAFERTOS))
 ifeq ($(TARGET_CPU),R5F)
 
@@ -30,5 +31,6 @@ DEFS+=$(BUILD_PDK_BOARD)
 
 include $(FINALE)
 
+endif
 endif
 endif
