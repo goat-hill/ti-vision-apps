@@ -16,10 +16,6 @@ CSOURCES    += tivx_fileio_write_user_data_object_host.c
 IDIRS       += $(VISION_APPS_PATH)/kernels/fileio/include
 IDIRS       += $(VISION_APPS_PATH)/kernels/fileio/arm
 
-ifeq ($(SOC),j722s)
-SKIPBUILD=1
-endif
-
 include $(FINALE)
 
 endif

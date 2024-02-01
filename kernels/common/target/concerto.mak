@@ -18,10 +18,6 @@ ifeq ($(TARGET_CPU),C66)
 DEFS += CORE_DSP CORE_C6XX
 endif
 
-ifeq ($(SOC),j722s)
-SKIPBUILD=1
-endif
-
 include $(FINALE)
 
 endif

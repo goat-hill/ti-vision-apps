@@ -10,10 +10,6 @@ IDIRS       += $(VISION_APPS_PATH)/kernels/stereo/include
 IDIRS       += $(VISION_APPS_PATH)/utils/perception
 IDIRS       += $(PTK_PATH)/include
 
-ifeq ($(SOC),j722s)
-SKIPBUILD=1
-endif
-
 include $(FINALE)
 
 endif

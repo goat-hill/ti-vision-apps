@@ -33,10 +33,6 @@ IDIRS       += $(VISION_APPS_PATH)/kernels/srv/include
 IDIRS       += $(VXLIB_PATH)/packages
 IDIRS       += $(VISION_APPS_PATH)/kernels/srv/gpu/3dsrv
 
-ifeq ($(SOC),j722s)
-SKIPBUILD=1
-endif
-
 include $(FINALE)
 
 endif
