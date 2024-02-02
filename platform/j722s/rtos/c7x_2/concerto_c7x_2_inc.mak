@@ -33,6 +33,7 @@ ifeq ($(RTOS),FREERTOS)
 	STATIC_LIBS += app_rtos
 endif
 
+ADDITIONAL_STATIC_LIBS += dmautils.j722s.c75ss1-0.ti-c7000.${TARGET_BUILD}.lib
 ADDITIONAL_STATIC_LIBS += drivers.j722s.c75ss1-0.ti-c7000.${TARGET_BUILD}.lib
 
 #
