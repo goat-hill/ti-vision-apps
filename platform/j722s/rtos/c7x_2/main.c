@@ -143,8 +143,8 @@ static void appC7xClecInitDru(void)
     if (SystemP_SUCCESS == status)
     {
         uint32_t i;
-        uint32_t dru_input_start = 144;
-        uint32_t dru_input_num   = 12;
+        uint32_t dru_input_start = 128;
+        uint32_t dru_input_num   = 16;
         /* program CLEC events from DRU used by any app running on C7x-2 (Upto 12 channels)
          */
         for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
