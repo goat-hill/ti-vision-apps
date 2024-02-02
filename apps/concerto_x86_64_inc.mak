@@ -139,7 +139,7 @@ MMA_LIBS += mmalib_x86_64
 MMA_LIBS += common_x86_64
 
 PDK_LIBS =
-ifneq ($(SOC),$(filter $(SOC), am62a j722s))
+ifneq ($(SOC),$(filter $(SOC), am62a))
 #PDK_LIBS += dmautils.lib
 #PDK_LIBS += udma.lib
 #PDK_LIBS += sciclient.lib
