@@ -81,7 +81,7 @@
 #include <utils/hwa/include/app_hwa.h>
 #endif
 
-#if defined(ENABLE_I2C) && defined(ENABLE_CSI2RX)
+#if defined(ENABLE_CSI2RX)
 #include <utils/sensors/include/app_sensors.h>
 #include <utils/iss/include/app_iss.h>
 #endif
@@ -434,7 +434,7 @@ int32_t appInit()
     #endif
 
     #ifdef ENABLE_SCICLIENT
-    status = appSciclientInit();
+    status = appSciclientInit(ipc_init_prm.self_cpu_id);
     APP_ASSERT_SUCCESS(status);
     #endif
 
@@ -451,11 +451,6 @@ int32_t appInit()
         status = appUdmaInit(&udma_init_prm);
         APP_ASSERT_SUCCESS(status);
     }
-
-    #ifdef CPU_mcu2_0
-    status = appUdmaCsirxCsitxInit();
-    APP_ASSERT_SUCCESS(status);
-    #endif
     #endif
 
     status = appMemInit(&mem_init_prm);
@@ -517,10 +512,6 @@ int32_t appInit()
     APP_ASSERT_SUCCESS(status);
     #endif
 
-    #ifdef ENABLE_I2C
-    appI2cInit();
-    #endif
-
     #ifdef ENABLE_DSS_SINGLE
     {
         app_dss_init_params_t prm;
@@ -578,7 +569,12 @@ int32_t appInit()
     #endif
     appRegisterOpenVXTargetKernels();
 
-    #ifdef ENABLE_CSI2RX
+    #if defined(ENABLE_CSI2RX) || defined(ENABLE_CSI2TX)
+    status = appUdmaCsirxCsitxInit();
+    APP_ASSERT_SUCCESS(status);
+    #endif
+
+    #if defined(ENABLE_CSI2RX)
     status = appCsi2RxInit();
     APP_ASSERT_SUCCESS(status);
     #endif
@@ -588,7 +584,7 @@ int32_t appInit()
     APP_ASSERT_SUCCESS(status);
     #endif
 
-    #if defined(ENABLE_I2C) && defined(ENABLE_CSI2RX)
+    #if defined(ENABLE_CSI2RX)
     status = appIssInit();
     APP_ASSERT_SUCCESS(status);
 
@@ -685,15 +681,11 @@ void appDeInit()
     appSciclientDeInit();
     #endif
 
-    #ifdef ENABLE_I2C
-    appI2cDeInit();
-    #endif
-
     #if defined(ENABLE_VHWA_VPAC)
     appVissRemoteServiceDeInit();
     #endif
 
-    #if defined(ENABLE_I2C) && defined(ENABLE_CSI2RX)
+    #if defined(ENABLE_CSI2RX)
     appIssDeInit();
     appRemoteServiceSensorDeInit();
     #endif
@@ -737,7 +729,6 @@ static void appRegisterOpenVXTargetKernels()
         #endif
 
         #if defined(ENABLE_DSS_SINGLE) || defined(ENABLE_DSS_DUAL)
-        appLogPrintf("registering video io kernels\n");
         tivxRegisterVideoIOTargetDisplayKernels();
         /* tivxRegisterVideoIOTargetDisplayM2MKernels(); */
         #endif

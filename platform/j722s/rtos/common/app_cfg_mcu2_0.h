@@ -77,7 +77,7 @@
  */
 #ifdef BUILD_MCU_BOARD_DEPENDENCIES
    /* TBD: Check board dependencies */
-    #undef ENABLE_CSI2RX
+    #define ENABLE_CSI2RX
     #undef ENABLE_CSI2TX
 
     /* IMPORANT NOTE:
@@ -98,7 +98,7 @@
        & ENABLE_DSS_EDP as well */
     #undef ENABLE_DSS_DSI
 
-    #undef ENABLE_I2C
+    #define ENABLE_I2C
     #undef ENABLE_BOARD
 
 #else
