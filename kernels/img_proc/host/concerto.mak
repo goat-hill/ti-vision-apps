@@ -4,11 +4,11 @@ ifeq ($(TARGET_CPU), $(filter $(TARGET_CPU), x86_64 A72 A53 ))
 include $(PRELUDE)
 TARGET      := vx_kernels_img_proc
 TARGETTYPE  := library
-CSOURCES    := vx_kernels_img_proc_host.c
-CSOURCES    += tivx_img_proc_node_api.c
+CSOURCES    := tivx_img_proc_node_api.c
 CSOURCES    += tivx_img_mosaic_host.c
 
 ifneq ($(SOC),j722s)
+CSOURCES    += vx_kernels_img_proc_host.c
 CSOURCES    += tivx_dof_plane_seperation_host.c
 CSOURCES    += tivx_img_preprocessing_host.c
 CSOURCES    += tivx_oc_pre_proc_host.c
