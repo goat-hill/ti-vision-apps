@@ -581,10 +581,8 @@ Sensor driver does not support metadata yet.
     /* Config initialization */
     tivx_capture_params_init(&local_capture_config);
 
-    #ifndef SOC_J722S
     local_capture_config.timeout = 33;
     local_capture_config.timeoutInitial = 500;
-    #endif
     local_capture_config.numInst  = 2U;/* Configure both instances */
     local_capture_config.numCh = 1U;/* Single cam. Only 1 channel enabled */
     {
@@ -1182,6 +1180,7 @@ vx_status app_delete_graph(AppObj *obj)
     APP_PRINTF("releasing graph\n");
     status |= vxReleaseGraph(&obj->graph);
     APP_PRINTF("releasing graph done\n");
+
     return status;
 }
 

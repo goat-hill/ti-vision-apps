@@ -100,13 +100,11 @@ static vx_status configure_capture_params(vx_context context, CaptureObj *captur
 
         tivx_capture_params_init(&captureObj->params);
 
-        #ifndef SOC_J722S
         if (captureObj->enable_error_detection || captureObj->test_mode)
         {
             captureObj->params.timeout        = 90;
             captureObj->params.timeoutInitial = 500;
         }
-        #endif
         captureObj->params.numInst  = num_capt_instances;
         captureObj->params.numCh    = sensorObj->num_cameras_enabled;
 
