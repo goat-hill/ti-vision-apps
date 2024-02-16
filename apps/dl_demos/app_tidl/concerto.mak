@@ -34,10 +34,6 @@ TARGETTYPE  := library
 endif
 endif
 
-ifeq ($(SOC),j722s)
-SKIPBUILD=1
-endif
-
 include $(FINALE)
 
 endif
