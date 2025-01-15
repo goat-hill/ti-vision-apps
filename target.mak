@@ -39,10 +39,10 @@ SYSDEFS  :=
 
 SYS_XDC_IDIRS = $(BIOS_PATH)/packages
 
-ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), J721E J721S2 J784S4 J742S2 AM62A J722S))
+ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), J721E J721S2 J784S4 J742S2 AM62A J722S TDA54))
     SYSDEFS +=
     ifeq ($(TARGET_FAMILY),ARM)
-        ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), A72 A53))
+        ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), A72 A53 A720))
             ifeq ($(TARGET_OS),SYSBIOS)
                 SYSIDIRS += $(GCC_SYSBIOS_ARM_ROOT)/aarch64-elf/libc/usr/include/
                 SYSLDIRS += $(GCC_SYSBIOS_ARM_ROOT)/aarch64-elf/libc/usr/lib/
@@ -63,7 +63,7 @@ ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), J721E J721S2 J784S4 J742S
             INSTALL_BIN := /usr/bin
             INSTALL_INC := /usr/include
         else
-            SYSIDIRS += $(TIARMCGT_LLVM_ROOT)/include
+            SYSIDIRS += $(TIARMCGT_LLVM_ROOT)/include/c
             SYSLDIRS += $(TIARMCGT_LLVM_ROOT)/lib
         endif
     else ifeq ($(TARGET_FAMILY),DSP)
