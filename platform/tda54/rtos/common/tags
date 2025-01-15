@@ -1,0 +1,156 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/edgeai/edgeai-stack/vision_apps/platform/j784s4/rtos/common/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+APP_ASSERT_SUCCESS	app_cfg.h	/^#define APP_ASSERT_SUCCESS(/;"	d
+APP_CFG_C7x_1_H_	app_cfg_c7x_1.h	/^#define APP_CFG_C7x_1_H_$/;"	d
+APP_CFG_C7x_2_H_	app_cfg_c7x_2.h	/^#define APP_CFG_C7x_2_H_$/;"	d
+APP_CFG_C7x_3_H_	app_cfg_c7x_3.h	/^#define APP_CFG_C7x_3_H_$/;"	d
+APP_CFG_C7x_4_H_	app_cfg_c7x_4.h	/^#define APP_CFG_C7x_4_H_$/;"	d
+APP_CFG_H_	app_cfg.h	/^#define APP_CFG_H_$/;"	d
+APP_CFG_MCU1_0_H_	app_cfg_mcu1_0.h	/^#define APP_CFG_MCU1_0_H_$/;"	d
+APP_CFG_MCU2_0_H_	app_cfg_mcu2_0.h	/^#define APP_CFG_MCU2_0_H_$/;"	d
+APP_CFG_MCU2_1_H_	app_cfg_mcu2_1.h	/^#define APP_CFG_MCU2_1_H_$/;"	d
+APP_CFG_MCU3_0_H_	app_cfg_mcu3_0.h	/^#define APP_CFG_MCU3_0_H_$/;"	d
+APP_CFG_MCU3_1_H_	app_cfg_mcu3_1.h	/^#define APP_CFG_MCU3_1_H_$/;"	d
+APP_CFG_MCU4_0_H_	app_cfg_mcu4_0.h	/^#define APP_CFG_MCU4_0_H_$/;"	d
+APP_CFG_MCU4_1_H_	app_cfg_mcu4_1.h	/^#define APP_CFG_MCU4_1_H_$/;"	d
+APP_HOST_TYPE_LINUX	app.h	/^#define APP_HOST_TYPE_LINUX /;"	d
+APP_HOST_TYPE_QNX	app.h	/^#define APP_HOST_TYPE_QNX /;"	d
+APP_HOST_TYPE_RTOS	app.h	/^#define APP_HOST_TYPE_RTOS /;"	d
+APP_H_	app.h	/^#define APP_H_$/;"	d
+APP_RUN_H_	app_run.h	/^#define APP_RUN_H_$/;"	d
+CPU_ID	concerto.mak	/^CPU_ID=c7x_1$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=c7x_2$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=c7x_3$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=c7x_4$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu1_0$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu2_0$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu2_1$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu3_0$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu3_1$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu4_0$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mcu4_1$/;"	m
+CPU_ID	concerto.mak	/^CPU_ID=mpu1$/;"	m
+CSOURCES	concerto.mak	/^CSOURCES    := $(call all-c-files)$/;"	m
+DDR_HEAP_MEM_SIZE	app_cfg_c7x_1.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_c7x_2.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_c7x_3.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_c7x_4.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu1_0.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu2_0.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu2_1.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu3_0.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu3_1.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu4_0.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_MEM_SIZE	app_cfg_mcu4_1.h	/^#define DDR_HEAP_MEM_SIZE /;"	d
+DDR_HEAP_NON_CACHE_MEM_SIZE	app_cfg_c7x_1.h	/^#define DDR_HEAP_NON_CACHE_MEM_SIZE /;"	d
+DDR_HEAP_NON_CACHE_MEM_SIZE	app_cfg_c7x_2.h	/^#define DDR_HEAP_NON_CACHE_MEM_SIZE /;"	d
+DDR_HEAP_NON_CACHE_MEM_SIZE	app_cfg_c7x_3.h	/^#define DDR_HEAP_NON_CACHE_MEM_SIZE /;"	d
+DDR_HEAP_NON_CACHE_MEM_SIZE	app_cfg_c7x_4.h	/^#define DDR_HEAP_NON_CACHE_MEM_SIZE /;"	d
+DDR_SCRATCH_NON_CACHE_SIZE	app_cfg_c7x_1.h	/^#define DDR_SCRATCH_NON_CACHE_SIZE /;"	d
+DDR_SCRATCH_NON_CACHE_SIZE	app_cfg_c7x_2.h	/^#define DDR_SCRATCH_NON_CACHE_SIZE /;"	d
+DDR_SCRATCH_NON_CACHE_SIZE	app_cfg_c7x_3.h	/^#define DDR_SCRATCH_NON_CACHE_SIZE /;"	d
+DDR_SCRATCH_NON_CACHE_SIZE	app_cfg_c7x_4.h	/^#define DDR_SCRATCH_NON_CACHE_SIZE /;"	d
+DDR_SCRATCH_SIZE	app_cfg_c7x_1.h	/^#define DDR_SCRATCH_SIZE /;"	d
+DDR_SCRATCH_SIZE	app_cfg_c7x_2.h	/^#define DDR_SCRATCH_SIZE /;"	d
+DDR_SCRATCH_SIZE	app_cfg_c7x_3.h	/^#define DDR_SCRATCH_SIZE /;"	d
+DDR_SCRATCH_SIZE	app_cfg_c7x_4.h	/^#define DDR_SCRATCH_SIZE /;"	d
+DDR_VISS_HEAP_MEM_SIZE	app_cfg_mcu2_0.h	/^#define DDR_VISS_HEAP_MEM_SIZE /;"	d
+DDR_VISS_HEAP_MEM_SIZE	app_cfg_mcu4_0.h	/^#define DDR_VISS_HEAP_MEM_SIZE /;"	d
+ENABLE_BOARD	app_cfg_mcu2_0.h	/^    #define ENABLE_BOARD$/;"	d
+ENABLE_CSI2RX	app_cfg_mcu2_0.h	/^    #define ENABLE_CSI2RX$/;"	d
+ENABLE_CSI2TX	app_cfg_mcu2_0.h	/^    #define ENABLE_CSI2TX$/;"	d
+ENABLE_DSS_DSI	app_cfg_mcu2_0.h	/^    #define ENABLE_DSS_DSI$/;"	d
+ENABLE_DSS_EDP	app_cfg_mcu2_0.h	/^    #define ENABLE_DSS_EDP$/;"	d
+ENABLE_DSS_SINGLE	app_cfg_mcu2_0.h	/^    #define ENABLE_DSS_SINGLE$/;"	d
+ENABLE_FVID2	app_cfg_mcu2_0.h	/^#define ENABLE_FVID2$/;"	d
+ENABLE_FVID2	app_cfg_mcu2_1.h	/^#define ENABLE_FVID2$/;"	d
+ENABLE_FVID2	app_cfg_mcu4_0.h	/^#define ENABLE_FVID2$/;"	d
+ENABLE_I2C	app_cfg_mcu2_0.h	/^    #define ENABLE_I2C$/;"	d
+ENABLE_IPC	app_cfg.h	/^#define ENABLE_IPC$/;"	d
+ENABLE_IPC_C7x_1	app_cfg.h	/^#define ENABLE_IPC_C7x_1$/;"	d
+ENABLE_IPC_C7x_2	app_cfg.h	/^#define ENABLE_IPC_C7x_2$/;"	d
+ENABLE_IPC_C7x_3	app_cfg.h	/^#define ENABLE_IPC_C7x_3$/;"	d
+ENABLE_IPC_C7x_4	app_cfg.h	/^#define ENABLE_IPC_C7x_4$/;"	d
+ENABLE_IPC_ECHO_TEST	app_cfg.h	/^#define ENABLE_IPC_ECHO_TEST$/;"	d
+ENABLE_IPC_MCU2_0	app_cfg.h	/^#define ENABLE_IPC_MCU2_0$/;"	d
+ENABLE_IPC_MCU2_1	app_cfg.h	/^#define ENABLE_IPC_MCU2_1$/;"	d
+ENABLE_IPC_MCU3_0	app_cfg.h	/^#define ENABLE_IPC_MCU3_0$/;"	d
+ENABLE_IPC_MCU3_1	app_cfg.h	/^#define ENABLE_IPC_MCU3_1$/;"	d
+ENABLE_IPC_MCU4_0	app_cfg.h	/^#define ENABLE_IPC_MCU4_0$/;"	d
+ENABLE_IPC_MCU4_1	app_cfg.h	/^#define ENABLE_IPC_MCU4_1$/;"	d
+ENABLE_IPC_MPU1_0	app_cfg.h	/^#define ENABLE_IPC_MPU1_0$/;"	d
+ENABLE_PRINTF_REDIRECT	app_cfg.h	/^#define ENABLE_PRINTF_REDIRECT$/;"	d
+ENABLE_SCICLIENT	app_cfg.h	/^#define ENABLE_SCICLIENT$/;"	d
+ENABLE_SCISERVER	app_cfg_mcu1_0.h	/^#define ENABLE_SCISERVER$/;"	d
+ENABLE_TIOVX	app_cfg.h	/^#define ENABLE_TIOVX$/;"	d
+ENABLE_UDMA	app_cfg.h	/^#define ENABLE_UDMA$/;"	d
+ENABLE_UDMA_COPY	app_cfg.h	/^#define ENABLE_UDMA_COPY$/;"	d
+ENABLE_VHWA_DMPAC	app_cfg_mcu2_1.h	/^#define ENABLE_VHWA_DMPAC$/;"	d
+ENABLE_VHWA_VPAC0	app_cfg_mcu2_0.h	/^#define ENABLE_VHWA_VPAC0$/;"	d
+ENABLE_VHWA_VPAC1	app_cfg_mcu4_0.h	/^#define ENABLE_VHWA_VPAC1$/;"	d
+FS_APP_DATA_BUF_SIZE	app_run.c	/^#define FS_APP_DATA_BUF_SIZE /;"	d	file:
+FS_APP_PATH_BUF_SIZE	app_run.c	/^#define FS_APP_PATH_BUF_SIZE /;"	d	file:
+L1_MEM_SIZE	app_cfg_c7x_1.h	/^#define L1_MEM_SIZE /;"	d
+L1_MEM_SIZE	app_cfg_c7x_2.h	/^#define L1_MEM_SIZE /;"	d
+L1_MEM_SIZE	app_cfg_c7x_3.h	/^#define L1_MEM_SIZE /;"	d
+L1_MEM_SIZE	app_cfg_c7x_4.h	/^#define L1_MEM_SIZE /;"	d
+L2_MEM_SIZE	app_cfg_c7x_1.h	/^#define L2_MEM_SIZE /;"	d
+L2_MEM_SIZE	app_cfg_c7x_2.h	/^#define L2_MEM_SIZE /;"	d
+L2_MEM_SIZE	app_cfg_c7x_3.h	/^#define L2_MEM_SIZE /;"	d
+L2_MEM_SIZE	app_cfg_c7x_4.h	/^#define L2_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_c7x_1.h	/^#define L3_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_c7x_2.h	/^#define L3_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_c7x_3.h	/^#define L3_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_c7x_4.h	/^#define L3_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_mcu2_0.h	/^#define L3_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_mcu2_1.h	/^#define L3_MEM_SIZE /;"	d
+L3_MEM_SIZE	app_cfg_mcu4_0.h	/^#define L3_MEM_SIZE /;"	d
+TARGET	concerto.mak	/^TARGET      := app_rtos_common_$(CPU_ID)$/;"	m
+TARGETTYPE	concerto.mak	/^TARGETTYPE  := library$/;"	m
+_MODULE	concerto.mak	/^_MODULE=$(CPU_ID)$/;"	m
+__anonb8ce29110108	app_run_rtos_test.c	/^typedef struct {$/;"	s	file:
+appDeInit	app_init.c	/^void appDeInit()$/;"	f	typeref:typename:void
+appIdleLoop	app_init.c	/^void appIdleLoop(void)$/;"	f	typeref:typename:void
+appInit	app_init.c	/^int32_t appInit()$/;"	f	typeref:typename:int32_t
+appLogDeviceWrite	app_init.c	/^void appLogDeviceWrite(char *string, uint32_t max_size)$/;"	f	typeref:typename:void
+appMenuMain	app_run.c	/^void appMenuMain()$/;"	f	typeref:typename:void
+appRegisterOpenVXTargetKernels	app_init.c	/^static void appRegisterOpenVXTargetKernels()$/;"	f	typeref:typename:void	file:
+appRtosTestHandler	app_run_rtos_test.c	/^static int32_t appRtosTestHandler(char *service_name, uint32_t cmd, void *prm, uint32_t prm_size/;"	f	typeref:typename:int32_t	file:
+appRtosTestRegister	app_run_rtos_test.c	/^void appRtosTestRegister()$/;"	f	typeref:typename:void
+appRtosTestUnRegister	app_run_rtos_test.c	/^void appRtosTestUnRegister()$/;"	f	typeref:typename:void
+appRun	app_run.c	/^void appRun()$/;"	f	typeref:typename:void
+appRunFileioTest	app_run.c	/^int32_t appRunFileioTest(int argc, char *argv[])$/;"	f	typeref:typename:int32_t
+appRunRtosTest	app_run_rtos_test.c	/^int appRunRtosTest(int argc, char *argv[])$/;"	f	typeref:typename:int
+appRunSampleCliApp	app_run.c	/^int appRunSampleCliApp(int argc, char *argv[])$/;"	f	typeref:typename:int
+appRunSampleCliAppSubCmd	app_run.c	/^int appRunSampleCliAppSubCmd(int argc, char *argv[])$/;"	f	typeref:typename:int
+appRunTiovxConformance	app_run.c	/^int appRunTiovxConformance(int argc, char *argv[])$/;"	f	typeref:typename:int
+appRunTiovxTutorial	app_run.c	/^int appRunTiovxTutorial(int argc, char *argv[])$/;"	f	typeref:typename:int
+appUnRegisterOpenVXTargetKernels	app_init.c	/^static void appUnRegisterOpenVXTargetKernels()$/;"	f	typeref:typename:void	file:
+app_rtos_test_prm_t	app_run_rtos_test.c	/^} app_rtos_test_prm_t;$/;"	t	typeref:struct:__anonb8ce29110108	file:
+count	app_run_rtos_test.c	/^    uint32_t count;$/;"	m	struct:__anonb8ce29110108	typeref:typename:uint32_t	file:
+delay	app_run_rtos_test.c	/^    uint32_t delay;$/;"	m	struct:__anonb8ce29110108	typeref:typename:uint32_t	file:
+gFsAppDataBuf	app_run.c	/^static char gFsAppDataBuf[FS_APP_DATA_BUF_SIZE];$/;"	v	typeref:typename:char[]	file:
+gFsInFileName	app_run.c	/^static char gFsInFileName[FS_APP_PATH_BUF_SIZE];$/;"	v	typeref:typename:char[]	file:
+gFsOutFileName	app_run.c	/^static char gFsOutFileName[FS_APP_PATH_BUF_SIZE];$/;"	v	typeref:typename:char[]	file:
+g_app_fileio_shared_mem	app_init.c	/^app_fileio_shared_mem_t g_app_fileio_shared_mem$/;"	v	typeref:typename:app_fileio_shared_mem_t
+g_app_log_shared_mem	app_init.c	/^app_log_shared_mem_t g_app_log_shared_mem$/;"	v	typeref:typename:app_log_shared_mem_t
+g_ddr_cache_wt_mem	app_init.c	/^uint8_t g_ddr_cache_wt_mem[DDR_VISS_HEAP_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_ddr_local_mem	app_init.c	/^uint8_t g_ddr_local_mem[DDR_HEAP_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_ddr_non_cache_mem	app_init.c	/^uint8_t g_ddr_non_cache_mem[DDR_HEAP_NON_CACHE_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_ddr_scratch_mem	app_init.c	/^uint8_t g_ddr_scratch_mem[DDR_SCRATCH_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_ddr_scratch_non_cache_mem	app_init.c	/^uint8_t g_ddr_scratch_non_cache_mem[DDR_SCRATCH_NON_CACHE_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_ipc_vring_mem	app_init.c	/^uint8_t g_ipc_vring_mem[IPC_VRING_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_l1_mem	app_init.c	/^uint8_t g_l1_mem[L1_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_l2_mem	app_init.c	/^uint8_t g_l2_mem[L2_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_l3_mem	app_init.c	/^uint8_t g_l3_mem[L3_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+g_tiovx_obj_desc_mem	app_init.c	/^uint8_t g_tiovx_obj_desc_mem[TIOVX_OBJ_DESC_MEM_SIZE]$/;"	v	typeref:typename:uint8_t[]
+vx_tutorial_get_char	app_run.c	/^char vx_tutorial_get_char()$/;"	f	typeref:typename:char
