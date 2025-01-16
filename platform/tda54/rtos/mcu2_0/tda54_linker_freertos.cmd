@@ -14,7 +14,6 @@
 --fill_value=0
 --stack_size=0x8000
 --heap_size=0x10000
---entry_point=_freertosresetvectors
 
 -stack  0x8000  /* SOFTWARE STACK SIZE */
 -heap   0x10000 /* HEAP AREA SIZE      */
@@ -56,7 +55,6 @@ SECTIONS
     .data               : {} palign(128)    > DDR_MCU2_0
     .sysmem             : {} align(8)       > DDR_MCU2_0
     .stack              : {} align(4)       > DDR_MCU2_0
-    .bss.devgroup     : {*(.bss.devgroup*)} align(4)       > DDR_MCU2_0
     .bss:taskStackSection > DDR_MCU2_0
 
     .far:CPSW_DMA_DESC_MEMPOOL  (NOLOAD) {} ALIGN (128) > DDR_MCU2_0
@@ -64,7 +62,6 @@ SECTIONS
     .far:CPSW_DMA_PKT_MEMPOOL (NOLOAD) {} ALIGN (128) > DDR_MCU2_0
 
     .data_buffer        : {} palign(128)    > DDR_MCU2_0
-    .const.devgroup     : {*(.const.devgroup*)} align(4)       > DDR_MCU2_0
     .boardcfg_data      : {} align(4)       > DDR_MCU2_0
 
     .resource_table          :
