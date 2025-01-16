@@ -137,7 +137,7 @@ endif
 ########################################################################
 
 ifeq ($(BUILD_CPU_MCU2_0),yes)
-ifeq ($(TARGET_CPU),R5F)
+ifeq ($(TARGET_CPU),M55)
 
 # CPU_ID must be set before include $(PRELUDE)
 CPU_ID=mcu2_0

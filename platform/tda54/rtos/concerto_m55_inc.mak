@@ -16,7 +16,7 @@ ifeq ($(RTOS),FREERTOS)
 	LDIRS += $(MCU_PLUS_SDK_PATH)/source/kernel/freertos/lib/
 endif
 ifeq ($(RTOS),SAFERTOS)
-	LDIRS += $(PDK_PATH)/packages/ti/osal/lib/safertos/$(SOC)/r5f/$(TARGET_BUILD)/
+#	LDIRS += $(PDK_PATH)/packages/ti/osal/lib/safertos/$(SOC)/r5f/$(TARGET_BUILD)/
 endif
 LDIRS += $(MCU_PLUS_SDK_PATH)/source/board/lib/
 LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
