@@ -67,7 +67,7 @@ include $($(_MODULE)_SDIR)/../concerto_m55_inc.mak
 # CPU instance specific libraries
 # STATIC_LIBS += app_rtos_common_mcu2_0
 ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SAFERTOS))
-	STATIC_LIBS += app_rtos
+#	STATIC_LIBS += app_rtos
 endif
 
 ADDITIONAL_STATIC_LIBS += drivers.tda54.m55.ti-arm-clang.${TARGET_BUILD}.lib

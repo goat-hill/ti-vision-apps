@@ -24,7 +24,7 @@ endif
 endif
 endif
 
-ifeq ($(BUILD_APP_RTOS_QNX),no)
+ifeq ($(BUILD_APP_RTOS_QNX),yes)
 ifeq ($(BUILD_CPU_MCU2_0),yes)
 ifeq ($(TARGET_CPU),M55)
 
