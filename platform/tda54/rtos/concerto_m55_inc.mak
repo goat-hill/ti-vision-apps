@@ -1,7 +1,5 @@
 ifeq ($(TARGET_CPU),M55)
 
-LDFLAGS += --ram_model
-
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/common
 # IDIRS+=$(VISION_APPS_PATH)/kernels/img_proc/include
 # IDIRS+=$(VISION_APPS_PATH)/kernels/fileio/include
@@ -23,24 +21,24 @@ LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
 
 # LDIRS += $(TIOVX_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 # LDIRS += $(IMAGING_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
-# LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
+LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 # LDIRS += $(VIDEO_IO_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 
 #STATIC_LIBS += vx_target_kernels_img_proc_r5f
 
-#APP_UTILS_LIBS =
-#APP_UTILS_LIBS += app_utils_mem
-#APP_UTILS_LIBS += app_utils_rtos
-#APP_UTILS_LIBS += app_utils_console_io
+APP_UTILS_LIBS =
+APP_UTILS_LIBS += app_utils_mem
+APP_UTILS_LIBS += app_utils_rtos
+APP_UTILS_LIBS += app_utils_console_io
 #APP_UTILS_LIBS += app_utils_timer
-#APP_UTILS_LIBS += app_utils_file_io
-#APP_UTILS_LIBS += app_utils_ipc
-#APP_UTILS_LIBS += app_utils_remote_service
-#APP_UTILS_LIBS += app_utils_udma
-#APP_UTILS_LIBS += app_utils_misc
+APP_UTILS_LIBS += app_utils_file_io
+APP_UTILS_LIBS += app_utils_ipc
+APP_UTILS_LIBS += app_utils_remote_service
+APP_UTILS_LIBS += app_utils_udma
+APP_UTILS_LIBS += app_utils_misc
 #APP_UTILS_LIBS += app_utils_perf_stats
 
-#SYS_STATIC_LIBS += $(APP_UTILS_LIBS)
+SYS_STATIC_LIBS += $(APP_UTILS_LIBS)
 
 # TIOVX_LIBS =
 # TIOVX_LIBS += vx_conformance_engine vx_conformance_tests vx_conformance_tests_testmodule
@@ -83,7 +81,7 @@ LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
 # ADDITIONAL_STATIC_LIBS += ti.osal.aer5f
 # 
 # ifeq ($(RTOS),FREERTOS)
-# 	ADDITIONAL_STATIC_LIBS += ti.kernel.freertos.aer5f
+	ADDITIONAL_STATIC_LIBS += freertos.tda54.m55.ti-arm-clang.${TARGET_BUILD}.lib
 # endif
 # 
 # ifeq ($(RTOS),SAFERTOS)

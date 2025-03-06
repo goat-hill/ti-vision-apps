@@ -2,11 +2,11 @@ DEFS+=CPU_mcu2_0
 RTOS_LC := $(call lowercase,$(RTOS))
 
 ifeq ($(RTOS),FREERTOS)
-#	CSOURCES += generated/ti_board_config.c
-#	CSOURCES += generated/ti_board_open_close.c
-#	CSOURCES += generated/ti_dpl_config.c
-#	CSOURCES += generated/ti_drivers_config.c
-#	CSOURCES += generated/ti_drivers_open_close.c
+	CSOURCES += generated/ti_board_config.c
+	CSOURCES += generated/ti_board_open_close.c
+	CSOURCES += generated/ti_dpl_config.c
+	CSOURCES += generated/ti_drivers_config.c
+	CSOURCES += generated/ti_drivers_open_close.c
 #	CSOURCES += generated/ti_pinmux_config.c
 #	CSOURCES += generated/ti_power_clock_config.c
 #	CSOURCES += $(SOC)_mpu_cfg.c
@@ -18,7 +18,7 @@ ifeq ($(RTOS),SAFERTOS)
 	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_safertos.cmd
 endif
 
-LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
+#LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
 
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos
 IDIRS+=$(REMOTE_DEVICE_PATH)
@@ -34,7 +34,8 @@ ifeq ($(RTOS),SAFERTOS)
 #	IDIRS+=${SAFERTOS_KERNEL_INSTALL_PATH_r5f}/source_code_and_projects/SafeRTOS/portable/$(SAFERTOS_ISA_EXT_r5f)/$(SAFERTOS_COMPILER_EXT_r5f)
 endif
 
-# IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/mcu2_0/generated
+
+IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos/mcu2_0/generated
 
 ifeq ($(RTOS),FREERTOS)
 	LDIRS += $(MCU_PLUS_SDK_PATH)/source/kernel/freertos/lib/

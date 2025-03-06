@@ -61,39 +61,61 @@
  */
 
 #include <app.h>
-//#include <utils/console_io/include/app_log.h>
+#include <utils/console_io/include/app_log.h>
 //#include <utils/timer/include/app_timer.h>
 //#include <utils/ethfw/include/app_ethfw.h>
-//#include <utils/rtos/include/app_rtos.h>
+#include <utils/rtos/include/app_rtos.h>
 #include <stdio.h>
 #include <string.h>
-//#include <ti/osal/osal.h>
-#include <app_ipc_rsctable.h>
+//#include <app_ipc_rsctable.h>
+#include <kernel/dpl/DebugP.h>
 #include "app_cfg_mcu2_0.h"
 //#include <utils/perf_stats/include/app_perf_stats.h>
 #include <app_cfg_mcu2_0.h>
 
+#include "ti_drivers_config.h"
+#include "ti_board_config.h"
+#include "ti_drivers_open_close.h"
+#include "ti_board_open_close.h"
+
+extern void vTaskStartScheduler( void );
+extern void vTaskDelete();
+
 static void appMain(void* arg0, void* arg1)
 {
+    //appUtilsTaskInit();
+    int32_t status = SystemP_SUCCESS;
+
+    Drivers_open();
+    Board_driversOpen();
+    DebugP_assert(status==SystemP_SUCCESS);
     //appInit();
     //appRun();
-    #if 1
-    while(1)
-    {
+
+//    #if 1
+//    while(1)
+//    {
+    DebugP_log("HELLO WORLD\n\r");
+    //appLogPrintf("Hello World!!!\n");
+    //
+    Board_driversClose();
+    Drivers_close();
+
+    vTaskDelete();
         //appLogWaitMsecs(100u);
-    }
-    #else
-    appDeInit();
-    #endif
+//    }
+//    #else
+//    appDeInit();
+//    #endif
 }
 
-// void StartupEmulatorWaitFxn (void)
-// {
-//     volatile uint32_t enableDebug = 0;
-//     do
-//     {
-//     }while (enableDebug);
-// }
+ void StartupEmulatorWaitFxn (void)
+ {
+     volatile uint32_t enableDebug = 0;
+     do
+     {
+     }while (enableDebug);
+ }
 
 static uint8_t gTskStackMain[8*1024]
 __attribute__ ((section(".bss:taskStackSection")))
@@ -102,36 +124,31 @@ __attribute__ ((aligned(8192)))
 
 int main(void)
 {
-//    app_rtos_task_params_t tskParams;
-//    app_rtos_task_handle_t task;
-
-#ifdef ENABLE_ETHFW
-//    appEthFwEarlyInit();
-#endif
+    app_rtos_task_params_t tskParams;
+    app_rtos_task_handle_t task;
 
     /* This is for debug purpose - see the description of function header */
-//    StartupEmulatorWaitFxn();
+    StartupEmulatorWaitFxn();
 
-//    OS_init();
+    System_init();
+    Board_init();
 
-//    appPerfStatsInit();
+    //appPerfStatsInit();
 
-  while(1)
-  {
-      //appLogWaitMsecs(100u);
-  }
+    appRtosTaskParamsInit(&tskParams);
+    tskParams.priority = 8u;
+    tskParams.stack = gTskStackMain;
+    tskParams.stacksize = sizeof (gTskStackMain);
+    tskParams.taskfxn = &appMain;
+    task = appRtosTaskCreate(&tskParams);
 
-//    appRtosTaskParamsInit(&tskParams);
-//    tskParams.priority = 8u;
-//    tskParams.stack = gTskStackMain;
-//    tskParams.stacksize = sizeof (gTskStackMain);
-//    tskParams.taskfxn = &appMain;
-//    task = appRtosTaskCreate(&tskParams);
-//    if(NULL == task)
-//    {
-//        OS_stop();
-//    }
-//    OS_start();
+    DebugP_assert(task != NULL);
+    vTaskStartScheduler();
+    /* The following line should never be reached because vTaskStartScheduler()
+    will only return if there was not enough FreeRTOS heap memory available to
+    create the Idle and (if configured) Timer tasks.  Heap management, and
+    techniques for trapping heap exhaustion, are described in the book text. */
+    DebugP_assertNoLog(0);
 
     return 0;
 }
