@@ -61,7 +61,7 @@
  */
 
 #include <app.h>
-#include <utils/console_io/include/app_log.h>
+//#include <utils/console_io/include/app_log.h>
 //#include <utils/timer/include/app_timer.h>
 //#include <utils/ethfw/include/app_ethfw.h>
 #include <utils/rtos/include/app_rtos.h>
@@ -83,30 +83,17 @@ extern void vTaskDelete();
 
 static void appMain(void* arg0, void* arg1)
 {
-    //appUtilsTaskInit();
     int32_t status = SystemP_SUCCESS;
 
     Drivers_open();
     Board_driversOpen();
-    DebugP_assert(status==SystemP_SUCCESS);
-    //appInit();
-    //appRun();
 
-//    #if 1
-//    while(1)
-//    {
-    DebugP_log("HELLO WORLD\n\r");
-    //appLogPrintf("Hello World!!!\n");
-    //
+    DebugP_log("HELLO WORLD!!!\n\r");
+
     Board_driversClose();
     Drivers_close();
 
     vTaskDelete();
-        //appLogWaitMsecs(100u);
-//    }
-//    #else
-//    appDeInit();
-//    #endif
 }
 
  void StartupEmulatorWaitFxn (void)
