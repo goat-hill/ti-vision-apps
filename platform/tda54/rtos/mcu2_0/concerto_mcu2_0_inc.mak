@@ -18,7 +18,7 @@ ifeq ($(RTOS),SAFERTOS)
 	LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/$(SOC)_linker_safertos.cmd
 endif
 
-#LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
+LINKER_CMD_FILES +=  $($(_MODULE)_SDIR)/linker_mem_map.cmd
 
 IDIRS+=$(VISION_APPS_PATH)/platform/$(SOC)/rtos
 IDIRS+=$(REMOTE_DEVICE_PATH)
@@ -66,15 +66,15 @@ include $($(_MODULE)_SDIR)/../concerto_m55_inc.mak
 #endif
 
 # CPU instance specific libraries
-# STATIC_LIBS += app_rtos_common_mcu2_0
+STATIC_LIBS += app_rtos_common_mcu2_0
 ifeq ($(RTOS), $(filter $(RTOS), FREERTOS SAFERTOS))
-#	STATIC_LIBS += app_rtos
+	#STATIC_LIBS += app_rtos
 endif
 
 ADDITIONAL_STATIC_LIBS += drivers.tda54.m55.ti-arm-clang.${TARGET_BUILD}.lib
 
 #SYS_STATIC_LIBS += app_utils_hwa
-#SYS_STATIC_LIBS += app_utils_sciclient
+SYS_STATIC_LIBS += app_utils_sciclient
 #
 #ifeq ($(BUILD_MCU_BOARD_DEPENDENCIES),yes)
 #SYS_STATIC_LIBS += app_utils_dss

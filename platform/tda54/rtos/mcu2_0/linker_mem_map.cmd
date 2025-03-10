@@ -66,12 +66,9 @@
 
 MEMORY
 {
-    /* R5F_TCMA_VECS [ size 64 B ] */
-    R5F_TCMA_VECS            (    X ) : ORIGIN = 0x00000000 , LENGTH = 0x00000040
-    /* R5F_TCMA [ size 31.94 KB ] */
-    R5F_TCMA                 (    X ) : ORIGIN = 0x00000040 , LENGTH = 0x00007FC0
-    /* R5F_TCMB0 [ size 32.00 KB ] */
-    R5F_TCMB0                ( RWIX ) : ORIGIN = 0x41010000 , LENGTH = 0x00008000
+    M55_VECS : ORIGIN = 0x24000000 , LENGTH = 0x200
+    M55_IRAM : ORIGIN = 0x24000000 + 0x200 , LENGTH = 0xFFFF - 0x200
+    M55_DRAM : ORIGIN = 0x24010000 , LENGTH = 0xFFFF
     /* Main OCRAM for MCU2_0 [ size 256.00 KB ] */
     MAIN_OCRAM_MCU2_0        ( RWIX ) : ORIGIN = 0x60000000 , LENGTH = 0x00040000
     /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
@@ -79,11 +76,11 @@ MEMORY
     /* DDR for MCU2_0 for Linux resource table [ size 1024 B ] */
     DDR_MCU2_0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xA2100000 , LENGTH = 0x00000400
     /* DDR for MCU2_0 for code/data [ size 31.00 MB ] */
-    DDR_MCU2_0               ( RWIX ) : ORIGIN = 0xA2100400 , LENGTH = 0x01EFFC00
+    DDR_MCU2_0               ( RWIX ) : ORIGIN = 0x80000000 , LENGTH = 0x10000000
+    /* Memory for remote core logging [ size 256.00 KB ] */
+    APP_LOG_MEM                       : ORIGIN = 0x90000000 , LENGTH = 0x00040000
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 48.00 MB ] */
     IPC_VRING_MEM                     : ORIGIN = 0xAC000000 , LENGTH = 0x03000000
-    /* Memory for remote core logging [ size 256.00 KB ] */
-    APP_LOG_MEM                       : ORIGIN = 0xAF000000 , LENGTH = 0x00040000
     /* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 31.75 MB ] */
     TIOVX_OBJ_DESC_MEM                : ORIGIN = 0xAF040000 , LENGTH = 0x01FC0000
     /* Memory for remote core file operations [ size  4.00 MB ] */

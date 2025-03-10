@@ -70,13 +70,13 @@
 /* Vision_apps utils header files */
 #include <utils/mem/include/app_mem.h>
 #include <utils/ipc/include/app_ipc.h>
-#include <utils/remote_service/include/app_remote_service.h>
+//#include <utils/remote_service/include/app_remote_service.h>
 #include <utils/console_io/include/app_log.h>
 #include <utils/file_io/include/app_fileio.h>
 #include <utils/console_io/include/app_cli.h>
 #include <utils/misc/include/app_misc.h>
-#include <utils/perf_stats/include/app_perf_stats.h>
-#include <utils/timer/include/app_timer.h>
+//#include <utils/perf_stats/include/app_perf_stats.h>
+//#include <utils/timer/include/app_timer.h>
 
 #if defined(ENABLE_FVID2)
 #include <utils/hwa/include/app_hwa.h>
@@ -104,10 +104,10 @@
 #endif
 
 /* TIOVX header files */
-#include <TI/tivx.h>
+//#include <TI/tivx.h>
 
 /* Vision_apps custom kernel header files */
-#include <TI/tivx_img_proc.h>
+//#include <TI/tivx_img_proc.h>
 #if defined(C7120)
 #include <TI/tivx_srv.h>
 #include <TI/tivx_stereo.h>
@@ -152,19 +152,7 @@
 #endif /* #if defined(ENABLE_TIOVX) */
 
 
-/* PDK header files */
-#ifdef ENABLE_BOARD
-/* This header is only needed for the definition of UTRUE used */
-#include <ti/csl/csl_types.h>
-#include <ti/board/board.h>
-#endif
-
-#ifdef ENABLE_UART
-#include <ti/drv/uart/UART.h>
-#include <ti/drv/uart/UART_stdio.h>
-#endif
-
-extern app_perf_registration_t * perf_fxns_list;
+//extern app_perf_registration_t * perf_fxns_list;
 
 app_log_shared_mem_t g_app_log_shared_mem
 __attribute__ ((section(".bss:app_log_mem")))
@@ -258,7 +246,7 @@ int32_t appInit()
     app_mem_init_prm_t mem_init_prm;
     app_log_init_prm_t log_init_prm;
     app_fileio_init_prm_t fileio_init_prm;
-    app_ipc_init_prm_t ipc_init_prm;
+    //app_ipc_init_prm_t ipc_init_prm;
 
     app_mem_heap_prm_t *heap_prm;
 
@@ -267,7 +255,7 @@ int32_t appInit()
     void *ipc_resource_table = NULL;
     #endif
 
-    #if defined(CPU_mcu2_0) || defined(CPU_mcu2_1) || defined(CPU_mcu4_0)
+    #if defined(CPU_mcu2_1) || defined(CPU_mcu4_0)
     app_mem_rat_prm_t l3_mem_rat_prm;
     #endif
 
@@ -276,8 +264,8 @@ int32_t appInit()
     #endif
 
     /* Init and start GTC timer */
-    status = appLogGlobalTimeInit();
-    APP_ASSERT_SUCCESS(status);
+    //status = appLogGlobalTimeInit();
+    //APP_ASSERT_SUCCESS(status);
 
     #ifdef ENABLE_IPC
     /* appGetIpcResourceTable() returns NULL in RTOS only mode and returns a valid resource table
@@ -290,7 +278,7 @@ int32_t appInit()
     appMemInitPrmSetDefault(&mem_init_prm);
     appLogInitPrmSetDefault(&log_init_prm);
     appFileIOInitPrmSetDefault(&fileio_init_prm);
-    appIpcInitPrmSetDefault(&ipc_init_prm);
+    //appIpcInitPrmSetDefault(&ipc_init_prm);
 
     mem_init_prm.virtToPhyFxn     = appUdmaVirtToPhyAddrConversion;
     mem_init_prm.shared2TargetFxn = appShared2TargetConversion;
@@ -448,7 +436,7 @@ int32_t appInit()
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU1_0;
     #endif
     #ifdef CPU_mcu2_0
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU2_0;
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU0_M55;
     #endif
     #ifdef CPU_mcu2_1
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU2_1;
@@ -480,7 +468,8 @@ int32_t appInit()
     #endif
 
     log_init_prm.shared_mem = &g_app_log_shared_mem;
-    log_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU0_M55] = 1;
+    log_init_prm.self_cpu_index = APP_IPC_CPU_MCU0_M55;
     #ifdef CPU_mpu1
     strncpy(log_init_prm.self_cpu_name, "MPU1" , APP_LOG_MAX_CPU_NAME);
     #endif
@@ -488,7 +477,7 @@ int32_t appInit()
     strncpy(log_init_prm.self_cpu_name, "MCU1_0" , APP_LOG_MAX_CPU_NAME);
     #endif
     #ifdef CPU_mcu2_0
-    strncpy(log_init_prm.self_cpu_name, "MCU2_0" , APP_LOG_MAX_CPU_NAME);
+    strncpy(log_init_prm.self_cpu_name, "MCU2" , APP_LOG_MAX_CPU_NAME);
     #endif
     #ifdef CPU_mcu2_1
     strncpy(log_init_prm.self_cpu_name, "MCU2_1" , APP_LOG_MAX_CPU_NAME);
@@ -523,10 +512,10 @@ int32_t appInit()
     #endif
 
     fileio_init_prm.shared_mem = &g_app_fileio_shared_mem;
-    fileio_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
+    //fileio_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
     strncpy(fileio_init_prm.self_cpu_name, log_init_prm.self_cpu_name, APP_LOG_MAX_CPU_NAME);
 
-    appPerfStatsInitRegister(perf_fxns_list);
+    //appPerfStatsInitRegister(perf_fxns_list);
 
     #ifdef ENABLE_BOARD
     {
@@ -586,7 +575,7 @@ int32_t appInit()
     APP_ASSERT_SUCCESS(status);
     #endif
 
-    #if defined(CPU_mcu2_0) || defined(CPU_mcu2_1) || defined(CPU_mcu4_0)
+    #if defined(CPU_mcu2_1) || defined(CPU_mcu4_0)
     #ifdef L3_MEM_SIZE
 
     l3_mem_rat_prm.size        = L3_MEM_SIZE;
@@ -655,8 +644,8 @@ int32_t appInit()
     }
 
     #ifdef CPU_mcu2_0
-    status = appUdmaCsirxCsitxInit();
-    APP_ASSERT_SUCCESS(status);
+    //status = appUdmaCsirxCsitxInit();
+    //APP_ASSERT_SUCCESS(status);
     #endif
     #endif
 
@@ -967,7 +956,7 @@ void appDeInit()
     #endif
 
     /* De-init GTC timer */
-    appLogGlobalTimeDeInit();
+    //appLogGlobalTimeDeInit();
 
     /* Unregister remote service for SL2 reallocation.
      * Can add more conditions if needed.

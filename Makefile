@@ -47,8 +47,7 @@ else
 #DIRECTORIES += kernels
 #DIRECTORIES += modules
 #DIRECTORIES += applibs
-DIRECTORIES += platform/$(SOC)/rtos/mcu2_0
-DIRECTORIES += platform/$(SOC)/rtos/common_linux
+DIRECTORIES += platform/$(SOC)/rtos
 
 ifeq ($(BUILD_EDGEAI),no)
 # 	DIRECTORIES += apps

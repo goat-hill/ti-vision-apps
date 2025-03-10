@@ -196,7 +196,7 @@
 #define IPC_VRING_MEM_SIZE (0x03000000u)
 
 /* Memory for remote core logging [ size 256.00 KB ] */
-#define APP_LOG_MEM_ADDR (0xAF000000u)
+#define APP_LOG_MEM_ADDR (0x90000000u)
 #define APP_LOG_MEM_SIZE (0x00040000u)
 
 /* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 31.75 MB ] */

@@ -1,4 +1,3 @@
-
 /* make sure below retain is there in your linker command file, it keeps the vector table in the final binary */
 --retain="*(.vectors)"
 /* This is the stack that is used by code running within main()
@@ -30,18 +29,10 @@ SECTIONS
     .rodata: {} palign(8) > DDR_MCU2_0     /* This is where const's go */
     .sysmem: {} palign(8) > DDR_MCU2_0     /* This is where the malloc heap goes */
     .stack:  {} palign(8) > DDR_MCU2_0     /* This is where the main() stack goes */
+    .bss:app_log_mem        (NOLOAD) : {} > APP_LOG_MEM
 
     /* Sections needed for C++ projects */
     .ARM.exidx:     {} palign(8) > DDR_MCU2_0  /* Needed for C++ exception handling */
     .init_array:    {} palign(8) > DDR_MCU2_0  /* Contains function pointers called before main */
     .fini_array:    {} palign(8) > DDR_MCU2_0  /* Contains function pointers called after main */
-}
-
-MEMORY
-{
-    M55_VECS : ORIGIN = 0x24000000 , LENGTH = 0x200
-    M55_IRAM : ORIGIN = 0x24000000 + 0x200 , LENGTH = 0xFFFF - 0x200
-    M55_DRAM : ORIGIN = 0x24010000 , LENGTH = 0xFFFF
-    DDR_MCU2_0 : ORIGIN = 0x80000000 , LENGTH = 0x20000000
-
 }

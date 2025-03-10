@@ -89,7 +89,7 @@
 //
 //#define ENABLE_IPC_ECHO_TEST
 //
-//#define APP_ASSERT_SUCCESS(x)  { if((x)!=0) while(1); }
+#define APP_ASSERT_SUCCESS(x)  { if((x)!=0) while(1); }
 
 
 #endif /* APP_CFG_H_ */
