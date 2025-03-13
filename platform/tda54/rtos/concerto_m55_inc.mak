@@ -19,7 +19,7 @@ endif
 LDIRS += $(MCU_PLUS_SDK_PATH)/source/board/lib/
 LDIRS += $(MCU_PLUS_SDK_PATH)/source/drivers/lib/
 
-# LDIRS += $(TIOVX_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
+LDIRS += $(TIOVX_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 # LDIRS += $(IMAGING_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 # LDIRS += $(VIDEO_IO_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
@@ -40,13 +40,9 @@ APP_UTILS_LIBS += app_utils_misc
 
 SYS_STATIC_LIBS += $(APP_UTILS_LIBS)
 
-# TIOVX_LIBS =
-# TIOVX_LIBS += vx_conformance_engine vx_conformance_tests vx_conformance_tests_testmodule
-# TIOVX_LIBS += vx_tiovx_tests vx_tiovx_internal_tests vx_tutorial vx_utils
-# TIOVX_LIBS += vx_framework vx_vxu vx_platform_psdk_j7_rtos vx_kernels_target_utils
-# TIOVX_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
-# TIOVX_LIBS += vx_target_kernels_source_sink
-# TIOVX_LIBS += vx_kernels_host_utils vx_kernels_openvx_core
+TIOVX_LIBS =
+TIOVX_LIBS += vx_framework vx_platform_board_rtos vx_kernels_target_utils
+TIOVX_LIBS += vx_target_kernels_source_sink
 # TIOVX_LIBS += vx_kernels_hwa_tests vx_kernels_hwa
 # TIOVX_LIBS += vx_target_kernels_vpac_nf vx_target_kernels_vpac_viss
 # TIOVX_LIBS += vx_target_kernels_vpac_msc vx_target_kernels_vpac_ldc
@@ -57,7 +53,7 @@ SYS_STATIC_LIBS += $(APP_UTILS_LIBS)
 # TIOVX_LIBS += vx_target_kernels_j7_arm
 # TIOVX_LIBS += vx_target_kernels_display_m2m
 # 
-# SYS_STATIC_LIBS += $(TIOVX_LIBS)
+SYS_STATIC_LIBS += $(TIOVX_LIBS)
 # 
 # IMAGING_LIBS  = ti_imaging_awbalg
 # IMAGING_LIBS += ti_imaging_dcc

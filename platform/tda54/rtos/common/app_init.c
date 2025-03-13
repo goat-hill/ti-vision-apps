@@ -104,7 +104,7 @@
 #endif
 
 /* TIOVX header files */
-//#include <TI/tivx.h>
+#include <TI/tivx.h>
 
 /* Vision_apps custom kernel header files */
 //#include <TI/tivx_img_proc.h>

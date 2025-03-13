@@ -43,6 +43,7 @@ ifeq ($(BUILD_QNX_MPU),yes)
 	DIRECTORIES += apps/dl_demos/app_tidl_od_cam
 endif
 else
+DIRECTORIES += utils/app_init
 #DIRECTORIES += utils
 #DIRECTORIES += kernels
 #DIRECTORIES += modules
