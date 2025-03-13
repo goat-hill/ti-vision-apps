@@ -65,11 +65,6 @@
 
 #include <app_cfg.h>
 
-#define L3_MEM_SIZE (MAIN_OCRAM_MCU2_1_SIZE)
-
-#define DDR_HEAP_MEM_SIZE               (DDR_MCU2_1_LOCAL_HEAP_SIZE)
-#define ENABLE_FVID2
-#define ENABLE_VHWA_DMPAC
-#undef ENABLE_UDMA_COPY
+#undef ENABLE_TIOVX
 
 #endif /* APP_CFG_RMCU0_0_H_ */

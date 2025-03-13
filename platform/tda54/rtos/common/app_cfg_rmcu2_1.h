@@ -65,9 +65,6 @@
 
 #include <app_cfg.h>
 
-#define DDR_HEAP_MEM_SIZE               (DDR_MCU4_1_LOCAL_HEAP_SIZE)
-
-#undef ENABLE_UDMA
-#undef ENABLE_UDMA_COPY
+#undef ENABLE_TIOVX
 
 #endif /* APP_CFG_RMCU2_1_H_ */
