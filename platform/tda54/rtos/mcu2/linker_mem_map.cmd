@@ -70,13 +70,13 @@ MEMORY
     M55_IRAM : ORIGIN = 0x24000000 + 0x200 , LENGTH = 0xFFFF - 0x200
     M55_DRAM : ORIGIN = 0x24010000 , LENGTH = 0xFFFF
     /* Main OCRAM for MCU2_0 [ size 256.00 KB ] */
-    MAIN_OCRAM_MCU2_0        ( RWIX ) : ORIGIN = 0x60000000 , LENGTH = 0x00040000
+    MAIN_OCRAM_MCU2        ( RWIX ) : ORIGIN = 0x60000000 , LENGTH = 0x00040000
     /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
-    DDR_MCU2_0_IPC           ( RWIX ) : ORIGIN = 0xA2000000 , LENGTH = 0x00100000
+    DDR_MCU2_IPC           ( RWIX ) : ORIGIN = 0xA2000000 , LENGTH = 0x00100000
     /* DDR for MCU2_0 for Linux resource table [ size 1024 B ] */
-    DDR_MCU2_0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xA2100000 , LENGTH = 0x00000400
+    DDR_MCU2_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xA2100000 , LENGTH = 0x00000400
     /* DDR for MCU2_0 for code/data [ size 31.00 MB ] */
-    DDR_MCU2_0               ( RWIX ) : ORIGIN = 0x80000000 , LENGTH = 0x10000000
+    DDR_MCU2               ( RWIX ) : ORIGIN = 0x80000000 , LENGTH = 0x10000000
     /* Memory for remote core logging [ size 256.00 KB ] */
     APP_LOG_MEM                       : ORIGIN = 0x90000000 , LENGTH = 0x00040000
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 48.00 MB ] */
@@ -86,9 +86,9 @@ MEMORY
     /* Memory for remote core file operations [ size  4.00 MB ] */
     APP_FILEIO_MEM                    : ORIGIN = 0xB1000000 , LENGTH = 0x00400000
     /* DDR for MCU2_0 for local heap [ size  6.00 MB ] */
-    DDR_MCU2_0_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xBB000000 , LENGTH = 0x00600000
+    DDR_MCU2_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xBB000000 , LENGTH = 0x00600000
     /* VISS configuration memory. MUST be write through cache policy. [ size  2.00 MB ] */
-    DDR_MCU2_0_VISS_CONFIG_HEAP ( RWIX ) : ORIGIN = 0xBB600000 , LENGTH = 0x00200000
+    DDR_MCU2_VISS_CONFIG_HEAP ( RWIX ) : ORIGIN = 0xBB600000 , LENGTH = 0x00200000
     /* Inter-core ethernet shared desc queues. MUST be non-cached or cache-coherent [ size  8.00 MB ] */
     INTERCORE_ETH_DESC_MEM            : ORIGIN = 0xBE000000 , LENGTH = 0x00800000
     /* Inter-core ethernet shared data buffers. MUST be non-cached or cache-coherent [ size 24.00 MB ] */
