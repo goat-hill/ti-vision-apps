@@ -91,18 +91,18 @@ static int32_t appRtosTestHandler(char *service_name, uint32_t cmd, void *prm, u
         );
     #endif
 
-    elasped_time = appLogGetTimeInUsec();
-    while (count < test_prm->count)
-    {
-        appLogPrintf (" %d: Core is UP!!! \n", count);
-        count++;
-        appLogWaitMsecs(test_prm->delay);
-    }
-    elasped_time = appLogGetTimeInUsec() - elasped_time;
-
-    appLogPrintf("TI-RTOS TEST: Test done in %d ms (expected value is %d ms + print time)\n",
-        (uint32_t)(elasped_time/1000u),
-        (uint32_t)(test_prm->count*test_prm->delay));
+    // elasped_time = appLogGetTimeInUsec();
+    // while (count < test_prm->count)
+    // {
+    //     appLogPrintf (" %d: Core is UP!!! \n", count);
+    //     count++;
+    //     appLogWaitMsecs(test_prm->delay);
+    // }
+    // elasped_time = appLogGetTimeInUsec() - elasped_time;
+    //
+    // appLogPrintf("TI-RTOS TEST: Test done in %d ms (expected value is %d ms + print time)\n",
+    //     (uint32_t)(elasped_time/1000u),
+    //     (uint32_t)(test_prm->count*test_prm->delay));
 
     return 0;
 }
