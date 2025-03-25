@@ -70,7 +70,7 @@
 /* Vision_apps utils header files */
 #include <utils/mem/include/app_mem.h>
 #include <utils/ipc/include/app_ipc.h>
-//#include <utils/remote_service/include/app_remote_service.h>
+#include <utils/remote_service/include/app_remote_service.h>
 #include <utils/console_io/include/app_log.h>
 #include <utils/file_io/include/app_fileio.h>
 #include <utils/console_io/include/app_cli.h>
@@ -246,7 +246,7 @@ int32_t appInit()
     app_mem_init_prm_t mem_init_prm;
     app_log_init_prm_t log_init_prm;
     app_fileio_init_prm_t fileio_init_prm;
-    //app_ipc_init_prm_t ipc_init_prm;
+    app_ipc_init_prm_t ipc_init_prm;
 
     app_mem_heap_prm_t *heap_prm;
 
@@ -278,7 +278,7 @@ int32_t appInit()
     appMemInitPrmSetDefault(&mem_init_prm);
     appLogInitPrmSetDefault(&log_init_prm);
     appFileIOInitPrmSetDefault(&fileio_init_prm);
-    //appIpcInitPrmSetDefault(&ipc_init_prm);
+    appIpcInitPrmSetDefault(&ipc_init_prm);
 
     mem_init_prm.virtToPhyFxn     = appUdmaVirtToPhyAddrConversion;
     mem_init_prm.shared2TargetFxn = appShared2TargetConversion;
@@ -364,40 +364,15 @@ int32_t appInit()
     ipc_init_prm.num_cpus++;
     log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MPU1_0] = 1;
     #endif
-    #ifdef ENABLE_IPC_MCU1_0
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU1_0;
+    #ifdef ENABLE_IPC_DMCU_0_M55
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_DMCU_0_M55;
     ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU1_0] = 1;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_DMCU_0_M55] = 1;
     #endif
-    #ifdef ENABLE_IPC_MCU2_0
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_0;
+    #ifdef ENABLE_IPC_MCU0_M55
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU0_M55;
     ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU2_0] = 1;
-    #endif
-    #ifdef ENABLE_IPC_MCU2_1
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_1;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU2_1] = 1;
-    #endif
-    #ifdef ENABLE_IPC_MCU3_0
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_0;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_0] = 1;
-    #endif
-    #ifdef ENABLE_IPC_MCU3_1
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_1;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_1] = 1;
-    #endif
-    #ifdef ENABLE_IPC_MCU4_0
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_0;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_0] = 1;
-    #endif
-    #ifdef ENABLE_IPC_MCU4_1
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_1;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_1] = 1;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU0_M55] = 1;
     #endif
     #ifdef ENABLE_IPC_C7x_1
     ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_1;
@@ -411,18 +386,43 @@ int32_t appInit()
     log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_2] = 1;
     fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_2] = 1;
     #endif
-    #ifdef ENABLE_IPC_C7x_3
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_3;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
-    fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
-    #endif
-    #ifdef ENABLE_IPC_C7x_4
-    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_4;
-    ipc_init_prm.num_cpus++;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
-    fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
-    #endif
+    // #ifdef ENABLE_IPC_MCU2_1
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_1;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU2_1] = 1;
+    // #endif
+    // #ifdef ENABLE_IPC_MCU3_0
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_0;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_0] = 1;
+    // #endif
+    // #ifdef ENABLE_IPC_MCU3_1
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_1;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_1] = 1;
+    // #endif
+    // #ifdef ENABLE_IPC_MCU4_0
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_0;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_0] = 1;
+    // #endif
+    // #ifdef ENABLE_IPC_MCU4_1
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_1;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_1] = 1;
+    // #endif
+    // #ifdef ENABLE_IPC_C7x_3
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_3;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
+    // fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
+    // #endif
+    // #ifdef ENABLE_IPC_C7x_4
+    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_4;
+    // ipc_init_prm.num_cpus++;
+    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
+    // fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
+    // #endif
     ipc_init_prm.tiovx_obj_desc_mem = (void*)g_tiovx_obj_desc_mem;
     ipc_init_prm.tiovx_obj_desc_mem_size = TIOVX_OBJ_DESC_MEM_SIZE;
     ipc_init_prm.tiovx_log_rt_mem   = (void*)TIOVX_LOG_RT_MEM_ADDR;
@@ -432,26 +432,11 @@ int32_t appInit()
     #ifdef CPU_mpu1
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_MPU1_0;
     #endif
-    #ifdef CPU_mcu1_0
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU1_0;
+    #ifdef CPU_dmcu0
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_DMCU_0_M55;
     #endif
-    #ifdef CPU_mcu2_0
+    #ifdef CPU_mcu0
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU0_M55;
-    #endif
-    #ifdef CPU_mcu2_1
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU2_1;
-    #endif
-    #ifdef CPU_mcu3_0
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_0;
-    #endif
-    #ifdef CPU_mcu3_1
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_1;
-    #endif
-    #ifdef CPU_mcu4_0
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_0;
-    #endif
-    #ifdef CPU_mcu4_1
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_1;
     #endif
     #ifdef CPU_c7x_1
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_1;
@@ -459,40 +444,39 @@ int32_t appInit()
     #ifdef CPU_c7x_2
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_2;
     #endif
-    #ifdef CPU_c7x_3
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_3;
     #endif
-    #ifdef CPU_c7x_4
-    ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_4;
-    #endif
-    #endif
+    // #ifdef CPU_mcu2_1
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU2_1;
+    // #endif
+    // #ifdef CPU_mcu3_0
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_0;
+    // #endif
+    // #ifdef CPU_mcu3_1
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_1;
+    // #endif
+    // #ifdef CPU_mcu4_0
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_0;
+    // #endif
+    // #ifdef CPU_mcu4_1
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_1;
+    // #endif
+    // #ifdef CPU_c7x_3
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_3;
+    // #endif
+    // #ifdef CPU_c7x_4
+    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_4;
+    // #endif
 
     log_init_prm.shared_mem = &g_app_log_shared_mem;
-    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU0_M55] = 1;
-    log_init_prm.self_cpu_index = APP_IPC_CPU_MCU0_M55;
+    log_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
     #ifdef CPU_mpu1
     strncpy(log_init_prm.self_cpu_name, "MPU1" , APP_LOG_MAX_CPU_NAME);
     #endif
-    #ifdef CPU_mcu1_0
-    strncpy(log_init_prm.self_cpu_name, "MCU1_0" , APP_LOG_MAX_CPU_NAME);
+    #ifdef CPU_dmcu0
+    strncpy(log_init_prm.self_cpu_name, "DMCU0" , APP_LOG_MAX_CPU_NAME);
     #endif
-    #ifdef CPU_mcu2_0
-    strncpy(log_init_prm.self_cpu_name, "MCU2" , APP_LOG_MAX_CPU_NAME);
-    #endif
-    #ifdef CPU_mcu2_1
-    strncpy(log_init_prm.self_cpu_name, "MCU2_1" , APP_LOG_MAX_CPU_NAME);
-    #endif
-    #ifdef CPU_mcu3_0
-    strncpy(log_init_prm.self_cpu_name, "MCU3_0" , APP_LOG_MAX_CPU_NAME);
-    #endif
-    #ifdef CPU_mcu3_1
-    strncpy(log_init_prm.self_cpu_name, "MCU3_1" , APP_LOG_MAX_CPU_NAME);
-    #endif
-    #ifdef CPU_mcu4_0
-    strncpy(log_init_prm.self_cpu_name, "MCU4_0" , APP_LOG_MAX_CPU_NAME);
-    #endif
-    #ifdef CPU_mcu4_1
-    strncpy(log_init_prm.self_cpu_name, "MCU4_1" , APP_LOG_MAX_CPU_NAME);
+    #ifdef CPU_mcu0
+    strncpy(log_init_prm.self_cpu_name, "MCU0" , APP_LOG_MAX_CPU_NAME);
     #endif
     #ifdef CPU_c7x_1
     strncpy(log_init_prm.self_cpu_name, "C7x_1" , APP_LOG_MAX_CPU_NAME);
@@ -500,19 +484,34 @@ int32_t appInit()
     #ifdef CPU_c7x_2
     strncpy(log_init_prm.self_cpu_name, "C7x_2" , APP_LOG_MAX_CPU_NAME);
     #endif
-    #ifdef CPU_c7x_3
-    strncpy(log_init_prm.self_cpu_name, "C7x_3" , APP_LOG_MAX_CPU_NAME);
-    #endif
-    #ifdef CPU_c7x_4
-    strncpy(log_init_prm.self_cpu_name, "C7x_4" , APP_LOG_MAX_CPU_NAME);
-    #endif
+    // #ifdef CPU_mcu2_1
+    // strncpy(log_init_prm.self_cpu_name, "MCU2_1" , APP_LOG_MAX_CPU_NAME);
+    // #endif
+    // #ifdef CPU_mcu3_0
+    // strncpy(log_init_prm.self_cpu_name, "MCU3_0" , APP_LOG_MAX_CPU_NAME);
+    // #endif
+    // #ifdef CPU_mcu3_1
+    // strncpy(log_init_prm.self_cpu_name, "MCU3_1" , APP_LOG_MAX_CPU_NAME);
+    // #endif
+    // #ifdef CPU_mcu4_0
+    // strncpy(log_init_prm.self_cpu_name, "MCU4_0" , APP_LOG_MAX_CPU_NAME);
+    // #endif
+    // #ifdef CPU_mcu4_1
+    // strncpy(log_init_prm.self_cpu_name, "MCU4_1" , APP_LOG_MAX_CPU_NAME);
+    // #endif
+    // #ifdef CPU_c7x_3
+    // strncpy(log_init_prm.self_cpu_name, "C7x_3" , APP_LOG_MAX_CPU_NAME);
+    // #endif
+    // #ifdef CPU_c7x_4
+    // strncpy(log_init_prm.self_cpu_name, "C7x_4" , APP_LOG_MAX_CPU_NAME);
+    // #endif
     #ifdef ENABLE_UART
     log_init_prm.log_rd_max_cpus = APP_IPC_CPU_MAX;
     log_init_prm.device_write = appLogDeviceWrite;
     #endif
 
     fileio_init_prm.shared_mem = &g_app_fileio_shared_mem;
-    //fileio_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
+    fileio_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
     strncpy(fileio_init_prm.self_cpu_name, log_init_prm.self_cpu_name, APP_LOG_MAX_CPU_NAME);
 
     //appPerfStatsInitRegister(perf_fxns_list);
@@ -666,7 +665,7 @@ int32_t appInit()
 
         if((host_os_type == APP_HOST_TYPE_LINUX) || (host_os_type == APP_HOST_TYPE_QNX))
         {
-            master_cpu_id = APP_IPC_CPU_MCU2_0;
+            master_cpu_id = APP_IPC_CPU_MCU0_M55;
         }
         else
         {
@@ -704,7 +703,7 @@ int32_t appInit()
         appRemoteServiceInitSetDefault(&init_prms);
         appRemoteServiceInit(&init_prms);
         appRtosTestRegister();
-        appPerfStatsRemoteServiceInit();
+        // appPerfStatsRemoteServiceInit();
     }
     #endif
 
@@ -917,7 +916,7 @@ void appDeInit()
     appFvid2DeInit();
     #endif
     #ifdef ENABLE_IPC
-    appPerfStatsDeInit();
+    // appPerfStatsDeInit();
     appRtosTestUnRegister();
     appRemoteServiceDeInit();
     appIpcDeInit();

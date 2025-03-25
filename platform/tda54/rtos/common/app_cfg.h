@@ -66,20 +66,20 @@
 #include <stdint.h>
 
 //#define ENABLE_TIOVX
-//#define ENABLE_IPC
+#define ENABLE_IPC
 //#define ENABLE_PRINTF_REDIRECT
 
-//#define ENABLE_IPC_MPU1_0
-//#define ENABLE_IPC_MCU1_0
-//#define ENABLE_IPC_MCU1_1
-//#define ENABLE_IPC_MCU2_0
-//#define ENABLE_IPC_MCU2_1
+#define ENABLE_IPC_MPU1_0
+#define ENABLE_IPC_DMCU_0_M55
+#define ENABLE_IPC_MCU0_M55
+#define ENABLE_IPC_C7x_1
+#define ENABLE_IPC_C7x_2
+// #define ENABLE_IPC_MCU2_0
+// #define ENABLE_IPC_MCU2_1
 //#define ENABLE_IPC_MCU3_0
 //#define ENABLE_IPC_MCU3_1
 //#define ENABLE_IPC_MCU4_0
 //#define ENABLE_IPC_MCU4_1
-//#define ENABLE_IPC_C7x_1
-//#define ENABLE_IPC_C7x_2
 //#define ENABLE_IPC_C7x_3
 //#define ENABLE_IPC_C7x_4
 //

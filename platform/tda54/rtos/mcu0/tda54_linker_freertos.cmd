@@ -18,21 +18,27 @@
 SECTIONS
 {
     /* This has the M55 entry point and vector table, this MUST be at 0x0 */
-    .vectors:{} palign(8) > DDR_MCU2_0
-    .text:   {} palign(8) > DDR_MCU2_0     /* This is where code resides */
+    .vectors:{} palign(8) > DDR_MCU0
+    .text:   {} palign(8) > DDR_MCU0     /* This is where code resides */
 
-    .bss:    {} palign(8) > DDR_MCU2_0     /* This is where uninitialized globals go */
+    .bss:    {} palign(8) > DDR_MCU0     /* This is where uninitialized globals go */
     RUN_START(__BSS_START)
     RUN_END(__BSS_END)
 
-    .data:   {} palign(8) > DDR_MCU2_0     /* This is where initialized globals and static go */
-    .rodata: {} palign(8) > DDR_MCU2_0     /* This is where const's go */
-    .sysmem: {} palign(8) > DDR_MCU2_0     /* This is where the malloc heap goes */
-    .stack:  {} palign(8) > DDR_MCU2_0     /* This is where the main() stack goes */
+    .data:   {} palign(8) > DDR_MCU0     /* This is where initialized globals and static go */
+    .rodata: {} palign(8) > DDR_MCU0     /* This is where const's go */
+    .sysmem: {} palign(8) > DDR_MCU0     /* This is where the malloc heap goes */
+    .stack:  {} palign(8) > DDR_MCU0     /* This is where the main() stack goes */
     .bss:app_log_mem        (NOLOAD) : {} > APP_LOG_MEM
+    .bss:ipc_vring_mem      (NOLOAD) : {} > IPC_VRING_MEM
 
+    .bss.debug_mem_trace_buf        : {} align(1024)   > DDR_MCU0_IPC_TRACE
+    .resource_table          :
+    {
+        __RESOURCE_TABLE = .;
+    }                                           > DDR_MCU0_RESOURCE_TABLE
     /* Sections needed for C++ projects */
-    .ARM.exidx:     {} palign(8) > DDR_MCU2_0  /* Needed for C++ exception handling */
-    .init_array:    {} palign(8) > DDR_MCU2_0  /* Contains function pointers called before main */
-    .fini_array:    {} palign(8) > DDR_MCU2_0  /* Contains function pointers called after main */
+    .ARM.exidx:     {} palign(8) > DDR_MCU0  /* Needed for C++ exception handling */
+    .init_array:    {} palign(8) > DDR_MCU0  /* Contains function pointers called before main */
+    .fini_array:    {} palign(8) > DDR_MCU0  /* Contains function pointers called after main */
 }

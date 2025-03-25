@@ -61,14 +61,14 @@
  */
 
 #include <app.h>
-//#include <utils/console_io/include/app_log.h>
+#include <utils/console_io/include/app_log.h>
 //#include <utils/timer/include/app_timer.h>
 //#include <utils/ethfw/include/app_ethfw.h>
 #include <utils/misc/include/app_misc.h>
 #include <utils/rtos/include/app_rtos.h>
 #include <stdio.h>
 #include <string.h>
-//#include <app_ipc_rsctable.h>
+#include <app_ipc_rsctable.h>
 #include <kernel/dpl/DebugP.h>
 //#include <utils/perf_stats/include/app_perf_stats.h>
 #include <app_cfg_mcu0.h>

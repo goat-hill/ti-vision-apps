@@ -69,30 +69,22 @@ MEMORY
     M55_VECS : ORIGIN = 0x24000000 , LENGTH = 0x200
     M55_IRAM : ORIGIN = 0x24000000 + 0x200 , LENGTH = 0xFFFF - 0x200
     M55_DRAM : ORIGIN = 0x24010000 , LENGTH = 0xFFFF
-    /* Main OCRAM for MCU2_0 [ size 256.00 KB ] */
-    MAIN_OCRAM_MCU2_0        ( RWIX ) : ORIGIN = 0x60000000 , LENGTH = 0x00040000
     /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
-    DDR_MCU2_0_IPC           ( RWIX ) : ORIGIN = 0xA2000000 , LENGTH = 0x00100000
+    DDR_MCU0_IPC           ( RWIX ) : ORIGIN = 0x91000000 , LENGTH = 0x100000
     /* DDR for MCU2_0 for Linux resource table [ size 1024 B ] */
-    DDR_MCU2_0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0xA2100000 , LENGTH = 0x00000400
+    DDR_MCU0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0x91100000 , LENGTH = 0x00000400
+    /* DDR for MCU2_0 for Linux IPC trace [ size 1023.00 KB ] */
+    DDR_MCU0_IPC_TRACE     ( RWIX ) : ORIGIN = 0x91100400 , LENGTH = 0x000FFC00
     /* DDR for MCU2_0 for code/data [ size 31.00 MB ] */
-    DDR_MCU2_0               ( RWIX ) : ORIGIN = 0x80000000 , LENGTH = 0x10000000
+    DDR_MCU0               ( RWIX ) : ORIGIN = 0x91200000 , LENGTH = 0xE0000
     /* Memory for remote core logging [ size 256.00 KB ] */
-    APP_LOG_MEM                       : ORIGIN = 0x90000000 , LENGTH = 0x00040000
+    APP_LOG_MEM                       : ORIGIN = 0x92000000 , LENGTH = 0xE000000
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 48.00 MB ] */
-    IPC_VRING_MEM                     : ORIGIN = 0xAC000000 , LENGTH = 0x03000000
+    IPC_VRING_MEM                     : ORIGIN = 0xA5000000 , LENGTH = 0x1C00000
     /* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 31.75 MB ] */
     TIOVX_OBJ_DESC_MEM                : ORIGIN = 0xAF040000 , LENGTH = 0x01FC0000
     /* Memory for remote core file operations [ size  4.00 MB ] */
     APP_FILEIO_MEM                    : ORIGIN = 0xB1000000 , LENGTH = 0x00400000
-    /* DDR for MCU2_0 for local heap [ size  6.00 MB ] */
-    DDR_MCU2_0_LOCAL_HEAP    ( RWIX ) : ORIGIN = 0xBB000000 , LENGTH = 0x00600000
-    /* VISS configuration memory. MUST be write through cache policy. [ size  2.00 MB ] */
-    DDR_MCU2_0_VISS_CONFIG_HEAP ( RWIX ) : ORIGIN = 0xBB600000 , LENGTH = 0x00200000
-    /* Inter-core ethernet shared desc queues. MUST be non-cached or cache-coherent [ size  8.00 MB ] */
-    INTERCORE_ETH_DESC_MEM            : ORIGIN = 0xBE000000 , LENGTH = 0x00800000
-    /* Inter-core ethernet shared data buffers. MUST be non-cached or cache-coherent [ size 24.00 MB ] */
-    INTERCORE_ETH_DATA_MEM            : ORIGIN = 0xBE800000 , LENGTH = 0x01800000
     /* Memory for shared memory buffers in DDR [ size 960.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x3C000000
 }
