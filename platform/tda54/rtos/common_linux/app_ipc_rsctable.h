@@ -72,6 +72,7 @@ extern "C" {
 #define VIRTIO_ID_RPMSG  RPMESSAGE_RSC_VIRTIO_ID_RPMSG
 #define TRACE_INTS_VER0  RPMESSAGE_RSC_TRACE_INTS_VER0
 #define TRACE_INTS_VER1  RPMESSAGE_RSC_TRACE_INTS_VER0
+#define TRACE_INTS_VER2  RPMESSAGE_RSC_TRACE_INTS_VER0
 #define TYPE_TRACE       RPMESSAGE_RSC_TYPE_TRACE
 
 typedef RPMessage_ResourceTable Ipc_ResourceTable;
@@ -105,7 +106,8 @@ typedef RPMessage_ResourceTable Ipc_ResourceTable;
 #define C7X_RPMSG_VQ1_SIZE      256U
 
 /* flip up bits whose indices represent features we support */
-#define RPMSG_R5F_C0_FEATURES   1U
+#define RPMSG_R52F_FEATURES   1U
+#define RPMSG_M55_FEATURES   1U
 #define RPMSG_C7X_DSP_FEATURES  1U
 
 #ifdef SYSBIOS
@@ -132,8 +134,10 @@ const Ipc_ResourceTable ti_ipc_remoteproc_ResourceTable __attribute__ ((section 
         TYPE_VDEV, VIRTIO_ID_RPMSG, 0U,
 #if defined (CPU_c7x_1) || defined (CPU_c7x_2) || defined (CPU_c7x_3) || defined (CPU_c7x_4)
         RPMSG_C7X_DSP_FEATURES, 0U, 0U, 0U, 2U, { 0U, 0U },
+#elif defined (CPU_mcu0) || defined (CPU_mcu1) || defined (CPU_mcu2) || defined (CPU_mcu3) || defined (CPU_mcu4)
+        RPMSG_M55_FEATURES, 0U, 0U, 0U, 2U, { 0U, 0U },
 #else
-        RPMSG_R5F_C0_FEATURES, 0U, 0U, 0U, 2U, { 0U, 0U },
+        RPMSG_R52F_FEATURES, 0U, 0U, 0U, 2U, { 0U, 0U },
 #endif
         /* no config data */
     },
@@ -186,9 +190,11 @@ const Ipc_ResourceTable ti_ipc_remoteproc_ResourceTable __attribute__ ((section 
 
     {
 #if defined(CPU_c7x_1) || defined(CPU_c7x_2) || defined(CPU_c7x_3) || defined(CPU_c7x_4)
-        (TRACE_INTS_VER1 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:r5f0",
+        (TRACE_INTS_VER0 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:c7x",
+#elif defined (CPU_mcu0) || defined (CPU_mcu1) || defined (CPU_mcu2) || defined (CPU_mcu3) || defined (CPU_mcu4)
+        (TRACE_INTS_VER1 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:m55",
 #else
-        (TRACE_INTS_VER0 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:r5f0",
+        (TRACE_INTS_VER2 | TYPE_TRACE), TRACEBUFADDR, 0x80000, 0, "trace:r52f",
 #endif
     },
 };
