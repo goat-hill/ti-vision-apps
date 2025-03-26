@@ -50,7 +50,7 @@
 #include "ipc_trace.h"
 
 char Ipc_traceBuffer[IPC_TRACE_BUFFER_MAX_SIZE]
-__attribute__ ((section(".tracebuf")))
+__attribute__ ((section(".bss.debug_mem_trace_buf")))
 ;
 
 static uint32_t gTraceBufIndex = 0U;

@@ -22,6 +22,8 @@ SECTIONS
     .text:   {} palign(8) > DDR_MCU0     /* This is where code resides */
 
     .bss:    {} palign(8) > DDR_MCU0     /* This is where uninitialized globals go */
+    /* This is allocated for IPC */
+    .bss.ipcctrl: {} palign(8) > DDR_MCU0
     RUN_START(__BSS_START)
     RUN_END(__BSS_END)
 
@@ -30,13 +32,16 @@ SECTIONS
     .sysmem: {} palign(8) > DDR_MCU0     /* This is where the malloc heap goes */
     .stack:  {} palign(8) > DDR_MCU0     /* This is where the main() stack goes */
     .bss:app_log_mem        (NOLOAD) : {} > APP_LOG_MEM
-    .bss:ipc_vring_mem      (NOLOAD) : {} > IPC_VRING_MEM
 
-    .bss.debug_mem_trace_buf        : {} align(1024)   > DDR_MCU0_IPC_TRACE
+    /* this is used only when IPC RPMessage is enabled, else this is not used */
+    .bss:ipc_vring_mem   (NOLOAD) : {} > IPC_VRING_MEM
     .resource_table          :
     {
         __RESOURCE_TABLE = .;
     }                                           > DDR_MCU0_RESOURCE_TABLE
+    /* This IPC log can be viewed via ROV in CCS and when linux is enabled, this log can also be viewed via linux debugfs */
+    .bss.debug_mem_trace_buf    : {} palign(128)    > DDR_MCU0_IPC_TRACE
+
     /* Sections needed for C++ projects */
     .ARM.exidx:     {} palign(8) > DDR_MCU0  /* Needed for C++ exception handling */
     .init_array:    {} palign(8) > DDR_MCU0  /* Contains function pointers called before main */

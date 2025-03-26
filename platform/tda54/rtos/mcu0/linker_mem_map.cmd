@@ -36,7 +36,7 @@
  * licensed and provided to you in object code. 
  * 
  * If software source code is provided to you, modification and redistribution of the 
- * source code are permitted provided that the following conditions are met: 
+ * source code are permitted provided that the following conditions are met
  * 
  *        any redistribution and use of the source code, including any resulting derivative 
  * works, are licensed by TI for use only with TI Devices. 
@@ -66,21 +66,21 @@
 
 MEMORY
 {
-    M55_VECS : ORIGIN = 0x24000000 , LENGTH = 0x200
-    M55_IRAM : ORIGIN = 0x24000000 + 0x200 , LENGTH = 0xFFFF - 0x200
-    M55_DRAM : ORIGIN = 0x24010000 , LENGTH = 0xFFFF
+    M55_VECS : ORIGIN = 0x06000000 , LENGTH = 0x200
+    M55_IRAM : ORIGIN = 0x06000000 + 0x200 , LENGTH = 0xFFFF - 0x200
+    M55_DRAM : ORIGIN = 0x06010000 , LENGTH = 0xFFFF
     /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
     DDR_MCU0_IPC           ( RWIX ) : ORIGIN = 0x91000000 , LENGTH = 0x100000
     /* DDR for MCU2_0 for Linux resource table [ size 1024 B ] */
-    DDR_MCU0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0x91100000 , LENGTH = 0x00000400
+    DDR_MCU0_RESOURCE_TABLE ( RWIX ) : ORIGIN = 0x91100000 , LENGTH = 0x400
     /* DDR for MCU2_0 for Linux IPC trace [ size 1023.00 KB ] */
-    DDR_MCU0_IPC_TRACE     ( RWIX ) : ORIGIN = 0x91100400 , LENGTH = 0x000FFC00
+    DDR_MCU0_IPC_TRACE     ( RWIX ) : ORIGIN = 0x91100400 , LENGTH = 0xFFC00
     /* DDR for MCU2_0 for code/data [ size 31.00 MB ] */
-    DDR_MCU0               ( RWIX ) : ORIGIN = 0x91200000 , LENGTH = 0xE0000
-    /* Memory for remote core logging [ size 256.00 KB ] */
-    APP_LOG_MEM                       : ORIGIN = 0x92000000 , LENGTH = 0xE000000
+    DDR_MCU0               ( RWIX ) : ORIGIN = 0x91200000, LENGTH = 0xEDC0000
+    /* Memory for remote core logging [ size 4 MB ] */
+    APP_LOG_MEM                       : ORIGIN = 0x9FFC0000 , LENGTH = 0x00040000
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 48.00 MB ] */
-    IPC_VRING_MEM                     : ORIGIN = 0xA5000000 , LENGTH = 0x1C00000
+    IPC_VRING_MEM                     : ORIGIN = 0xA5000000 , LENGTH = 0x3000000
     /* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 31.75 MB ] */
     TIOVX_OBJ_DESC_MEM                : ORIGIN = 0xAF040000 , LENGTH = 0x01FC0000
     /* Memory for remote core file operations [ size  4.00 MB ] */
