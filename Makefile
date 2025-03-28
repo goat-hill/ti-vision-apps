@@ -46,12 +46,12 @@ else
 DIRECTORIES += utils/app_init
 #DIRECTORIES += utils
 #DIRECTORIES += kernels
-#DIRECTORIES += modules
+DIRECTORIES += modules
 #DIRECTORIES += applibs
-DIRECTORIES += platform/$(SOC)/rtos
+DIRECTORIES += platform/$(SOC)
 
 ifeq ($(BUILD_EDGEAI),no)
-# 	DIRECTORIES += apps
+	DIRECTORIES += apps/utilities/app_remote_log
 else
 	DIRECTORIES += apps/basic_demos/app_c7x_kernel
 	DIRECTORIES += apps/utilities

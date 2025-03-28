@@ -140,11 +140,11 @@ static int32_t appCommonInitLocal()
 
     printf("APP: Init ... !!!\n");
 
-    status = appLogGlobalTimeInit();
-    if(status!=0)
-    {
-        printf("APP: ERROR: Global timer init failed !!!\n");
-    }
+    // status = appLogGlobalTimeInit();
+    // if(status!=0)
+    // {
+    //     printf("APP: ERROR: Global timer init failed !!!\n");
+    // }
 
     appLogInitPrmSetDefault(&log_init_prm);
 
@@ -187,36 +187,12 @@ static int32_t appCommonInitLocal()
         ipc_init_prm.num_cpus = 0;
         ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MPU1_0;
         ipc_init_prm.num_cpus++;
-        #ifdef ENABLE_IPC_MCU1_0
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU1_0;
+        #ifdef ENABLE_IPC_DMCU_0_M55
+        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_DMCU_0_M55;
         ipc_init_prm.num_cpus++;
         #endif
-        #ifdef ENABLE_IPC_MCU1_1
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU1_1;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_MCU2_0
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_0;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_MCU2_1
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_1;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_MCU3_0
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_0;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_MCU3_1
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_1;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_MCU4_0
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_0;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_MCU4_1
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_1;
+        #ifdef ENABLE_IPC_MCU0_M55
+        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU0_M55;
         ipc_init_prm.num_cpus++;
         #endif
         #ifdef ENABLE_IPC_C7x_1
@@ -225,14 +201,6 @@ static int32_t appCommonInitLocal()
         #endif
         #ifdef ENABLE_IPC_C7x_2
         ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_2;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_C7x_3
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_3;
-        ipc_init_prm.num_cpus++;
-        #endif
-        #ifdef ENABLE_IPC_C7x_4
-        ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_4;
         ipc_init_prm.num_cpus++;
         #endif
         ipc_init_prm.tiovx_obj_desc_mem = (void*)TIOVX_OBJ_DESC_MEM_ADDR;
@@ -251,19 +219,19 @@ static int32_t appCommonInitLocal()
         {
             printf("APP: ERROR: Remote service init failed !!!\n");
         }
-        status = appPerfStatsInit();
-        if(status!=0)
-        {
-            printf("APP: ERROR: Perf stats init failed !!!\n");
-        }
-        status = appPerfStatsRemoteServiceInit();
-        if(status!=0)
-        {
-            printf("APP: ERROR: Perf stats remote service init failed !!!\n");
-        }
+        // status = appPerfStatsInit();
+        // if(status!=0)
+        // {
+        //     printf("APP: ERROR: Perf stats init failed !!!\n");
+        // }
+        // status = appPerfStatsRemoteServiceInit();
+        // if(status!=0)
+        // {
+        //     printf("APP: ERROR: Perf stats remote service init failed !!!\n");
+        // }
         #endif
 
-        appLogPrintGtcFreq();
+        // appLogPrintGtcFreq();
     }
     printf("APP: Init ... Done !!!\n");
     return status;
@@ -279,7 +247,7 @@ static int32_t appCommonDeInitLocal()
     appIpcDeInit();
     appLogWrDeInit();
     appMemDeInit();
-    status = appLogGlobalTimeDeInit();
+    // status = appLogGlobalTimeDeInit();
 
     printf("APP: Deinit ... Done !!!\n");
 
