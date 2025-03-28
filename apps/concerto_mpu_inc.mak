@@ -201,7 +201,7 @@ VISION_APPS_UTILS_LIBS += app_utils_draw2d
 endif
 
 # VISION_APPS_UTILS_LIBS += app_utils_hwa
-# VISION_APPS_UTILS_LIBS += app_utils_init
+VISION_APPS_UTILS_LIBS += app_utils_init
 
 VISION_APPS_OPENGL_UTILS_LIBS += app_utils_opengl
 

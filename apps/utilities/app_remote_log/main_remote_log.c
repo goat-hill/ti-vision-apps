@@ -63,7 +63,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <utils/console_io/include/app_log.h>
-#include <utils/timer/include/app_timer.h>
+// #include <utils/timer/include/app_timer.h>
 #include <utils/file_io/include/app_fileio.h>
 #include <utils/ipc/include/app_ipc.h>
 #include <stdint.h>
@@ -98,6 +98,23 @@ int main(void)
 
     appLogInitPrmSetDefault(&log_init_prm);
 
+    #ifdef SOC_TDA54
+    #ifdef ENABLE_IPC_MPU1_0
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MPU1_0] = 1;
+    #endif
+    #ifdef ENABLE_IPC_DMCU_0_M55
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_DMCU_0_M55] = 1;
+    #endif
+    #ifdef ENABLE_IPC_MCU0_M55
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU0_M55] = 1;
+    #endif
+    #ifdef ENABLE_IPC_C7x_1
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_1] = 1;
+    #endif
+    #ifdef ENABLE_IPC_C7x_2
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_2] = 1;
+    #endif
+    #else 
     #ifdef ENABLE_IPC_MPU1_0
     log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MPU1_0] = 1;
     #endif
@@ -140,6 +157,7 @@ int main(void)
     #ifdef ENABLE_IPC_C7x_4
     log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
     #endif
+    #endif
     
     log_init_prm.shared_mem = (app_log_shared_mem_t *)APP_LOG_MEM_ADDR;
     log_init_prm.self_cpu_index = APP_IPC_CPU_MPU1_0;
@@ -174,10 +192,10 @@ int main(void)
     
     appFileIORdInit(&fileio_init_prm);
 #endif
-    while(1)
-    {
-        appLogWaitMsecs(1000);
-    }
+    // while(1)
+    // {
+    //     // appLogWaitMsecs(1000);
+    // }
 
     return 0;
 }
