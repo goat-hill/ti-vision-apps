@@ -1,4 +1,4 @@
-ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), x86_64 A72 A53))
+ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), x86_64 A72 A53 A720))
 ifeq ($(TARGET_OS), $(filter $(TARGET_OS), LINUX QNX))
 
 include $(PRELUDE)
@@ -12,14 +12,14 @@ include $(VISION_APPS_PATH)/apps/concerto_x86_64_inc.mak
 STATIC_LIBS     += $(TIADALG_LIBS)
 else
 include $(VISION_APPS_PATH)/apps/concerto_mpu_inc.mak
-STATIC_LIBS     += $(VISION_APPS_MODULES_LIBS)
+# STATIC_LIBS     += $(VISION_APPS_MODULES_LIBS)
 endif
 
 
-STATIC_LIBS     += $(IMAGING_LIBS)
-STATIC_LIBS     += $(PTK_LIBS)
-STATIC_LIBS     += $(VISION_APPS_KERNELS_LIBS)
-STATIC_LIBS     += $(TEST_LIBS)
+# STATIC_LIBS     += $(IMAGING_LIBS)
+# STATIC_LIBS     += $(PTK_LIBS)
+# STATIC_LIBS     += $(VISION_APPS_KERNELS_LIBS)
+# STATIC_LIBS     += $(TEST_LIBS)
 
 ifeq ($(SOC), $(filter $(SOC), j721e j721s2 j784s4 j722s j742s2))
 STATIC_LIBS     += $(VISION_APPS_OPENGL_UTILS_LIBS)

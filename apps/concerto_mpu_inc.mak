@@ -1,5 +1,5 @@
 
-ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), A72 A53))
+ifeq ($(TARGET_CPU),$(filter $(TARGET_CPU), A72 A53 A720))
 
 TEST_IDIRS =
 TEST_IDIRS += $(TIOVX_PATH)/conformance_tests
@@ -182,12 +182,12 @@ endif
 VISION_APPS_UTILS_LIBS += app_utils_mem
 VISION_APPS_UTILS_LIBS += app_utils_ipc
 VISION_APPS_UTILS_LIBS += app_utils_console_io
-VISION_APPS_UTILS_LIBS += app_utils_timer
+# VISION_APPS_UTILS_LIBS += app_utils_timer
 VISION_APPS_UTILS_LIBS += app_utils_file_io
 VISION_APPS_UTILS_LIBS += app_utils_remote_service
-VISION_APPS_UTILS_LIBS += app_utils_perf_stats
+# VISION_APPS_UTILS_LIBS += app_utils_perf_stats
 
-ifneq ($(TARGET_PLATFORM), AM62A)
+ifneq ($(TARGET_PLATFORM),$(filter $(TARGET_PLATFORM), AM62A TDA54))
 VISION_APPS_UTILS_LIBS += app_utils_grpx
 VISION_APPS_UTILS_LIBS += app_utils_draw2d
 endif
@@ -200,8 +200,8 @@ VISION_APPS_UTILS_LIBS += app_utils_grpx
 VISION_APPS_UTILS_LIBS += app_utils_draw2d
 endif
 
-VISION_APPS_UTILS_LIBS += app_utils_hwa
-VISION_APPS_UTILS_LIBS += app_utils_init
+# VISION_APPS_UTILS_LIBS += app_utils_hwa
+# VISION_APPS_UTILS_LIBS += app_utils_init
 
 VISION_APPS_OPENGL_UTILS_LIBS += app_utils_opengl
 
@@ -242,7 +242,7 @@ TEST_LIBS += vx_kernels_srv_tests
 TEST_LIBS += vx_applib_tests
 endif
 
-STATIC_LIBS += $(TIOVX_LIBS)
+# STATIC_LIBS += $(TIOVX_LIBS)
 STATIC_LIBS += $(VISION_APPS_UTILS_LIBS)
 ifeq ($(TARGET_OS),LINUX)
 STATIC_LIBS += app_rtos_linux_mpu1_common
