@@ -139,15 +139,16 @@ endif
 
 TIOVX_LIBS += vx_vxu vx_framework
 TIOVX_LIBS += vx_kernels_host_utils vx_kernels_target_utils
-TIOVX_LIBS += vx_platform_psdk_j7
+TIOVX_LIBS += vx_platform_board_hlos
 TIOVX_LIBS += vx_kernels_openvx_core
 TIOVX_LIBS += vx_kernels_openvx_ext vx_target_kernels_openvx_ext
 TIOVX_LIBS += vx_utils
-TIOVX_LIBS += vx_tutorial
-TIOVX_LIBS += vx_kernels_video_io
-TIOVX_LIBS += vx_kernels_hwa 
-TIOVX_LIBS += vx_kernels_tidl vx_nested_kernels_tidl
-TIOVX_LIBS += vx_kernels_tvm
+# TIOVX_LIBS += vx_tutorial
+# TIOVX_LIBS += vx_kernels_video_io
+# TIOVX_LIBS += vx_kernels_hwa
+# TIOVX_LIBS += vx_kernels_tidl vx_nested_kernels_tidl
+# TIOVX_LIBS += vx_kernels_tvm
+
 ifeq ($(TARGET_PLATFORM)$(TARGET_OS), AM62AQNX)
 TIOVX_LIBS+=vx_target_kernels_capture
 endif
@@ -242,7 +243,7 @@ TEST_LIBS += vx_kernels_srv_tests
 TEST_LIBS += vx_applib_tests
 endif
 
-# STATIC_LIBS += $(TIOVX_LIBS)
+STATIC_LIBS += $(TIOVX_LIBS)
 STATIC_LIBS += $(VISION_APPS_UTILS_LIBS)
 ifeq ($(TARGET_OS),LINUX)
 STATIC_LIBS += app_rtos_linux_mpu1_common

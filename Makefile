@@ -52,6 +52,7 @@ DIRECTORIES += platform/$(SOC)
 
 ifeq ($(BUILD_EDGEAI),no)
 	DIRECTORIES += apps/utilities/app_remote_log
+	DIRECTORIES += apps/utilities/app_ipc
 else
 	DIRECTORIES += apps/basic_demos/app_c7x_kernel
 	DIRECTORIES += apps/utilities
