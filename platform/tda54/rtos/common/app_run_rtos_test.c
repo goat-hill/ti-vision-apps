@@ -79,10 +79,10 @@ typedef struct {
 
 static int32_t appRtosTestHandler(char *service_name, uint32_t cmd, void *prm, uint32_t prm_size, uint32_t flags)
 {
-    app_rtos_test_prm_t *test_prm = (app_rtos_test_prm_t*)prm;
+    // app_rtos_test_prm_t *test_prm = (app_rtos_test_prm_t*)prm;
 
-    uint32_t count = 0;
-    uint64_t elasped_time = 0;
+    // uint32_t count = 0;
+    // uint64_t elasped_time = 0;
 
     #if 0
     appLogPrintf("TI-RTOS TEST: Running test for %d iterations and delay of %d ms\n",
