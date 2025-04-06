@@ -82,9 +82,9 @@ MEMORY
     /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 48.00 MB ] */
     IPC_VRING_MEM                     : ORIGIN = 0xA5000000 , LENGTH = 0x3000000
     /* Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent [ size 31.75 MB ] */
-    TIOVX_OBJ_DESC_MEM                : ORIGIN = 0xAF040000 , LENGTH = 0x01FC0000
+    TIOVX_OBJ_DESC_MEM                : ORIGIN = 0xA0000000 , LENGTH = 0x01FC0000
     /* Memory for remote core file operations [ size  4.00 MB ] */
-    APP_FILEIO_MEM                    : ORIGIN = 0xB1000000 , LENGTH = 0x00400000
+    APP_FILEIO_MEM                    : ORIGIN = 0xA1FC0000 , LENGTH = 0x00400000
     /* Memory for shared memory buffers in DDR [ size 960.00 MB ] */
     DDR_SHARED_MEM                    : ORIGIN = 0xC0000000 , LENGTH = 0x3C000000
 }
