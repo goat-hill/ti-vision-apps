@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2018 Texas Instruments Incorporated
+ * Copyright (c) 2023 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -61,7 +61,7 @@
  */
 --ram_model
 -heap  0x20000
--stack 0x20000
+-stack 0x100000
 --args 0x1000
 --diag_suppress=10068 /* "no matching section" */
 --cinit_compression=off
@@ -72,42 +72,26 @@ SECTIONS
     boot:
     {
       boot.*<boot.oe71>(.text)
-    } load > DDR_C7x_1 ALIGN(0x200000)
-    /* Code sections. */
-    GROUP LOAD_START( lnkStartFlashAddress ),
-          LOAD_END( lnkEndFlashAddress )
-    {
-        .vecs                   : {} ALIGN(0x400000)
-        .interrupt_vectors      : {} ALIGN(0x400000)
-        .secure_vecs            : {} ALIGN(0x200000)
-        .text:_c_int00_secure   : {} ALIGN(0x200000)
-        .text                   : {} ALIGN(0x200000)
+    } load > DDR_C7x_1_BOOT ALIGN(0x200000)
+    .vecs       >       DDR_C7x_1_VECS ALIGN(0x400000)
+    .text:_c_int00_secure > DDR_C7x_1_BOOT ALIGN(0x200000)
+    .text       >       DDR_C7x_1 ALIGN(0x200000)
 
-        .cinit                  : {}  /* could be part of const */
-        .const                  : {}
-        .KERNEL_FUNCTION LOAD_START( lnkKernelFuncStartAddr ),
-                         LOAD_END( lnkKernelFuncEndAddr )
-                                : {} palign( 0x10000 )
-    } > DDR_C7x_1
+    .bss        >       DDR_C7x_1  /* Zero-initialized data */
+    RUN_START(__BSS_START)
+    RUN_END(__BSS_END)
 
-    /* Data sections. */
-    GROUP  palign( 0x10000 ), LOAD_START( lnkRamStartAddr ), LOAD_END( lnkRamEndAddr )
-    {
-        .bss                    : {}  /* Zero-initialized data */
-        .data                   : {}  /* Initialized data */
+    .data       >       DDR_C7x_1  /* Initialized data */
 
-        .init_array             : {}  /* C++ initializations */
-        .stack                  : {} ALIGN(0x10000)
-        .args                   : {}
-        .cio                    : {}
-        .switch                 : {} /* For exception handling. */
-        .sysmem      /* heap */
-        .KERNEL_DATA LOAD_START( lnkKernelDataStartAddr ),
-                     LOAD_END( lnkKernelDataEndAddr )
-                                : {} palign( 0x800 )
-    } > DDR_C7x_1
-    
-    /* .bss:taskStackSection:tiovx (NOLOAD) : {} > L2RAM_C7x_1 */
+    .cinit      >       DDR_C7x_1  /* could be part of const */
+    .init_array >       DDR_C7x_1  /* C++ initializations */
+    .stack      >       DDR_C7x_1  ALIGN(0x20000) /* MUST be 128KB aligned to handle nested interrupts */
+    .args       >       DDR_C7x_1
+    .cio        >       DDR_C7x_1
+    .const      >       DDR_C7x_1
+    .switch     >       DDR_C7x_1
+    .sysmem     >       DDR_C7x_1 /* heap */
+    /* .bss:taskStackSection:tiovx (NOLOAD) : {} > L2RAM_MAIN_C7x_1 */
     .bss:taskStackSection       > DDR_C7x_1
     .bss:ddr_local_mem      (NOLOAD) : {} > DDR_C7X_1_LOCAL_HEAP
     .bss:ddr_scratch_mem    (NOLOAD) : {} > DDR_C7X_1_SCRATCH
@@ -120,23 +104,25 @@ SECTIONS
     .bss:tiovx_obj_desc_mem (NOLOAD) : {} > TIOVX_OBJ_DESC_MEM
     .bss:ipc_vring_mem      (NOLOAD) : {} > IPC_VRING_MEM
 
-    .bss:l1mem              (NOLOAD)(NOINIT) : {} > L1RAM_C7x_1
+    .bss:l1mem              (NOLOAD)(NOINIT) : {} > L2RAM_C7x_1
     .bss:l2mem              (NOLOAD)(NOINIT) : {} > L2RAM_C7x_1
     .bss:l3mem              (NOLOAD)(NOINIT) : {} > MSMC_C7x_1
 
     ipc_data_buffer:       > DDR_C7x_1
     .tracebuf                : {} align(1024)   > DDR_C7x_1
-    .resource_table > DDR_C7x_1_RESOURCE_TABLE
+    .resource_table          :
+    {
+        __RESOURCE_TABLE = .;
+    }                                           > DDR_C7x_1_RESOURCE_TABLE
+    .bss.debug_mem_trace_buf > DDR_C7x_1_IPC_TRACE
 
     GROUP:              >  DDR_C7x_1
     {
         .data.Mmu_tableArray          : type=NOINIT
         .data.Mmu_tableArraySlot      : type=NOINIT
         .data.Mmu_level1Table         : type=NOINIT
-        .data.Mmu_tableArray_NS       : type=NOINIT
+        .data.gMmu_tableArray_NS       : type=NOINIT
         .data.Mmu_tableArraySlot_NS   : type=NOINIT
         .data.Mmu_level1Table_NS      : type=NOINIT
     }
-
-
 }

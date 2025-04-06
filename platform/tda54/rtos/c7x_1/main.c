@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2018 Texas Instruments Incorporated
+ * Copyright (c) 2023 Texas Instruments Incorporated
  *
  * All rights reserved not granted herein.
  *
@@ -62,41 +62,55 @@
 
 #include <app.h>
 #include <utils/console_io/include/app_log.h>
-#include <utils/timer/include/app_timer.h>
+//#include <utils/timer/include/app_timer.h>
 #include <utils/misc/include/app_misc.h>
 #include <utils/rtos/include/app_rtos.h>
 #include <stdio.h>
 #include <string.h>
-#include <ti/osal/osal.h>
-#include <ti/osal/HwiP.h>
-#include <ti/osal/CacheP.h>
+#include <HwiP.h>
+#include <CacheP.h>
 #include <app_mem_map.h>
+//#include <utils/perf_stats/include/app_perf_stats.h>
 #include <app_ipc_rsctable.h>
-#include <ti/csl/soc.h>
-#include <ti/csl/arch/csl_arch.h>
-#include <ti/csl/arch/c7x/Cache.h>
-#include <ti/csl/arch/c7x/Hwi.h>
-#include <ti/csl/arch/c7x/Mmu.h>
-#include <utils/perf_stats/include/app_perf_stats.h>
 
-#if (defined (SAFERTOS))
-#include "SafeRTOS_API.h"
-#include "SafeRTOSConfig.h"
-#endif
+#include "ti_drivers_config.h"
+#include "ti_board_config.h"
+#include "ti_drivers_open_close.h"
+#include "ti_board_open_close.h"
+#include <ipc_notify.h>
+#include <ipc_notify/v0/ipc_notify_v0.h>
 
-#define C7X_CORE_ID 0
+#include <drivers/hw_include/cslr_soc.h>
+#include <kernel/nortos/dpl/c76/csl_clec.h>
 
-/* The upper 2GB DDR starts from 0x0008_8000_0000 */
-/* This address is mapped to a virtual address of 0x0001_0000_0000 */
+extern void vTaskStartScheduler( void );
+
+void IpcNotify_getConfig(IpcNotify_InterruptConfig **interruptConfig, uint32_t *interruptConfigNum)
+{
+    /* extern globals that are specific to this core */
+    extern IpcNotify_InterruptConfig gIpcNotifyInterruptConfig_c76ss0_0[];
+    extern uint32_t gIpcNotifyInterruptConfigNum_c76ss0_0;
+
+    *interruptConfig = &gIpcNotifyInterruptConfig_c76ss0_0[0];
+    *interruptConfigNum = gIpcNotifyInterruptConfigNum_c76ss0_0;
+}
 
 static void appMain(void* arg0, void* arg1)
 {
+    appUtilsTaskInit();
+
+    Drivers_open();
+    Board_driversOpen();
+
+    printf("HELLO WORLD!!!\n\r");
+
     appInit();
     appRun();
+
     #if 1
     while(1)
     {
-        appLogWaitMsecs(100u);
+        //appLogWaitMsecs(100u);
     }
     #else
     appDeInit();
@@ -111,6 +125,51 @@ void StartupEmulatorWaitFxn (void)
     }while (enableDebug);
 }
 
+static void appC7xClecInitDru(void)
+{
+    CSL_ClecEventConfig   cfgClec;
+    CSL_CLEC_EVTRegs   *clecBaseAddr;
+    int32_t status = SystemP_SUCCESS;
+    uint32_t clusterId;
+
+    clusterId=CSL_clecGetC7xClusterId();
+
+    if (clusterId == CSL_C75_CPU_CLUSTER_NUM_C75_1)
+    {
+        clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_C7X1024V0_CLEC_BASE;
+    }
+    else if (clusterId == CSL_C75_CPU_CLUSTER_NUM_C75_2)
+    {
+        clecBaseAddr = (CSL_CLEC_EVTRegs*)CSL_C7X1024V0_CLEC_BASE;
+    }
+    else
+    {
+        status = SystemP_FAILURE;
+    }
+
+    if (SystemP_SUCCESS == status)
+    {
+        uint32_t i;
+        uint32_t dru_input_start = 128;
+        uint32_t dru_input_num   = 16;
+        /* program CLEC events from DRU used for polling by TIDL
+         * to map to required events in C7x
+         */
+        for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
+        {
+            /* Configure CLEC */
+            cfgClec.secureClaimEnable = FALSE;
+            cfgClec.evtSendEnable     = TRUE;
+
+            /* cfgClec.rtMap value is different for each C7x */
+            cfgClec.rtMap             = CSL_CLEC_RTMAP_CPU_4;
+            cfgClec.extEvtNum         = 0;
+            cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
+            CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
+        }
+    }
+}
+
 /* IMPORTANT NOTE: For C7x,
  * - stack size and stack ptr MUST be 8KB aligned
  * - AND min stack size MUST be 16KB
@@ -122,75 +181,19 @@ __attribute__ ((section(".bss:taskStackSection")))
 __attribute__ ((aligned(8192)))
     ;
 
-/* DRU configuration */
-uint32_t gDruQoS_Enable    = 1;
-uint32_t gQoS_DRU_Priority = 3;
-uint32_t gQoS_DRU_OrderID  = 0;
-
-void setup_dru_qos(void)
-{
-   uint64_t DRU_BASE = CSL_COMPUTE_CLUSTER0_MMR_DRU4_MMR_CFG_DRU_BASE;
-   volatile uint64_t* queue0CFG     = (uint64_t*)(DRU_BASE + 0x8000);
-
-   if(gQoS_DRU_Priority > 7 || (gDruQoS_Enable == 0))
-   {
-     gQoS_DRU_Priority = 0;
-   }
-   if(gQoS_DRU_OrderID > 15 || (gDruQoS_Enable == 0))
-   {
-     gQoS_DRU_OrderID = 0;
-   }
-
-   uint64_t queue0CFG_VAL = 0x0;
-   queue0CFG_VAL |= ((uint64_t)gQoS_DRU_OrderID)<<4;
-   queue0CFG_VAL |= ((uint64_t)gQoS_DRU_Priority);
-
-   *queue0CFG = queue0CFG_VAL;
-}
-
-/* Important Note: The CLEC configuration in this file corresponds to the default UDMA
- * partitioning of events as found in pdk/packages/ti/drv/udma/soc/j784s4/udma_rmcfg.c
- * for the UDMA_RM_C7X_MSMC_DRU4.  The first 20 events are configured for C7X-1, so
- * enabling these CLEC events for C7X-1 here.  If the default UDMA event partitioning
- * is changed, this mapping of events will need a corresponding change */
-static void appC7xClecInitDru(void)
-{
-    CSL_ClecEventConfig   cfgClec;
-    CSL_CLEC_EVTRegs   *clecBaseAddr = (CSL_CLEC_EVTRegs*) CSL_COMPUTE_CLUSTER0_CLEC_REGS_BASE;
-
-    uint32_t i;
-    uint32_t dru_input_start = 664 + 96*C7X_CORE_ID;
-    uint32_t dru_input_num   = 20;
-    /* program CLEC events from DRU used for polling by TIDL
-     * to map to required events in C7x
-     */
-    for(i=dru_input_start; i<(dru_input_start+dru_input_num); i++)
-    {
-        /* Configure CLEC */
-        cfgClec.secureClaimEnable = UFALSE;
-        cfgClec.evtSendEnable     = UTRUE;
-
-        /* cfgClec.rtMap value is different for each C7x */
-        cfgClec.rtMap             = CSL_clecGetC7xRtmapCpuId();
-        cfgClec.extEvtNum         = 0;
-        cfgClec.c7xEvtNum         = (i-dru_input_start)+32;
-        cfgClec.acDru             = 0;
-        CSL_clecConfigEvent(clecBaseAddr, i, &cfgClec);
-    }
-}
-
 int main(void)
 {
     app_rtos_task_params_t tskParams;
     app_rtos_task_handle_t task;
 
-    OS_init();
+    StartupEmulatorWaitFxn();
+
+    System_init();
+    Board_init();
 
     appC7xClecInitDru();
 
-    setup_dru_qos();
-
-    appPerfStatsInit();
+    //appPerfStatsInit();
 
     appRtosTaskParamsInit(&tskParams);
     tskParams.priority = 8u;
@@ -198,302 +201,19 @@ int main(void)
     tskParams.stacksize = sizeof (gTskStackMain);
     tskParams.taskfxn = &appMain;
     task = appRtosTaskCreate(&tskParams);
-    if(NULL == task)
-    {
-        OS_stop();
-    }
-    OS_start();
+
+    DebugP_assert(task != NULL);
+    vTaskStartScheduler();
+    /* The following line should never be reached because vTaskStartScheduler()
+    will only return if there was not enough FreeRTOS heap memory available to
+    create the Idle and (if configured) Timer tasks.  Heap management, and
+    techniques for trapping heap exhaustion, are described in the book text. */
+    DebugP_assertNoLog(0);
 
     return 0;
 }
 
-uint32_t g_app_rtos_c7x_mmu_map_error = 0;
-
-void appMmuMap(Bool is_secure)
-{
-    Bool            retVal;
-    Mmu_MapAttrs    attrs;
-
-    uint32_t ns = 1;
-
-    if(is_secure)
-        ns = 0;
-    else
-        ns = 1;
-
-    Mmu_initMapAttrs(&attrs);
-
-    attrs.attrIndx = Mmu_AttrIndx_MAIR0;
-    attrs.ns = ns;
-
-    retVal = Mmu_map(0x00000000U, 0x00000000U, 0x20000000U, &attrs, is_secure);
-    if(retVal==UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0x20000000U, 0x20000000U, 0x20000000U, &attrs, is_secure);
-    if(retVal==UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0x40000000U, 0x40000000U, 0x20000000U, &attrs, is_secure);
-    if(retVal==UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0x60000000U, 0x60000000U, 0x10000000U, &attrs, is_secure);
-    if(retVal==UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0x78000000U, 0x78000000U, 0x08000000U, &attrs, is_secure); /* CLEC */
-    if(retVal==UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    /* DDR Local heap non cacheable */
-    retVal = Mmu_map(DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR, DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR, DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_3_LOCAL_HEAP_NON_CACHEABLE_ADDR, DDR_C7X_3_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_3_LOCAL_HEAP_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_4_LOCAL_HEAP_NON_CACHEABLE_ADDR, DDR_C7X_4_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_4_LOCAL_HEAP_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-    
-    /* DDR Scratch non cacheable */
-    retVal = Mmu_map(DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR, DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_1_SCRATCH_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR, DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_2_SCRATCH_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_3_SCRATCH_NON_CACHEABLE_ADDR, DDR_C7X_3_SCRATCH_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_3_SCRATCH_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_4_SCRATCH_NON_CACHEABLE_ADDR, DDR_C7X_4_SCRATCH_NON_CACHEABLE_PHYS_ADDR, DDR_C7X_4_SCRATCH_NON_CACHEABLE_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    /*-------------------------------------------------------*/
-    /* Cacheable region memory attributes                     */
-    /*-------------------------------------------------------*/
-
-    attrs.attrIndx = Mmu_AttrIndx_MAIR7;
-
-    retVal = Mmu_map(0x80000000U, 0x80000000U, 0x20000000U, &attrs, is_secure); /* DRR - Marking DDR region as cacheable */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0xA0000000U, 0xA0000000U, 0x20000000U, &attrs, is_secure); /* DRR - Marking DDR region as cacheable */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0x70000000U, 0x70000000U, 0x00800000U, &attrs, is_secure); /* MSMC - 8MB */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(0x41C00000U, 0x41C00000U, 0x00100000U, &attrs, is_secure); /* OCMC - 1MB */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    /*The region mapped by the MMU is intentionally set to 2MB for L2 SRAM since
-      page sizes are a function of the region size and having smaller page sizes
-      negatively affects the performance of L2 SRAM as the table walks with the
-      translation table in DDR are expensive, especially in context of high-
-      throughput, low-latency memory like L2 SRAM*/
-    retVal = Mmu_map(L2RAM_C7x_1_ADDR, L2RAM_C7x_1_ADDR, 0x00200000, &attrs, is_secure); /* L2 sram 448KB   */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7x_1_DTS_ADDR, DDR_C7x_1_DTS_ADDR, DDR_C7x_1_DTS_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    /* DDR Local heap */
-    retVal = Mmu_map(DDR_C7X_1_LOCAL_HEAP_ADDR, DDR_C7X_1_LOCAL_HEAP_PHYS_ADDR, DDR_C7X_1_LOCAL_HEAP_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_2_LOCAL_HEAP_ADDR, DDR_C7X_2_LOCAL_HEAP_PHYS_ADDR, DDR_C7X_2_LOCAL_HEAP_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_3_LOCAL_HEAP_ADDR, DDR_C7X_3_LOCAL_HEAP_PHYS_ADDR, DDR_C7X_3_LOCAL_HEAP_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_4_LOCAL_HEAP_ADDR, DDR_C7X_4_LOCAL_HEAP_PHYS_ADDR, DDR_C7X_4_LOCAL_HEAP_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-
-    /* DDR scratch */
-    retVal = Mmu_map(DDR_C7X_1_SCRATCH_ADDR, DDR_C7X_1_SCRATCH_PHYS_ADDR, DDR_C7X_1_SCRATCH_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_2_SCRATCH_ADDR, DDR_C7X_2_SCRATCH_PHYS_ADDR, DDR_C7X_2_SCRATCH_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_3_SCRATCH_ADDR, DDR_C7X_3_SCRATCH_PHYS_ADDR, DDR_C7X_3_SCRATCH_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7X_1_4_SCRATCH_ADDR, DDR_C7X_4_SCRATCH_PHYS_ADDR, DDR_C7X_4_SCRATCH_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    /* DDR Shared mem */
-    retVal = Mmu_map(DDR_SHARED_MEM_ADDR, DDR_SHARED_MEM_PHYS_ADDR, DDR_SHARED_MEM_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(MSMC_C7x_1_ADDR, MSMC_C7x_1_ADDR, MSMC_C7x_1_SIZE, &attrs, is_secure); /* Local MSMC   */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    attrs.attrIndx = Mmu_AttrIndx_MAIR4;
-
-    retVal = Mmu_map(APP_LOG_MEM_ADDR, APP_LOG_MEM_ADDR, APP_LOG_MEM_SIZE, &attrs, is_secure);
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(APP_FILEIO_MEM_ADDR, APP_FILEIO_MEM_ADDR, APP_FILEIO_MEM_SIZE, &attrs, is_secure);
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(TIOVX_OBJ_DESC_MEM_ADDR, TIOVX_OBJ_DESC_MEM_ADDR, TIOVX_OBJ_DESC_MEM_SIZE, &attrs, is_secure);
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(IPC_VRING_MEM_ADDR, IPC_VRING_MEM_ADDR, IPC_VRING_MEM_SIZE, &attrs, is_secure);
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(DDR_C7x_1_IPC_ADDR, DDR_C7x_1_IPC_ADDR, DDR_C7x_1_IPC_SIZE, &attrs, is_secure); /* ddr            */
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-    retVal = Mmu_map(TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_ADDR, TIOVX_LOG_RT_MEM_SIZE, &attrs, is_secure);
-    if(retVal == UFALSE)
-    {
-        goto mmu_exit;
-    }
-
-mmu_exit:
-    if(retVal == UFALSE)
-    {
-        g_app_rtos_c7x_mmu_map_error++;
-    }
-
-
-
-    return;
-}
-
-void appCacheInit()
-{
-    Cache_Size  cacheSize;
-
-    /* init cache size here, since this needs to be done in secure mode */
-    cacheSize.l1pSize = Cache_L1Size_32K;
-    cacheSize.l1dSize = Cache_L1Size_32K;
-    cacheSize.l2Size  = Cache_L2Size_64K;
-
-    Cache_setSize(&cacheSize);
-}
-
-void InitMmu(void)
-{
-    /* This is for debug purpose - see the description of function header */
-    StartupEmulatorWaitFxn();
-
-    g_app_rtos_c7x_mmu_map_error = 0;
-
-    appC7xClecInitForNonSecAccess();
-
-    appMmuMap(UFALSE);
-    appMmuMap(UTRUE);
-
-    appCacheInit();
-}
-
-/** Description : This function converts a virtual memory region address to physical memory region address given the base addresses of both memory regions 
+/** Description : This function converts a virtual memory region address to physical memory region address given the base addresses of both memory regions
  *  which are mapped using MMU in appMmuMap
  *  Arguments:
  *      - virtAddr : Virtual pointer
@@ -538,45 +258,29 @@ uint64_t appTarget2SharedConversion(const uint64_t virtAddr)
     }
     else
     {
-        /* Below code converts c7x_1 virtual addresses of all cores to C7x DDR physical addresses 
+        /* Below code converts c7x_1 virtual addresses of all cores to C7x DDR physical addresses
            If virtAddr does not belong to any of the below defined virtual memory regions, it will be returned without any modification.
            A virtAddr would belong to any one of the below memory spaces, so convertVirt2Phys call for that particular space would be executed
            All other function calls would just pass through the phyAddr */
-        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_3_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_3_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_3_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_4_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_4_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_4_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
 
-        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_ADDR,
             (uint64_t) DDR_C7X_1_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_ADDR,
             (uint64_t) DDR_C7X_2_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_3_LOCAL_HEAP_ADDR, 
-            (uint64_t) DDR_C7X_3_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_3_LOCAL_HEAP_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_4_LOCAL_HEAP_ADDR, 
-            (uint64_t) DDR_C7X_4_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_4_LOCAL_HEAP_PHYS_SIZE, &phyAddr);
 
-        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_3_SCRATCH_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_3_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_3_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_4_SCRATCH_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_4_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_4_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &phyAddr);
-        
-        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_SCRATCH_ADDR, 
+
+        convertVirt2Phys(virtAddr, (uint64_t) DDR_C7X_1_SCRATCH_ADDR,
             (uint64_t) DDR_C7X_1_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_SCRATCH_ADDR, 
+        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_2_SCRATCH_ADDR,
             (uint64_t) DDR_C7X_2_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_3_SCRATCH_ADDR, 
-            (uint64_t) DDR_C7X_3_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_3_SCRATCH_PHYS_SIZE, &phyAddr);
-        convertVirt2Phys(virtAddr, (uint64_t)DDR_C7X_1_4_SCRATCH_ADDR, 
-            (uint64_t) DDR_C7X_4_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_4_SCRATCH_PHYS_SIZE, &phyAddr);
     }
     return phyAddr;
 }
@@ -588,7 +292,7 @@ uint64_t appUdmaVirtToPhyAddrConversion(const void *virtAddr,
     return appTarget2SharedConversion((uint64_t)virtAddr);
 }
 
-/** Description : This function converts a physical memory region address to virtual memory region address given the base addresses of both memory regions 
+/** Description : This function converts a physical memory region address to virtual memory region address given the base addresses of both memory regions
  *  which are mapped using MMU in appMmuMap
  *  Arguments:
  *      - shared_ptr : Physical pointer
@@ -633,46 +337,29 @@ uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
     }
     else
     {
-        /* Below code converts C7x DDR physical addresses of all cores to c7x_1 virtual addresses 
+        /* Below code converts C7x DDR physical addresses of all cores to c7x_1 virtual addresses
            If shared_ptr does not belong to any of the below defined physical memory regions, it will be returned without any modification.
            A shared_ptr would belong to any one of the below memory spaces, so convertPhys2Virt call for that particular space would be executed
            All other function calls would just pass through the target_ptr */
-        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_3_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_3_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_3_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_4_LOCAL_HEAP_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_4_LOCAL_HEAP_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_4_LOCAL_HEAP_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
 
-        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_LOCAL_HEAP_ADDR,
             (uint64_t) DDR_C7X_1_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_1_LOCAL_HEAP_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_LOCAL_HEAP_ADDR,
             (uint64_t) DDR_C7X_2_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_2_LOCAL_HEAP_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_3_LOCAL_HEAP_ADDR, 
-            (uint64_t) DDR_C7X_3_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_3_LOCAL_HEAP_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_4_LOCAL_HEAP_ADDR, 
-            (uint64_t) DDR_C7X_4_LOCAL_HEAP_PHYS_ADDR, (uint64_t)DDR_C7X_4_LOCAL_HEAP_PHYS_SIZE, &target_ptr);
 
-        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_SCRATCH_NON_CACHEABLE_ADDR,
             (uint64_t) DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_3_SCRATCH_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_3_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_3_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_4_SCRATCH_NON_CACHEABLE_ADDR, 
-            (uint64_t) DDR_C7X_4_SCRATCH_NON_CACHEABLE_PHYS_ADDR, (uint64_t)DDR_C7X_4_SCRATCH_NON_CACHEABLE_PHYS_SIZE, &target_ptr);
-        
-        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_SCRATCH_ADDR, 
+
+        convertPhys2Virt(shared_ptr, (uint64_t) DDR_C7X_1_SCRATCH_ADDR,
             (uint64_t) DDR_C7X_1_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_1_SCRATCH_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_SCRATCH_ADDR, 
+        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_2_SCRATCH_ADDR,
             (uint64_t) DDR_C7X_2_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_2_SCRATCH_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_3_SCRATCH_ADDR, 
-            (uint64_t) DDR_C7X_3_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_3_SCRATCH_PHYS_SIZE, &target_ptr);
-        convertPhys2Virt(shared_ptr, (uint64_t)DDR_C7X_1_4_SCRATCH_ADDR, 
-            (uint64_t) DDR_C7X_4_SCRATCH_PHYS_ADDR, (uint64_t)DDR_C7X_4_SCRATCH_PHYS_SIZE, &target_ptr);
     }
     return target_ptr;
 }
-
