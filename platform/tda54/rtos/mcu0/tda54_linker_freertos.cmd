@@ -31,7 +31,11 @@ SECTIONS
     .rodata: {} palign(8) > DDR_MCU0     /* This is where const's go */
     .sysmem: {} palign(8) > DDR_MCU0     /* This is where the malloc heap goes */
     .stack:  {} palign(8) > DDR_MCU0     /* This is where the main() stack goes */
+    .bss:taskStackSection > DDR_MCU0
     .bss:app_log_mem        (NOLOAD) : {} > APP_LOG_MEM
+    .bss:app_fileio_mem     (NOLOAD) : {} > APP_FILEIO_MEM
+    .bss:tiovx_obj_desc_mem (NOLOAD) : {} > TIOVX_OBJ_DESC_MEM
+    .bss:ipc_vring_mem      (NOLOAD) : {} > IPC_VRING_MEM
 
     /* this is used only when IPC RPMessage is enabled, else this is not used */
     .bss:ipc_vring_mem   (NOLOAD) : {} > IPC_VRING_MEM
