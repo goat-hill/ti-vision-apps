@@ -63,7 +63,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <utils/console_io/include/app_log.h>
-// #include <utils/timer/include/app_timer.h>
+#include <utils/timer/include/app_timer.h>
 #include <utils/file_io/include/app_fileio.h>
 #include <utils/ipc/include/app_ipc.h>
 #include <stdint.h>
@@ -189,13 +189,12 @@ int main(void)
     fileio_init_prm.self_cpu_index = APP_IPC_CPU_MPU1_0;
     strncpy(fileio_init_prm.self_cpu_name, "MPU1_0", APP_FILEIO_MAX_CPU_NAME);
     fileio_init_prm.fileio_rd_max_cpus = APP_IPC_CPU_MAX;
-    
     appFileIORdInit(&fileio_init_prm);
 #endif
-    // while(1)
-    // {
-    //     // appLogWaitMsecs(1000);
-    // }
+    while(1)
+    {
+        appLogWaitMsecs(1000);
+    }
 
     return 0;
 }

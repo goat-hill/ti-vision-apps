@@ -95,13 +95,13 @@ int main(int argc, char *argv[])
                             printf("APP IPC: ERROR: Send msg %d to CPU [%s] failed !!!\n", msg+1, appIpcGetCpuName(i));
                             break;
                         }
-                        /* appLogWaitMsecs(10); */
+                        appLogWaitMsecs(10);
                     }
                 }
             }
         }
         printf("APP IPC: Waiting for all messages to get echoed from remote core...\n");
-        // appLogWaitMsecs(10000);
+        appLogWaitMsecs(10000);
         printf("APP IPC: Waiting for all messages to get echoed ... Done.\n");
         #endif
 
