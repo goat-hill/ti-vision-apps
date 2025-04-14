@@ -95,158 +95,29 @@ mmu_armv84.attribute         = "MAIR0";
 
 /**
  * CLEC region.
- * Region start: 0x7C200000
- * Region end: 0x7C200000
+ * Region start:  0x6AA00000
+ * Region end:  0x6AB00000
  * Read and write for both privileged and user modes.
  * No Execute for both privileged and user modes.
  * Attribute is MAIR0.
  */
-mmu_armv85.$name             = "CLEC";
-mmu_armv85.vAddr             = 0x7C200000;
-mmu_armv85.pAddr             = 0x7C200000;
-mmu_armv85.size              = 0x100000;
-mmu_armv85.attribute         = "MAIR0";
+mmu_armv85.$name = "CLEC";
+mmu_armv85.size  = 0x100000;
+mmu_armv85.vAddr = 0x6AA00000;
+mmu_armv85.pAddr = 0x6AA00000;
+mmu_armv85.attribute = "MAIR0";
 
 /**
  * DRU region.
- * Region start: 0x7C400000
- * Region end: 0x7C400000
+ * Region start: 0x6AC00000
+ * Region end: 0x6AD00000
  * Read and write for both privileged and user modes.
  * No Execute for both privileged and user modes.
  * Attribute is MAIR0.
  */
-mmu_armv86.$name             = "DRU";
-mmu_armv86.vAddr             = 0x7C400000;
-mmu_armv86.pAddr             = 0x7C400000;
-mmu_armv86.size              = 0x100000;
-mmu_armv86.attribute         = "MAIR0";
+mmu_armv86.$name = "DRU";
+mmu_armv86.size  = 0x100000;
+mmu_armv86.vAddr = 0x6AC00000;
+mmu_armv86.pAddr = 0x6AC00000;
+mmu_armv86.attribute = "MAIR0";
 
-/**
- * C7X_1 L2 MAIN + C7X_2 L2 MAIN
- * Region start: 0x7E000000
- * Region end: 0x7E400000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR0.
- */
-mmu_armv87.$name             = "C7X_1_L2_MAIN";
-mmu_armv87.vAddr             = 0x7E000000;
-mmu_armv87.pAddr             = 0x7E000000;
-mmu_armv87.size              = 0x400000;
-mmu_armv87.attribute         = "MAIR0";
-
-/**
- * C7X_1 L2 AUX
- * Region start: 0x7F000000
- * Region end: 0x7F040000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR0.
- */
-mmu_armv88.$name             = "C7X_1_L2_AUX";
-mmu_armv88.vAddr             = 0x7F000000;
-mmu_armv88.pAddr             = 0x7F000000;
-mmu_armv88.size              = 0x80000;
-mmu_armv88.attribute         = "MAIR0";
-
-/**
- * DDR_C7x_1_DTS
- * Region start: 0xAD200000
- * Region end: 0xAD200000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR7.
- */
-mmu_armv89.$name             = "DDR_C7x_1_DTS";
-mmu_armv89.vAddr             = 0xAD200000;
-mmu_armv89.pAddr             = 0xAD200000;
-mmu_armv89.size              = 0x3E00000;
-mmu_armv89.attribute         = "MAIR7";
-
-/**
- * DDR_SHARED_MEM
- * Region start: 0xC0000000
- * Region end: 0xC0000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR7.
- */
-mmu_armv810.$name             = "DDR_SHARED_MEM";
-mmu_armv810.vAddr             = 0xC0000000;
-mmu_armv810.pAddr             = 0x900000000;
-mmu_armv810.size              = 0x20000000;
-mmu_armv810.attribute         = "MAIR7";
-
-/**
- * DDR_SHARED_MEM_NON_CACHE
- * Region start: 0xA5000000
- * Region end: 0xA500000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR4.
- */
-mmu_armv811.$name             = "DDR_SHARED_MEM_NON_CACHE";
-mmu_armv811.vAddr             = 0xA5000000;
-mmu_armv811.pAddr             = 0xA5000000;
-mmu_armv811.size              = 0x8000000;
-mmu_armv811.attribute         = "MAIR4";
-
-/**
- * DDR_C7X_1_IPC
- * Region start: 0xAD000000
- * Region end: 0xAD000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR4.
- */
-mmu_armv812.$name             = "DDR_C7X_1_IPC";
-mmu_armv812.vAddr             = 0xAD000000;
-mmu_armv812.pAddr             = 0xAD000000;
-mmu_armv812.size              = 0x200000;
-mmu_armv812.attribute         = "MAIR4";
-
-/**
- * DDR_C7X_1_HEAP_SCRATCH_NON_CACHEABLE
- * Region start: 0x100000000
- * Region end: 0x110000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR4.
- */
-mmu_armv813.$name             = "DDR_C7X_1_HEAP_SCRATCH_NON_CACHEABLE";
-mmu_armv813.vAddr             = 0x100000000;
-mmu_armv813.pAddr             = 0x880000000;
-mmu_armv813.size              = 0x2000000;
-mmu_armv813.attribute         = "MAIR4";
-
-/**
- * DDR_C7X_1_HEAP_SCRATCH_CACHEABLE
- * Region start: 0x110000000
- * Region end: 0x108000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR7.
- */
-mmu_armv814.$name             = "DDR_C7X_1_HEAP_SCRATCH_CACHEABLE";
-mmu_armv814.vAddr             = 0x102000000;
-mmu_armv814.pAddr             = 0x882000000;
-mmu_armv814.size              = 0xE000000;
-mmu_armv814.attribute         = "MAIR7";
-
-/**
- * DDR_C7X_2_HEAP_SCRATCH_NON_CACHEABLE
- * Region start: 0x120000000
- * Region end: 0x130000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR4.
- */
-mmu_armv815.$name             = "DDR_C7X_2_HEAP_SCRATCH_NON_CACHEABLE";
-mmu_armv815.vAddr             = 0x110000000;
-mmu_armv815.pAddr             = 0x890000000;
-mmu_armv815.size              = 0x2000000;
-mmu_armv815.attribute         = "MAIR4";
-
-/**
- * DDR_C7X_2_HEAP_SCRATCH_CACHEABLE
- * Region start: 0x130000000
- * Region end: 0x140000000
- * Read and write for both privileged and user modes.
- * Attribute is MAIR7.
- */
-mmu_armv816.$name             = "DDR_C7X_2_HEAP_SCRATCH_CACHEABLE";
-mmu_armv816.vAddr             = 0x112000000;
-mmu_armv816.pAddr             = 0x892000000;
-mmu_armv816.size              = 0xE000000;
-mmu_armv816.attribute         = "MAIR7";
