@@ -74,7 +74,7 @@ endif
 ADDITIONAL_STATIC_LIBS += drivers.tda54.m55.ti-arm-clang.${TARGET_BUILD}.lib
 
 #SYS_STATIC_LIBS += app_utils_hwa
-SYS_STATIC_LIBS += app_utils_sciclient
+#SYS_STATIC_LIBS += app_utils_sciclient
 #
 #ifeq ($(BUILD_MCU_BOARD_DEPENDENCIES),yes)
 #SYS_STATIC_LIBS += app_utils_dss
