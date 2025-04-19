@@ -133,8 +133,8 @@ main_ocram_mem_addr_phys = 0x23800000;
 #codec_carveout_size = 2*GB;
 
 #TODO:
-#uboot_reloc_mem_addr = 0xFC000000;
-#uboot_reloc_mem_size = 64*MB;
+uboot_reloc_mem_addr = 0xFC000000;
+uboot_reloc_mem_size = 64*MB;
 #
 # Other constant sizes
 #
@@ -336,39 +336,38 @@ rmcu2_0_ddr_local_heap_size  = 8*MB;
 rmcu2_1_ddr_local_heap_addr  = rmcu2_0_ddr_local_heap_addr + rmcu2_0_ddr_local_heap_size;
 rmcu2_1_ddr_local_heap_size  = 8*MB;
 
-# Hardcoding this value, as this cannot be different from IPC echo test value
+# Hardcoding this value, as this cannot be different from IPC echo test value ??
 # To Align Shared Memory to 1 GB
-#ipc_vring_mem_addr      = ddr_mem_addr_hi - 0x14000000; 
-#ipc_vring_mem_size      = 48*MB;
+ipc_vring_mem_addr      = rmcu2_1_ddr_local_heap_addr + rmcu2_1_ddr_local_heap_size;
+ipc_vring_mem_size      = 48*MB;
 
-#app_log_mem_addr        = ipc_vring_mem_addr + ipc_vring_mem_size;
-#app_log_mem_size        = 256*KB;
+app_log_mem_addr        = ipc_vring_mem_addr + ipc_vring_mem_size;
+app_log_mem_size        = 256*KB;
 
-#tiovx_obj_desc_mem_addr = app_log_mem_addr + app_log_mem_size;
-#tiovx_obj_desc_mem_size = 32*MB - app_log_mem_size;
+tiovx_obj_desc_mem_addr = app_log_mem_addr + app_log_mem_size;
+tiovx_obj_desc_mem_size = 32*MB - app_log_mem_size;
 
-#app_fileio_mem_addr     =  tiovx_obj_desc_mem_addr + tiovx_obj_desc_mem_size;
-#app_fileio_mem_size     = 4*MB;
+app_fileio_mem_addr     =  tiovx_obj_desc_mem_addr + tiovx_obj_desc_mem_size;
+app_fileio_mem_size     = 4*MB;
 
-#tiovx_log_rt_mem_addr   = app_fileio_mem_addr + app_fileio_mem_size;
-#tiovx_log_rt_mem_size   = 16*MB - app_fileio_mem_size;
+# Reduced tiovx log rt log mem from 12 MB to 10 MB
+tiovx_log_rt_mem_addr   = app_fileio_mem_addr + app_fileio_mem_size;
+tiovx_log_rt_mem_size   = 14*MB - app_fileio_mem_size;
 
 
 #TODO:
 # DDR memory allocation for various shared memories
-#
-
-# 
 # ddr_intercore_eth_desc_addr = rmcu0_1_ddr_local_heap_addr + rmcu0_1_ddr_local_heap_size;
 # ddr_intercore_eth_desc_size = 8*MB;
-# 
 # ddr_intercore_eth_data_addr = ddr_intercore_eth_desc_addr + ddr_intercore_eth_desc_size;
 # ddr_intercore_eth_data_size = 24*MB;
 
 # TODO: Shared Mem should be in high mem need RAT for that
 # Shared memory for DMA Buf FD carveout
-#ddr_shared_mem_addr     = ddr_intercore_eth_data_addr + ddr_intercore_eth_data_size;
-#ddr_shared_mem_size     = SHARED_MEM_SIZE - uboot_reloc_mem_size;
+ddr_shared_mem_addr     = tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
+ddr_shared_mem_size     = SHARED_MEM_SIZE - uboot_reloc_mem_size;
+
+assert ddr_shared_mem_addr & (SHARED_MEM_SIZE - 1) == 0
 
 # C7x 1 Persistent DDR
 c7x_1_ddr_local_heap_non_cacheable_addr  = ddr_mem_addr_hi;
@@ -520,11 +519,11 @@ c7x_4_3_ddr_scratch_addr = c7x_4_2_ddr_scratch_addr + c7x_2_ddr_scratch_size;
 
 #TODO:
 # Shared memory for DMA Buf FD carveout (located in high mem)
-# ddr_shared_mem_addr_phys  = c7x_4_ddr_scratch_addr_phys + c7x_4_ddr_scratch_size;
-# ddr_shared_mem_size       = SHARED_MEM_SIZE - uboot_reloc_mem_size;
-# 
-# assert ddr_shared_mem_addr_phys & (SHARED_MEM_SIZE - 1) == 0
-# assert ddr_shared_mem_addr & (SHARED_MEM_SIZE - 1) == 0
+# Temporarily placing Shared Mem in Low Mem since RAT is not enabled
+#ddr_shared_mem_addr_phys  = tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
+#ddr_shared_mem_size       = SHARED_MEM_SIZE - uboot_reloc_mem_size;
+
+#assert ddr_shared_mem_addr_phys & (SHARED_MEM_SIZE - 1) == 0
 
 #
 # Create memory section based on addr and size defined above, including
@@ -532,14 +531,14 @@ c7x_4_3_ddr_scratch_addr = c7x_4_2_ddr_scratch_addr + c7x_2_ddr_scratch_size;
 #
 
 #TODO:
-# r52f local memory sections
-# mcu_r52f_tcma_vecs  = MemSection("R52F_TCMA_VECS" , "X"   , 0x00000000, (KB >> 4));
-# mcu_r52f_tcma       = MemSection("R52F_TCMA" , "X"   , 0x00000040, (32*KB) - (KB >> 4));
+# R52+ local memory sections
+# rmcu_tcma_vecs  = MemSection("R52F_TCMA_VECS" , "X"   , 0x00000000, (KB >> 4));
+# rmcu_tcma       = MemSection("R52F_TCMA" , "X"   , 0x00000040, (32*KB) - (KB >> 4));
 
-# r52f_tcmb0      = MemSection("R52F_TCMB0", "RWIX", 0x41010000, 32*KB);
+# rmcu_tcmb0      = MemSection("R52F_TCMB0", "RWIX", 0x41010000, 32*KB);
 
-# mcu_r52f_tcmb0_vecs   = MemSection("R52F_TCMB0_VECS", "RWIX", 0x41010000, (KB >> 4));
-# mcu_r52f_tcmb0        = MemSection("R52F_TCMB0", "RWIX", 0x41010040, (32*KB) - (KB >> 4));
+# rmcu_tcmb0_vecs   = MemSection("R52F_TCMB0_VECS", "RWIX", 0x41010000, (KB >> 4));
+# rmcu_tcmb0        = MemSection("R52F_TCMB0", "RWIX", 0x41010040, (32*KB) - (KB >> 4));
 
 # C7x L1/L2 memory sections
 # c7x_1_l2   = MemSection("L2RAM_C7x_1", "RWIX", c7x_1_l2_addr  , c7x_1_l2_size  , "L2 for C7x_1");
@@ -558,7 +557,7 @@ c7x_3_msmc  = MemSection("MSMC_C7x_3", "RWIX", c7x_3_msmc_addr  , c7x_3_msmc_siz
 # c7x_4_l1   = MemSection("L1RAM_C7x_4", "RWIX", c7x_4_l1_addr  , c7x_4_l1_size  , "L1 for C7x_4");
 c7x_4_msmc  = MemSection("MSMC_C7x_4", "RWIX", c7x_4_msmc_addr  , c7x_4_msmc_size  , "MSMC for C7x_4");
 
-# uboot_reloc_mem = MemSection("UBOOT_RELOC_MEM", "", uboot_reloc_mem_addr  , uboot_reloc_mem_size  , "Uboot DDR relocation memory");
+uboot_reloc_mem = MemSection("UBOOT_RELOC_MEM", "", uboot_reloc_mem_addr  , uboot_reloc_mem_size  , "Uboot DDR relocation memory");
 
 # Main OCRAM memory sections
 mcu2_main_ocram   = MemSection("MAIN_OCRAM_MCU2", "RWIX", mcu2_main_ocram_addr  , mcu2_main_ocram_size  , "Main OCRAM for MCU2");
@@ -847,20 +846,20 @@ c7x_4_ddr_total.setDtsName("vision_apps_c71_3_memory_region", "vision-apps-c71_3
 
 #TODO:
 # Shared memory memory sections in DDR
-# app_log_mem            = MemSection("APP_LOG_MEM"        , "", app_log_mem_addr       , app_log_mem_size       , "Memory for remote core logging");
-# tiovx_obj_desc_mem     = MemSection("TIOVX_OBJ_DESC_MEM" , "", tiovx_obj_desc_mem_addr, tiovx_obj_desc_mem_size, "Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent");
-# app_fileio_mem        = MemSection("APP_FILEIO_MEM"        , "", app_fileio_mem_addr       , app_fileio_mem_size       , "Memory for remote core file operations");
-# tiovx_log_rt_mem     = MemSection("TIOVX_LOG_RT_MEM" , "", tiovx_log_rt_mem_addr, tiovx_log_rt_mem_size, "Memory for TI OpenVX shared memory for Run-time logging. MUST be non-cached or cache-coherent");
-# 
-# ipc_vring_mem      = MemSection("IPC_VRING_MEM"     , "", ipc_vring_mem_addr     , ipc_vring_mem_size     , "Memory for IPC Vring's. MUST be non-cached or cache-coherent");
-# ipc_vring_mem.setDtsName("vision_apps_rtos_ipc_memory_region", "vision-apps-rtos-ipc-memory-region");
-# 
-# vision_apps_ddr_total  = MemSection("DDR_VISION_APPS_DTS", "", 0                      , 0                      , "DDR for Vision Apps for all sections, used for reserving memory in DTS file");
-# vision_apps_ddr_total.concat(app_log_mem);
-# vision_apps_ddr_total.concat(app_fileio_mem);
-# vision_apps_ddr_total.concat(tiovx_obj_desc_mem);
-# vision_apps_ddr_total.concat(tiovx_log_rt_mem);
-# vision_apps_ddr_total.setDtsName("vision_apps_memory_region", "vision-apps-dma-memory");
+app_log_mem            = MemSection("APP_LOG_MEM"        , "", app_log_mem_addr       , app_log_mem_size       , "Memory for remote core logging");
+tiovx_obj_desc_mem     = MemSection("TIOVX_OBJ_DESC_MEM" , "", tiovx_obj_desc_mem_addr, tiovx_obj_desc_mem_size, "Memory for TI OpenVX shared memory. MUST be non-cached or cache-coherent");
+app_fileio_mem        = MemSection("APP_FILEIO_MEM"        , "", app_fileio_mem_addr       , app_fileio_mem_size       , "Memory for remote core file operations");
+tiovx_log_rt_mem     = MemSection("TIOVX_LOG_RT_MEM" , "", tiovx_log_rt_mem_addr, tiovx_log_rt_mem_size, "Memory for TI OpenVX shared memory for Run-time logging. MUST be non-cached or cache-coherent");
+
+ipc_vring_mem      = MemSection("IPC_VRING_MEM"     , "", ipc_vring_mem_addr     , ipc_vring_mem_size     , "Memory for IPC Vring's. MUST be non-cached or cache-coherent");
+ipc_vring_mem.setDtsName("vision_apps_rtos_ipc_memory_region", "vision-apps-rtos-ipc-memory-region");
+
+vision_apps_ddr_total  = MemSection("DDR_VISION_APPS_DTS", "", 0, 0, "DDR for Vision Apps for all sections, used for reserving memory in DTS file");
+vision_apps_ddr_total.concat(app_log_mem);
+vision_apps_ddr_total.concat(app_fileio_mem);
+vision_apps_ddr_total.concat(tiovx_obj_desc_mem);
+vision_apps_ddr_total.concat(tiovx_log_rt_mem);
+vision_apps_ddr_total.setDtsName("vision_apps_memory_region", "vision-apps-dma-memory");
 
 vision_apps_core_heaps_lo = MemSection("DDR_VISION_APPS_CORE_HEAPS_LO_DTS", "", 0, 0, "Vision Apps Core Heaps in 32bit address range of DDR");
 vision_apps_core_heaps_lo.concat(dmcu0_ddr_local_heap);
@@ -888,7 +887,12 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 
 #TODO:
 # this region should NOT have the "no-map" flag since we want ION to map this memory and do cache ops on it as needed
-# ddr_shared_mem     = MemSection("DDR_SHARED_MEM"    , "", ddr_shared_mem_addr    , ddr_shared_mem_size    , "Memory for shared memory buffers in DDR");
+ddr_shared_mem     = MemSection("DDR_SHARED_MEM"    , "", ddr_shared_mem_addr    , ddr_shared_mem_size    , "Memory for shared memory buffers in DDR");
+ddr_shared_mem.setDtsName("vision_apps_shared_region", "vision_apps_shared-memories");
+ddr_shared_mem.setCompatibility("dma-heap-carveout");
+ddr_shared_mem.setNoMap(False);
+ddr_shared_mem.setOriginTag(False);
+ddr_shared_mem.splitOrigin(True)
 # ddr_shared_mem_phys  = MemSection("DDR_SHARED_MEM_PHYS"    , "", ddr_shared_mem_addr_phys  , ddr_shared_mem_size    , "Physical address of memory for shared memory buffers in DDR");
 # ddr_shared_mem_phys.setDtsName("vision_apps_shared_region", "vision_apps_shared-memories");
 # ddr_shared_mem_phys.setCompatibility("dma-heap-carveout");
@@ -909,10 +913,6 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 #
 
 # dmcu0_mmap = MemoryMap("dmcu0");
-# dmcu0_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# dmcu0_mmap.addMemSection( mcu_r52f_tcma      );
-# dmcu0_mmap.addMemSection( mcu_r52f_tcmb0_vecs   );
-# dmcu0_mmap.addMemSection( mcu_r52f_tcmb0        );
 # dmcu0_mmap.addMemSection( dmcu0_ddr           );
 # dmcu0_mmap.addMemSection( app_log_mem          );
 # dmcu0_mmap.addMemSection( tiovx_obj_desc_mem   );
@@ -923,10 +923,6 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # dmcu0_mmap.checkOverlap();
 # 
 # mcu0_mmap = MemoryMap("mcu0");
-# mcu0_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# mcu0_mmap.addMemSection( mcu_r52f_tcma      );
-# mcu0_mmap.addMemSection( mcu_r52f_tcmb0_vecs );
-# mcu0_mmap.addMemSection( mcu_r52f_tcmb0      );
 # mcu0_mmap.addMemSection( mcu0_ddr_ipc     );
 # mcu0_mmap.addMemSection( mcu0_ddr_resource_table  );
 # mcu0_mmap.addMemSection( mcu0_ddr         );
@@ -936,13 +932,11 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # mcu0_mmap.addMemSection( ipc_vring_mem      );
 # mcu0_mmap.addMemSection( mcu0_ddr_local_heap  );
 # mcu0_mmap.addMemSection( ddr_shared_mem     );
+# mcu0_mmap.addMemSection( intercore_eth_desc_mem );
+# mcu0_mmap.addMemSection( intercore_eth_data_mem );
 # mcu0_mmap.checkOverlap();
 # 
-# 
 # mcu1_mmap = MemoryMap("mcu1");
-# mcu1_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# mcu1_mmap.addMemSection( mcu_r52f_tcma      );
-# mcu1_mmap.addMemSection( r52f_tcmb0          );
 # mcu1_mmap.addMemSection( mcu1_ddr_ipc     );
 # mcu1_mmap.addMemSection( mcu1_ddr_resource_table  );
 # mcu1_mmap.addMemSection( mcu1_ddr         );
@@ -951,17 +945,10 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # mcu1_mmap.addMemSection( app_fileio_mem        );
 # mcu1_mmap.addMemSection( ipc_vring_mem      );
 # mcu1_mmap.addMemSection( mcu1_ddr_local_heap  );
-# mcu1_mmap.addMemSection( mcu1_ddr_viss_config_heap  );
 # mcu1_mmap.addMemSection( ddr_shared_mem     );
-# mcu1_mmap.addMemSection( mcu1_main_ocram );
-# mcu1_mmap.addMemSection( intercore_eth_desc_mem );
-# mcu1_mmap.addMemSection( intercore_eth_data_mem );
 # mcu1_mmap.checkOverlap();
 # 
 # mcu2_mmap = MemoryMap("mcu2");
-# mcu2_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# mcu2_mmap.addMemSection( mcu_r52f_tcma      );
-# mcu2_mmap.addMemSection( r52f_tcmb0          );
 # mcu2_mmap.addMemSection( mcu2_ddr_ipc     );
 # mcu2_mmap.addMemSection( mcu2_ddr_resource_table  );
 # mcu2_mmap.addMemSection( mcu2_ddr         );
@@ -970,14 +957,12 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # mcu2_mmap.addMemSection( app_fileio_mem        );
 # mcu2_mmap.addMemSection( ipc_vring_mem      );
 # mcu2_mmap.addMemSection( mcu2_ddr_local_heap  );
+# mcu2_mmap.addMemSection( mcu2_ddr_viss_config_heap  );
 # mcu2_mmap.addMemSection( ddr_shared_mem     );
 # mcu2_mmap.addMemSection( mcu2_main_ocram );
 # mcu2_mmap.checkOverlap();
 # 
 # mcu3_mmap = MemoryMap("mcu3");
-# mcu3_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# mcu3_mmap.addMemSection( mcu_r52f_tcma      );
-# mcu3_mmap.addMemSection( r52f_tcmb0          );
 # mcu3_mmap.addMemSection( mcu3_ddr_ipc     );
 # mcu3_mmap.addMemSection( mcu3_ddr_resource_table  );
 # mcu3_mmap.addMemSection( mcu3_ddr         );
@@ -986,13 +971,12 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # mcu3_mmap.addMemSection( app_fileio_mem        );
 # mcu3_mmap.addMemSection( ipc_vring_mem      );
 # mcu3_mmap.addMemSection( mcu3_ddr_local_heap  );
+# mcu3_mmap.addMemSection( mcu3_ddr_viss_config_heap  );
 # mcu3_mmap.addMemSection( ddr_shared_mem     );
+# mcu3_mmap.addMemSection( mcu3_main_ocram );
 # mcu3_mmap.checkOverlap();
 # 
 # mcu4_mmap = MemoryMap("mcu4");
-# mcu4_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# mcu4_mmap.addMemSection( mcu_r52f_tcma      );
-# mcu4_mmap.addMemSection( r52f_tcmb0          );
 # mcu4_mmap.addMemSection( mcu4_ddr_ipc     );
 # mcu4_mmap.addMemSection( mcu4_ddr_resource_table  );
 # mcu4_mmap.addMemSection( mcu4_ddr         );
@@ -1001,13 +985,15 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # mcu4_mmap.addMemSection( app_fileio_mem        );
 # mcu4_mmap.addMemSection( ipc_vring_mem      );
 # mcu4_mmap.addMemSection( mcu4_ddr_local_heap  );
+# mcu4_mmap.addMemSection( mcu4_ddr_viss_config_heap  );
 # mcu4_mmap.addMemSection( ddr_shared_mem     );
+# mcu4_mmap.addMemSection( mcu4_main_ocram );
 # mcu4_mmap.checkOverlap();
 # 
 # rmcu0_0_mmap = MemoryMap("rmcu0_0");
-# rmcu0_0_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# rmcu0_0_mmap.addMemSection( mcu_r52f_tcma      );
-# rmcu0_0_mmap.addMemSection( r52f_tcmb0          );
+# rmcu0_0_mmap.addMemSection( rmcu_tcma_vecs );
+# rmcu0_0_mmap.addMemSection( rmcu_tcma      );
+# rmcu0_0_mmap.addMemSection( rmcu_tcmb0          );
 # rmcu0_0_mmap.addMemSection( rmcu0_0_ddr_ipc     );
 # rmcu0_0_mmap.addMemSection( rmcu0_0_ddr_resource_table  );
 # rmcu0_0_mmap.addMemSection( rmcu0_0_ddr         );
@@ -1016,15 +1002,13 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # rmcu0_0_mmap.addMemSection( app_fileio_mem        );
 # rmcu0_0_mmap.addMemSection( ipc_vring_mem      );
 # rmcu0_0_mmap.addMemSection( rmcu0_0_ddr_local_heap  );
-# rmcu0_0_mmap.addMemSection( rmcu0_0_ddr_viss_config_heap  );
 # rmcu0_0_mmap.addMemSection( ddr_shared_mem     );
-# mcu2_mmap.addMemSection( rmcu0_0_main_ocram );
 # rmcu0_0_mmap.checkOverlap();
 # 
 # rmcu0_1_mmap = MemoryMap("rmcu0_1");
-# rmcu0_1_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# rmcu0_1_mmap.addMemSection( mcu_r52f_tcma      );
-# rmcu0_1_mmap.addMemSection( r52f_tcmb0          );
+# rmcu0_1_mmap.addMemSection( rmcu_tcma_vecs );
+# rmcu0_1_mmap.addMemSection( rmcu_tcma      );
+# rmcu0_1_mmap.addMemSection( rmcu_tcmb0          );
 # rmcu0_1_mmap.addMemSection( rmcu0_1_ddr_ipc     );
 # rmcu0_1_mmap.addMemSection( rmcu0_1_ddr_resource_table  );
 # rmcu0_1_mmap.addMemSection( rmcu0_1_ddr         );
@@ -1037,9 +1021,9 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # rmcu0_1_mmap.checkOverlap();
 # 
 # rmcu1_0_mmap = MemoryMap("rmcu1_0");
-# rmcu1_0_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# rmcu1_0_mmap.addMemSection( mcu_r52f_tcma      );
-# rmcu1_0_mmap.addMemSection( r52f_tcmb0          );
+# rmcu1_0_mmap.addMemSection( rmcu_tcma_vecs );
+# rmcu1_0_mmap.addMemSection( rmcu_tcma      );
+# rmcu1_0_mmap.addMemSection( rmcu_tcmb0          );
 # rmcu1_0_mmap.addMemSection( rmcu1_0_ddr_ipc     );
 # rmcu1_0_mmap.addMemSection( rmcu1_0_ddr_resource_table  );
 # rmcu1_0_mmap.addMemSection( rmcu1_0_ddr         );
@@ -1052,9 +1036,9 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # rmcu1_0_mmap.checkOverlap();
 # 
 # rmcu1_1_mmap = MemoryMap("rmcu1_1");
-# rmcu1_1_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# rmcu1_1_mmap.addMemSection( mcu_r52f_tcma      );
-# rmcu1_1_mmap.addMemSection( r52f_tcmb0          );
+# rmcu1_1_mmap.addMemSection( rmcu_tcma_vecs );
+# rmcu1_1_mmap.addMemSection( rmcu_tcma      );
+# rmcu1_1_mmap.addMemSection( rmcu_tcmb0          );
 # rmcu1_1_mmap.addMemSection( rmcu1_1_ddr_ipc     );
 # rmcu1_1_mmap.addMemSection( rmcu1_1_ddr_resource_table  );
 # rmcu1_1_mmap.addMemSection( rmcu1_1_ddr         );
@@ -1067,9 +1051,9 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # rmcu1_1_mmap.checkOverlap();
 # 
 # rmcu2_0_mmap = MemoryMap("rmcu2_0");
-# rmcu2_0_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# rmcu2_0_mmap.addMemSection( mcu_r52f_tcma      );
-# rmcu2_0_mmap.addMemSection( r52f_tcmb0          );
+# rmcu2_0_mmap.addMemSection( rmcu_tcma_vecs );
+# rmcu2_0_mmap.addMemSection( rmcu_tcma      );
+# rmcu2_0_mmap.addMemSection( rmcu_tcmb0          );
 # rmcu2_0_mmap.addMemSection( rmcu2_0_ddr_ipc     );
 # rmcu2_0_mmap.addMemSection( rmcu2_0_ddr_resource_table  );
 # rmcu2_0_mmap.addMemSection( rmcu2_0_ddr         );
@@ -1082,9 +1066,9 @@ c7x_ddr_heaps_hi.splitOrigin(True)
 # rmcu2_0_mmap.checkOverlap();
 # 
 # rmcu2_1_mmap = MemoryMap("rmcu2_1");
-# rmcu2_1_mmap.addMemSection( mcu_r52f_tcma_vecs );
-# rmcu2_1_mmap.addMemSection( mcu_r52f_tcma      );
-# rmcu2_1_mmap.addMemSection( r52f_tcmb0          );
+# rmcu2_1_mmap.addMemSection( rmcu_tcma_vecs );
+# rmcu2_1_mmap.addMemSection( rmcu_tcma      );
+# rmcu2_1_mmap.addMemSection( rmcu_tcmb0          );
 # rmcu2_1_mmap.addMemSection( rmcu2_1_ddr_ipc     );
 # rmcu2_1_mmap.addMemSection( rmcu2_1_ddr_resource_table  );
 # rmcu2_1_mmap.addMemSection( rmcu2_1_ddr         );
@@ -1397,13 +1381,13 @@ html_mmap.addMemSection( c7x_4_ddr_local_heap_phys         );
 html_mmap.addMemSection( c7x_4_ddr_scratch_non_cacheable_phys );
 html_mmap.addMemSection( c7x_4_ddr_scratch_phys );
 
-#html_mmap.addMemSection( uboot_reloc_mem    );
-#html_mmap.addMemSection( app_log_mem        );
-#html_mmap.addMemSection( tiovx_obj_desc_mem );
-#html_mmap.addMemSection( app_fileio_mem        );
-#html_mmap.addMemSection( ipc_vring_mem      );
-#html_mmap.addMemSection( ddr_shared_mem     );
-#html_mmap.addMemSection( tiovx_log_rt_mem );
+html_mmap.addMemSection( uboot_reloc_mem    );
+html_mmap.addMemSection( app_log_mem        );
+html_mmap.addMemSection( tiovx_obj_desc_mem );
+html_mmap.addMemSection( app_fileio_mem        );
+html_mmap.addMemSection( ipc_vring_mem      );
+html_mmap.addMemSection( ddr_shared_mem     );
+html_mmap.addMemSection( tiovx_log_rt_mem );
 html_mmap.addMemSection( mcu2_main_ocram );
 html_mmap.addMemSection( mcu3_main_ocram );
 html_mmap.addMemSection( mcu4_main_ocram );
@@ -1412,169 +1396,166 @@ html_mmap.addMemSection( mcu4_main_ocram );
 #html_mmap.addMemSection( ddr_shared_mem_phys     );
 html_mmap.checkOverlap();
 
-# c_header_mmap = MemoryMap("Memory Map for C header file");
+c_header_mmap = MemoryMap("Memory Map for C header file");
 # c_header_mmap.addMemSection( c7x_1_l2           );
 # c_header_mmap.addMemSection( c7x_1_l1           );
-# c_header_mmap.addMemSection( c7x_1_msmc         );
+c_header_mmap.addMemSection( c7x_1_msmc         );
 # c_header_mmap.addMemSection( c7x_2_l2           );
 # c_header_mmap.addMemSection( c7x_2_l1           );
-# c_header_mmap.addMemSection( c7x_2_msmc         );
+c_header_mmap.addMemSection( c7x_2_msmc         );
 # c_header_mmap.addMemSection( c7x_3_l2           );
 # c_header_mmap.addMemSection( c7x_3_l1           );
-# c_header_mmap.addMemSection( c7x_3_msmc         );
+c_header_mmap.addMemSection( c7x_3_msmc         );
 # c_header_mmap.addMemSection( c7x_4_l2           );
 # c_header_mmap.addMemSection( c7x_4_l1           );
-# c_header_mmap.addMemSection( c7x_4_msmc         );
-# c_header_mmap.addMemSection( mcu0_ddr_ipc     );
-# c_header_mmap.addMemSection( mcu1_ddr_ipc     );
-# c_header_mmap.addMemSection( mcu2_ddr_ipc     );
-# c_header_mmap.addMemSection( mcu3_ddr_ipc     );
-# c_header_mmap.addMemSection( mcu4_ddr_ipc     );
-# c_header_mmap.addMemSection( rmcu0_0_ddr_ipc     );
-# c_header_mmap.addMemSection( rmcu0_1_ddr_ipc     );
-# c_header_mmap.addMemSection( rmcu1_0_ddr_ipc     );
-# c_header_mmap.addMemSection( rmcu1_1_ddr_ipc     );
-# c_header_mmap.addMemSection( rmcu2_0_ddr_ipc     );
-# c_header_mmap.addMemSection( rmcu2_1_ddr_ipc     );
-# c_header_mmap.addMemSection( c7x_1_ddr_ipc     );
-# c_header_mmap.addMemSection( c7x_2_ddr_ipc     );
-# c_header_mmap.addMemSection( c7x_3_ddr_ipc     );
-# c_header_mmap.addMemSection( c7x_4_ddr_ipc     );
-# c_header_mmap.addMemSection( dmcu0_ddr_total     );
-# c_header_mmap.addMemSection( mcu0_ddr_total     );
-# c_header_mmap.addMemSection( mcu1_ddr_total     );
-# c_header_mmap.addMemSection( mcu2_ddr_total     );
-# c_header_mmap.addMemSection( mcu3_ddr_total     );
-# c_header_mmap.addMemSection( mcu4_ddr_total     );
-# c_header_mmap.addMemSection( rmcu0_0_ddr_total     );
-# c_header_mmap.addMemSection( rmcu0_1_ddr_total     );
-# c_header_mmap.addMemSection( rmcu1_0_ddr_total     );
-# c_header_mmap.addMemSection( rmcu1_1_ddr_total     );
-# c_header_mmap.addMemSection( rmcu2_0_ddr_total     );
-# c_header_mmap.addMemSection( rmcu2_1_ddr_total     );
-# c_header_mmap.addMemSection( c7x_1_ddr_total     );
-# c_header_mmap.addMemSection( c7x_2_ddr_total     );
-# c_header_mmap.addMemSection( c7x_3_ddr_total     );
-# c_header_mmap.addMemSection( c7x_4_ddr_total     );
-# 
-# c_header_mmap.addMemSection( dmcu0_ddr_local_heap);
-# c_header_mmap.addMemSection( mcu0_ddr_local_heap);
-# c_header_mmap.addMemSection( mcu1_ddr_local_heap);
-# c_header_mmap.addMemSection( mcu1_ddr_viss_config_heap);
-# c_header_mmap.addMemSection( mcu2_ddr_local_heap);
-# c_header_mmap.addMemSection( mcu3_ddr_local_heap);
-# c_header_mmap.addMemSection( mcu4_ddr_local_heap);
-# c_header_mmap.addMemSection( rmcu0_0_ddr_local_heap);
-# c_header_mmap.addMemSection( rmcu0_0_ddr_viss_config_heap);
-# c_header_mmap.addMemSection( rmcu0_1_ddr_local_heap);
-# c_header_mmap.addMemSection( rmcu1_0_ddr_local_heap);
-# c_header_mmap.addMemSection( rmcu1_1_ddr_local_heap);
-# c_header_mmap.addMemSection( rmcu2_0_ddr_local_heap);
-# c_header_mmap.addMemSection( rmcu2_1_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_1_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_ddr_local_heap_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_1_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_1_ddr_local_heap_phys);
-# c_header_mmap.addMemSection( c7x_1_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_ddr_scratch_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_1_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_1_ddr_scratch_phys);
-# c_header_mmap.addMemSection( c7x_1_2_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_2_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_1_2_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_2_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_1_3_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_3_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_1_3_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_3_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_1_4_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_4_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_1_4_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_1_4_ddr_scratch);
-# 
-# c_header_mmap.addMemSection( c7x_2_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_ddr_local_heap_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_2_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_2_ddr_local_heap_phys);
-# c_header_mmap.addMemSection( c7x_2_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_ddr_scratch_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_2_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_2_ddr_scratch_phys);
-# c_header_mmap.addMemSection( c7x_2_1_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_1_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_2_1_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_1_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_2_3_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_3_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_2_3_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_3_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_2_4_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_4_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_2_4_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_2_4_ddr_scratch);
-# 
-# c_header_mmap.addMemSection( c7x_3_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_ddr_local_heap_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_3_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_3_ddr_local_heap_phys);
-# c_header_mmap.addMemSection( c7x_3_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_ddr_scratch_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_3_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_3_ddr_scratch_phys);
-# c_header_mmap.addMemSection( c7x_3_1_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_1_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_3_1_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_1_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_3_2_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_2_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_3_2_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_2_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_3_4_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_4_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_3_4_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_3_4_ddr_scratch);
-# 
-# c_header_mmap.addMemSection( c7x_4_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_ddr_local_heap_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_4_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_4_ddr_local_heap_phys);
-# c_header_mmap.addMemSection( c7x_4_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_ddr_scratch_non_cacheable_phys);
-# c_header_mmap.addMemSection( c7x_4_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_4_ddr_scratch_phys);
-# c_header_mmap.addMemSection( c7x_4_1_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_1_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_4_1_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_1_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_4_2_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_2_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_4_2_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_2_ddr_scratch);
-# c_header_mmap.addMemSection( c7x_4_3_ddr_local_heap_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_3_ddr_local_heap);
-# c_header_mmap.addMemSection( c7x_4_3_ddr_scratch_non_cacheable);
-# c_header_mmap.addMemSection( c7x_4_3_ddr_scratch);
-# c_header_mmap.addMemSection( tiovx_log_rt_mem );
-# c_header_mmap.addMemSection( app_log_mem        );
-# c_header_mmap.addMemSection( tiovx_obj_desc_mem );
-# c_header_mmap.addMemSection( app_fileio_mem        );
-# c_header_mmap.addMemSection( ipc_vring_mem      );
-# c_header_mmap.addMemSection( ddr_shared_mem     );
+c_header_mmap.addMemSection( c7x_4_msmc         );
+c_header_mmap.addMemSection( mcu0_ddr_ipc     );
+c_header_mmap.addMemSection( mcu1_ddr_ipc     );
+c_header_mmap.addMemSection( mcu2_ddr_ipc     );
+c_header_mmap.addMemSection( mcu3_ddr_ipc     );
+c_header_mmap.addMemSection( mcu4_ddr_ipc     );
+c_header_mmap.addMemSection( rmcu0_0_ddr_ipc     );
+c_header_mmap.addMemSection( rmcu0_1_ddr_ipc     );
+c_header_mmap.addMemSection( rmcu1_0_ddr_ipc     );
+c_header_mmap.addMemSection( rmcu1_1_ddr_ipc     );
+c_header_mmap.addMemSection( rmcu2_0_ddr_ipc     );
+c_header_mmap.addMemSection( rmcu2_1_ddr_ipc     );
+c_header_mmap.addMemSection( c7x_1_ddr_ipc     );
+c_header_mmap.addMemSection( c7x_2_ddr_ipc     );
+c_header_mmap.addMemSection( c7x_3_ddr_ipc     );
+c_header_mmap.addMemSection( c7x_4_ddr_ipc     );
+c_header_mmap.addMemSection( dmcu0_ddr_total     );
+c_header_mmap.addMemSection( mcu0_ddr_total     );
+c_header_mmap.addMemSection( mcu1_ddr_total     );
+c_header_mmap.addMemSection( mcu2_ddr_total     );
+c_header_mmap.addMemSection( mcu3_ddr_total     );
+c_header_mmap.addMemSection( mcu4_ddr_total     );
+c_header_mmap.addMemSection( rmcu0_0_ddr_total     );
+c_header_mmap.addMemSection( rmcu0_1_ddr_total     );
+c_header_mmap.addMemSection( rmcu1_0_ddr_total     );
+c_header_mmap.addMemSection( rmcu1_1_ddr_total     );
+c_header_mmap.addMemSection( rmcu2_0_ddr_total     );
+c_header_mmap.addMemSection( rmcu2_1_ddr_total     );
+c_header_mmap.addMemSection( c7x_1_ddr_total     );
+c_header_mmap.addMemSection( c7x_2_ddr_total     );
+c_header_mmap.addMemSection( c7x_3_ddr_total     );
+c_header_mmap.addMemSection( c7x_4_ddr_total     );
+
+c_header_mmap.addMemSection( dmcu0_ddr_local_heap);
+c_header_mmap.addMemSection( mcu0_ddr_local_heap);
+c_header_mmap.addMemSection( mcu1_ddr_local_heap);
+c_header_mmap.addMemSection( mcu2_ddr_local_heap);
+c_header_mmap.addMemSection( mcu2_ddr_viss_config_heap);
+c_header_mmap.addMemSection( mcu3_ddr_local_heap);
+c_header_mmap.addMemSection( mcu3_ddr_viss_config_heap);
+c_header_mmap.addMemSection( mcu4_ddr_local_heap);
+c_header_mmap.addMemSection( mcu4_ddr_viss_config_heap);
+c_header_mmap.addMemSection( rmcu0_0_ddr_local_heap);
+c_header_mmap.addMemSection( rmcu0_1_ddr_local_heap);
+c_header_mmap.addMemSection( rmcu1_0_ddr_local_heap);
+c_header_mmap.addMemSection( rmcu1_1_ddr_local_heap);
+c_header_mmap.addMemSection( rmcu2_0_ddr_local_heap);
+c_header_mmap.addMemSection( rmcu2_1_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_1_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_ddr_local_heap_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_1_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_1_ddr_local_heap_phys);
+c_header_mmap.addMemSection( c7x_1_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_ddr_scratch_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_1_ddr_scratch);
+c_header_mmap.addMemSection( c7x_1_ddr_scratch_phys);
+c_header_mmap.addMemSection( c7x_1_2_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_2_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_1_2_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_2_ddr_scratch);
+c_header_mmap.addMemSection( c7x_1_3_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_3_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_1_3_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_3_ddr_scratch);
+c_header_mmap.addMemSection( c7x_1_4_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_4_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_1_4_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_1_4_ddr_scratch);
+
+c_header_mmap.addMemSection( c7x_2_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_ddr_local_heap_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_2_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_2_ddr_local_heap_phys);
+c_header_mmap.addMemSection( c7x_2_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_ddr_scratch_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_2_ddr_scratch);
+c_header_mmap.addMemSection( c7x_2_ddr_scratch_phys);
+c_header_mmap.addMemSection( c7x_2_1_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_1_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_2_1_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_1_ddr_scratch);
+c_header_mmap.addMemSection( c7x_2_3_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_3_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_2_3_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_3_ddr_scratch);
+c_header_mmap.addMemSection( c7x_2_4_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_4_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_2_4_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_2_4_ddr_scratch);
+
+c_header_mmap.addMemSection( c7x_3_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_ddr_local_heap_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_3_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_3_ddr_local_heap_phys);
+c_header_mmap.addMemSection( c7x_3_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_ddr_scratch_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_3_ddr_scratch);
+c_header_mmap.addMemSection( c7x_3_ddr_scratch_phys);
+c_header_mmap.addMemSection( c7x_3_1_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_1_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_3_1_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_1_ddr_scratch);
+c_header_mmap.addMemSection( c7x_3_2_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_2_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_3_2_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_2_ddr_scratch);
+c_header_mmap.addMemSection( c7x_3_4_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_4_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_3_4_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_3_4_ddr_scratch);
+
+c_header_mmap.addMemSection( c7x_4_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_ddr_local_heap_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_4_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_4_ddr_local_heap_phys);
+c_header_mmap.addMemSection( c7x_4_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_ddr_scratch_non_cacheable_phys);
+c_header_mmap.addMemSection( c7x_4_ddr_scratch);
+c_header_mmap.addMemSection( c7x_4_ddr_scratch_phys);
+c_header_mmap.addMemSection( c7x_4_1_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_1_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_4_1_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_1_ddr_scratch);
+c_header_mmap.addMemSection( c7x_4_2_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_2_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_4_2_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_2_ddr_scratch);
+c_header_mmap.addMemSection( c7x_4_3_ddr_local_heap_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_3_ddr_local_heap);
+c_header_mmap.addMemSection( c7x_4_3_ddr_scratch_non_cacheable);
+c_header_mmap.addMemSection( c7x_4_3_ddr_scratch);
+c_header_mmap.addMemSection( tiovx_log_rt_mem );
+c_header_mmap.addMemSection( app_log_mem        );
+c_header_mmap.addMemSection( tiovx_obj_desc_mem );
+c_header_mmap.addMemSection( app_fileio_mem        );
+c_header_mmap.addMemSection( ipc_vring_mem      );
+c_header_mmap.addMemSection( ddr_shared_mem     );
 # c_header_mmap.addMemSection( ddr_shared_mem_phys     );
-# c_header_mmap.addMemSection( uboot_reloc_mem     );
-# c_header_mmap.addMemSection( c7x_1_msmc         );
-# c_header_mmap.addMemSection( c7x_2_msmc         );
-# c_header_mmap.addMemSection( c7x_3_msmc         );
-# c_header_mmap.addMemSection( c7x_4_msmc         );
-# c_header_mmap.addMemSection( mcu1_main_ocram  );
-# c_header_mmap.addMemSection( mcu2_main_ocram  );
-# c_header_mmap.addMemSection( rmcu0_0_main_ocram  );
-# c_header_mmap.addMemSection( mcu1_main_ocram_phys  );
-# c_header_mmap.addMemSection( mcu2_main_ocram_phys  );
-# c_header_mmap.addMemSection( rmcu0_0_main_ocram_phys  );
+c_header_mmap.addMemSection( uboot_reloc_mem     );
+c_header_mmap.addMemSection( mcu2_main_ocram  );
+c_header_mmap.addMemSection( mcu3_main_ocram  );
+c_header_mmap.addMemSection( mcu4_main_ocram  );
+c_header_mmap.addMemSection( mcu2_main_ocram_phys  );
+c_header_mmap.addMemSection( mcu3_main_ocram_phys  );
+c_header_mmap.addMemSection( mcu4_main_ocram_phys  );
 # c_header_mmap.addMemSection( intercore_eth_desc_mem  );
 # c_header_mmap.addMemSection( intercore_eth_data_mem  );
-# c_header_mmap.checkOverlap();
+c_header_mmap.checkOverlap();
 
 dts_mmap = MemoryMap("Memory Map for Linux kernel dts/dtsi file");
 dts_mmap.addMemSection( dmcu0_ddr_total   );
@@ -1608,11 +1589,12 @@ dts_mmap.addMemSection( c7x_3_ddr_ipc      );
 dts_mmap.addMemSection( c7x_3_ddr_total    );
 dts_mmap.addMemSection( c7x_4_ddr_ipc      );
 dts_mmap.addMemSection( c7x_4_ddr_total    );
-# dts_mmap.addMemSection( vision_apps_ddr_total );
-# dts_mmap.addMemSection( ipc_vring_mem      );
+dts_mmap.addMemSection( vision_apps_ddr_total );
+dts_mmap.addMemSection( ipc_vring_mem      );
 dts_mmap.addMemSection( vision_apps_core_heaps_lo );
 dts_mmap.addMemSection( c7x_ddr_heaps_hi );
-# dts_mmap.addMemSection( ddr_shared_mem_phys );
+# Should be ddr_shared_mem_phys
+dts_mmap.addMemSection( ddr_shared_mem );
 # dts_mmap.addMemSection( intercore_eth_desc_mem );
 # dts_mmap.addMemSection( intercore_eth_data_mem );
 dts_mmap.checkOverlap();
