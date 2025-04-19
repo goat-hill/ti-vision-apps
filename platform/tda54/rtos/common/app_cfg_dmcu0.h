@@ -65,8 +65,8 @@
 
 #include <app_cfg.h>
 
-#define DDR_HEAP_MEM_SIZE               (DDR_MCU1_0_LOCAL_HEAP_SIZE)
-#define ENABLE_SCISERVER
+// #define DDR_HEAP_MEM_SIZE               (DDR_DMCU0_LOCAL_HEAP_SIZE)
+// #define ENABLE_SCISERVER
 
 #undef ENABLE_UDMA
 #undef ENABLE_UDMA_COPY

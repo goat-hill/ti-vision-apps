@@ -145,7 +145,7 @@
 #include <TI/video_io_csitx.h>
 #endif
 
-#ifdef C7120
+#ifdef C7604
 #include <TI/dl_kernels.h>
 #endif
 
@@ -174,10 +174,10 @@ __attribute__ ((section(".bss:ipc_vring_mem")))
 __attribute__ ((aligned(4096)))
         ;
 
-uint8_t g_ddr_local_mem[DDR_HEAP_MEM_SIZE]
-__attribute__ ((section(".bss:ddr_local_mem")))
-__attribute__ ((aligned(4096)))
-        ;
+// uint8_t g_ddr_local_mem[DDR_HEAP_MEM_SIZE]
+// __attribute__ ((section(".bss:ddr_local_mem")))
+// __attribute__ ((aligned(4096)))
+//        ;
 
 #ifdef L1_MEM_SIZE
 uint8_t g_l1_mem[L1_MEM_SIZE]
@@ -255,13 +255,13 @@ int32_t appInit()
     void *ipc_resource_table = NULL;
     #endif
 
-    #if defined(CPU_mcu2_1) || defined(CPU_mcu4_0)
-    app_mem_rat_prm_t l3_mem_rat_prm;
-    #endif
+    // #if defined(CPU_mcu3) || defined(CPU_mcu4)
+    // app_mem_rat_prm_t l3_mem_rat_prm;
+    // #endif
 
-    #if defined(R5F)
-    app_mem_rat_prm_t ddr_mem_rat_prm;
-    #endif
+    // #if defined(M55)
+    // app_mem_rat_prm_t ddr_mem_rat_prm;
+    // #endif
 
     /* Init and start GTC timer */
     //status = appLogGlobalTimeInit();
@@ -280,15 +280,15 @@ int32_t appInit()
     appFileIOInitPrmSetDefault(&fileio_init_prm);
     appIpcInitPrmSetDefault(&ipc_init_prm);
 
-    mem_init_prm.virtToPhyFxn     = appUdmaVirtToPhyAddrConversion;
-    mem_init_prm.shared2TargetFxn = appShared2TargetConversion;
-    mem_init_prm.target2SharedFxn = appTarget2SharedConversion;
+    // mem_init_prm.virtToPhyFxn     = appUdmaVirtToPhyAddrConversion;
+    // mem_init_prm.shared2TargetFxn = appShared2TargetConversion;
+    // mem_init_prm.target2SharedFxn = appTarget2SharedConversion;
 
-    heap_prm = &mem_init_prm.heap_info[APP_MEM_HEAP_DDR];
-    heap_prm->base = g_ddr_local_mem;
-    strncpy(heap_prm->name, "DDR_LOCAL_MEM", APP_MEM_HEAP_NAME_MAX);
-    heap_prm->size = DDR_HEAP_MEM_SIZE;
-    heap_prm->flags = APP_MEM_HEAP_FLAGS_IS_SHARED;
+    // heap_prm = &mem_init_prm.heap_info[APP_MEM_HEAP_DDR];
+    // heap_prm->base = g_ddr_local_mem;
+    // strncpy(heap_prm->name, "DDR_LOCAL_MEM", APP_MEM_HEAP_NAME_MAX);
+    // heap_prm->size = DDR_HEAP_MEM_SIZE;
+    // heap_prm->flags = APP_MEM_HEAP_FLAGS_IS_SHARED;
 
     #ifdef L1_MEM_SIZE
     heap_prm = &mem_init_prm.heap_info[APP_MEM_HEAP_L1];
@@ -374,6 +374,56 @@ int32_t appInit()
     ipc_init_prm.num_cpus++;
     log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU0_M55] = 1;
     #endif
+    #ifdef ENABLE_IPC_MCU1_M55
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU1_M55;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU1_M55] = 1;
+    #endif
+    #ifdef ENABLE_IPC_MCU2_M55
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_M55;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU2_M55] = 1;
+    #endif
+    #ifdef ENABLE_IPC_MCU3_M55
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_M55;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_M55] = 1;
+    #endif
+    #ifdef ENABLE_IPC_MCU4_M55
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_M55;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_M55] = 1;
+    #endif
+    #ifdef ENABLE_IPC_RMCU0_0
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_RMCU0_0;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_RMCU0_0] = 1;
+    #endif
+    #ifdef ENABLE_IPC_RMCU0_1
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_RMCU0_1;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_RMCU0_1] = 1;
+    #endif
+    #ifdef ENABLE_IPC_RMCU1_0
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_RMCU1_0;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_RMCU1_0] = 1;
+    #endif
+    #ifdef ENABLE_IPC_RMCU1_1
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_RMCU1_1;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_RMCU1_1] = 1;
+    #endif
+    #ifdef ENABLE_IPC_RMCU2_0
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_RMCU2_0;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_RMCU2_0] = 1;
+    #endif
+    #ifdef ENABLE_IPC_RMCU2_1
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_RMCU2_1;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_RMCU2_1] = 1;
+    #endif
     #ifdef ENABLE_IPC_C7x_1
     ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_1;
     ipc_init_prm.num_cpus++;
@@ -386,49 +436,26 @@ int32_t appInit()
     log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_2] = 1;
     fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_2] = 1;
     #endif
-    // #ifdef ENABLE_IPC_MCU2_1
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU2_1;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU2_1] = 1;
-    // #endif
-    // #ifdef ENABLE_IPC_MCU3_0
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_0;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_0] = 1;
-    // #endif
-    // #ifdef ENABLE_IPC_MCU3_1
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU3_1;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU3_1] = 1;
-    // #endif
-    // #ifdef ENABLE_IPC_MCU4_0
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_0;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_0] = 1;
-    // #endif
-    // #ifdef ENABLE_IPC_MCU4_1
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_MCU4_1;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_MCU4_1] = 1;
-    // #endif
-    // #ifdef ENABLE_IPC_C7x_3
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_3;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
-    // fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
-    // #endif
-    // #ifdef ENABLE_IPC_C7x_4
-    // ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_4;
-    // ipc_init_prm.num_cpus++;
-    // log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
-    // fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
-    // #endif
+    #ifdef ENABLE_IPC_C7x_3
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_3;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
+    fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_3] = 1;
+    #endif
+    #ifdef ENABLE_IPC_C7x_4
+    ipc_init_prm.enabled_cpu_id_list[ipc_init_prm.num_cpus] = APP_IPC_CPU_C7x_4;
+    ipc_init_prm.num_cpus++;
+    log_init_prm.log_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
+    fileio_init_prm.fileio_rd_cpu_enable[APP_IPC_CPU_C7x_4] = 1;
+    #endif
+
     ipc_init_prm.tiovx_obj_desc_mem = (void*)g_tiovx_obj_desc_mem;
     ipc_init_prm.tiovx_obj_desc_mem_size = TIOVX_OBJ_DESC_MEM_SIZE;
     ipc_init_prm.tiovx_log_rt_mem   = (void*)TIOVX_LOG_RT_MEM_ADDR;
     ipc_init_prm.tiovx_log_rt_mem_size   = TIOVX_LOG_RT_MEM_SIZE;
     ipc_init_prm.ipc_vring_mem = g_ipc_vring_mem;
     ipc_init_prm.ipc_vring_mem_size = IPC_VRING_MEM_SIZE;
+
     #ifdef CPU_mpu1
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_MPU1_0;
     #endif
@@ -438,34 +465,49 @@ int32_t appInit()
     #ifdef CPU_mcu0
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU0_M55;
     #endif
+    #ifdef CPU_mcu1
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU1_M55;
+    #endif
+    #ifdef CPU_mcu2
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU2_M55;
+    #endif
+    #ifdef CPU_mcu3
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_M55;
+    #endif
+    #ifdef CPU_mcu4
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_M55;
+    #endif
+    #ifdef CPU_rmcu0_0
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_RMCU0_0;
+    #endif
+    #ifdef CPU_rmcu0_1
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_RMCU0_1;
+    #endif
+    #ifdef CPU_rmcu1_0
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_RMCU1_0;
+    #endif
+    #ifdef CPU_rmcu1_1
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_RMCU1_1;
+    #endif
+    #ifdef CPU_rmcu2_0
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_RMCU2_0;
+    #endif
+    #ifdef CPU_rmcu2_1
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_RMCU2_1;
+    #endif
     #ifdef CPU_c7x_1
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_1;
     #endif
     #ifdef CPU_c7x_2
     ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_2;
     #endif
+    #ifdef CPU_c7x_3
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_3;
     #endif
-    // #ifdef CPU_mcu2_1
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU2_1;
-    // #endif
-    // #ifdef CPU_mcu3_0
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_0;
-    // #endif
-    // #ifdef CPU_mcu3_1
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU3_1;
-    // #endif
-    // #ifdef CPU_mcu4_0
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_0;
-    // #endif
-    // #ifdef CPU_mcu4_1
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_MCU4_1;
-    // #endif
-    // #ifdef CPU_c7x_3
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_3;
-    // #endif
-    // #ifdef CPU_c7x_4
-    // ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_4;
-    // #endif
+    #ifdef CPU_c7x_4
+    ipc_init_prm.self_cpu_id = APP_IPC_CPU_C7x_4;
+    #endif
+    #endif
 
     log_init_prm.shared_mem = &g_app_log_shared_mem;
     log_init_prm.self_cpu_index = ipc_init_prm.self_cpu_id;
@@ -478,33 +520,48 @@ int32_t appInit()
     #ifdef CPU_mcu0
     strncpy(log_init_prm.self_cpu_name, "MCU0" , APP_LOG_MAX_CPU_NAME);
     #endif
+    #ifdef CPU_mcu1
+    strncpy(log_init_prm.self_cpu_name, "MCU1" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_mcu2
+    strncpy(log_init_prm.self_cpu_name, "MCU2" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_mcu3
+    strncpy(log_init_prm.self_cpu_name, "MCU3" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_mcu4
+    strncpy(log_init_prm.self_cpu_name, "MCU4" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_rmcu0_0
+    strncpy(log_init_prm.self_cpu_name, "RMCU0_0" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_rmcu0_1
+    strncpy(log_init_prm.self_cpu_name, "RMCU0_1" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_rmcu1_0
+    strncpy(log_init_prm.self_cpu_name, "RMCU1_0" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_rmcu1_1
+    strncpy(log_init_prm.self_cpu_name, "RMCU1_1" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_rmcu2_0
+    strncpy(log_init_prm.self_cpu_name, "RMCU2_0" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_rmcu2_1
+    strncpy(log_init_prm.self_cpu_name, "RMCU2_1" , APP_LOG_MAX_CPU_NAME);
+    #endif
     #ifdef CPU_c7x_1
     strncpy(log_init_prm.self_cpu_name, "C7x_1" , APP_LOG_MAX_CPU_NAME);
     #endif
     #ifdef CPU_c7x_2
     strncpy(log_init_prm.self_cpu_name, "C7x_2" , APP_LOG_MAX_CPU_NAME);
     #endif
-    // #ifdef CPU_mcu2_1
-    // strncpy(log_init_prm.self_cpu_name, "MCU2_1" , APP_LOG_MAX_CPU_NAME);
-    // #endif
-    // #ifdef CPU_mcu3_0
-    // strncpy(log_init_prm.self_cpu_name, "MCU3_0" , APP_LOG_MAX_CPU_NAME);
-    // #endif
-    // #ifdef CPU_mcu3_1
-    // strncpy(log_init_prm.self_cpu_name, "MCU3_1" , APP_LOG_MAX_CPU_NAME);
-    // #endif
-    // #ifdef CPU_mcu4_0
-    // strncpy(log_init_prm.self_cpu_name, "MCU4_0" , APP_LOG_MAX_CPU_NAME);
-    // #endif
-    // #ifdef CPU_mcu4_1
-    // strncpy(log_init_prm.self_cpu_name, "MCU4_1" , APP_LOG_MAX_CPU_NAME);
-    // #endif
-    // #ifdef CPU_c7x_3
-    // strncpy(log_init_prm.self_cpu_name, "C7x_3" , APP_LOG_MAX_CPU_NAME);
-    // #endif
-    // #ifdef CPU_c7x_4
-    // strncpy(log_init_prm.self_cpu_name, "C7x_4" , APP_LOG_MAX_CPU_NAME);
-    // #endif
+    #ifdef CPU_c7x_3
+    strncpy(log_init_prm.self_cpu_name, "C7x_3" , APP_LOG_MAX_CPU_NAME);
+    #endif
+    #ifdef CPU_c7x_4
+    strncpy(log_init_prm.self_cpu_name, "C7x_4" , APP_LOG_MAX_CPU_NAME);
+    #endif
     #ifdef ENABLE_UART
     log_init_prm.log_rd_max_cpus = APP_IPC_CPU_MAX;
     log_init_prm.device_write = appLogDeviceWrite;
@@ -565,53 +622,55 @@ int32_t appInit()
 
     appLogPrintf("APP: Init ... !!!\n");
 
-    #if defined(R5F)
-    #if defined(CPU_mcu1_0)
-    status = appMemSetRatRegs((CSL_ratRegs *)(CSL_MCU_R5FSS0_RAT_CFG_BASE));
-    #else
-    status = appMemSetRatRegs((CSL_ratRegs *)(CSL_R5FSS0_RAT_CFG_BASE));
-    #endif
-    APP_ASSERT_SUCCESS(status);
-    #endif
+    // TODO: Configure RAT for accessing OCRAM for M55
+    // #if defined(M55)
+    // #if defined(CPU_dmcu0)
+    // status = appMemSetRatRegs((CSL_ratRegs *)(CSL_MCU_R5FSS0_RAT_CFG_BASE));
+    // #else
+    // status = appMemSetRatRegs((CSL_ratRegs *)(CSL_R5FSS0_RAT_CFG_BASE));
+    // #endif
+    // APP_ASSERT_SUCCESS(status);
+    // #endif
 
-    #if defined(CPU_mcu2_1) || defined(CPU_mcu4_0)
-    #ifdef L3_MEM_SIZE
+    // #if defined(CPU_mcu3) || defined(CPU_mcu4)
+    // #ifdef L3_MEM_SIZE
 
-    l3_mem_rat_prm.size        = L3_MEM_SIZE;
+    // l3_mem_rat_prm.size        = L3_MEM_SIZE;
 
-    #if defined(CPU_mcu2_0)
-    l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU2_0_ADDR;
-    l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU2_0_PHYS_ADDR;
-    #elif defined(CPU_mcu2_1)
-    l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU2_1_ADDR;
-    l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU2_1_PHYS_ADDR;
-    #elif defined(CPU_mcu4_0)
-    l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU4_0_ADDR;
-    l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU4_0_PHYS_ADDR;
-    #endif
+    // #if defined(CPU_mcu2)
+    // l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU2_0_ADDR;
+    // l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU2_0_PHYS_ADDR;
+    // #elif defined(CPU_mcu3)
+    // l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU2_1_ADDR;
+    // l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU2_1_PHYS_ADDR;
+    // #elif defined(CPU_mcu4)
+    // l3_mem_rat_prm.baseAddress       = MAIN_OCRAM_MCU4_0_ADDR;
+    // l3_mem_rat_prm.translatedAddress = MAIN_OCRAM_MCU4_0_PHYS_ADDR;
+    // #endif
 
-    status = appMemAddrTranslate(&l3_mem_rat_prm);
-    APP_ASSERT_SUCCESS(status);
-    #endif
-    #endif
+    // status = appMemAddrTranslate(&l3_mem_rat_prm);
+    // APP_ASSERT_SUCCESS(status);
+    // #endif
+    // #endif
+    //
+    //TODO: Configure RAT for Shared Mem for M55
+    // #if defined(M55)
+    // /* Only programming RAT if the physical address is in high mem */
+    // if (DDR_SHARED_MEM_PHYS_ADDR > 0xFFFFFFFF)
+    // {
+    //     /* Making the DDR_SHARED_MEM size aligned to 1GB by adding the UBOOT_RELOC_MEM_SIZE.                        */
+    //     /* The UBOOT_RELOC_MEM_SIZE was subtracted from DDR_SHARED_MEM size while creating the memory map for J784S4*/
+    //     /* This was done because the 1GB DDR_SHARED_MEM size was overlapping the UBOOT_RELOC_MEM_ADDR at the end of */
+    //     /* low 2GB memory. For more details on this, please refer to 3.1.1.1.6. Available RAM for image download    */
+    //     /* section in processor-sdk-linux documentation                                                             */
+    //     ddr_mem_rat_prm.size              = DDR_SHARED_MEM_SIZE + UBOOT_RELOC_MEM_SIZE;
+    //     ddr_mem_rat_prm.baseAddress       = DDR_SHARED_MEM_ADDR;
+    //     ddr_mem_rat_prm.translatedAddress = DDR_SHARED_MEM_PHYS_ADDR;
 
-    #if defined(R5F)
-    /* Only programming RAT if the physical address is in high mem */
-    if (DDR_SHARED_MEM_PHYS_ADDR > 0xFFFFFFFF)
-    {
-        /* Making the DDR_SHARED_MEM size aligned to 1GB by adding the UBOOT_RELOC_MEM_SIZE.                        */
-        /* The UBOOT_RELOC_MEM_SIZE was subtracted from DDR_SHARED_MEM size while creating the memory map for J784S4*/
-        /* This was done because the 1GB DDR_SHARED_MEM size was overlapping the UBOOT_RELOC_MEM_ADDR at the end of */
-        /* low 2GB memory. For more details on this, please refer to 3.1.1.1.6. Available RAM for image download    */
-        /* section in processor-sdk-linux documentation                                                             */
-        ddr_mem_rat_prm.size              = DDR_SHARED_MEM_SIZE + UBOOT_RELOC_MEM_SIZE;
-        ddr_mem_rat_prm.baseAddress       = DDR_SHARED_MEM_ADDR;
-        ddr_mem_rat_prm.translatedAddress = DDR_SHARED_MEM_PHYS_ADDR;
-
-        status = appMemAddrTranslate(&ddr_mem_rat_prm);
-        APP_ASSERT_SUCCESS(status);
-    }
-    #endif
+    //     status = appMemAddrTranslate(&ddr_mem_rat_prm);
+    //     APP_ASSERT_SUCCESS(status);
+    // }
+    // #endif
 
     #ifdef ENABLE_UART
     {
@@ -628,25 +687,25 @@ int32_t appInit()
     APP_ASSERT_SUCCESS(status);
     #endif
 
-    #ifdef ENABLE_UDMA
-    {
-        app_udma_init_prms_t udma_init_prm;
+    // #ifdef ENABLE_UDMA
+    // {
+    //     app_udma_init_prms_t udma_init_prm;
 
-        appUdmaInitPrmSetDefault(&udma_init_prm);
+    //     appUdmaInitPrmSetDefault(&udma_init_prm);
 
-        #ifdef C7120
-        udma_init_prm.virtToPhyFxn = appUdmaVirtToPhyAddrConversion;
-        #endif
+    //     #ifdef C7604
+    //     udma_init_prm.virtToPhyFxn = appUdmaVirtToPhyAddrConversion;
+    //     #endif
 
-        status = appUdmaInit(&udma_init_prm);
-        APP_ASSERT_SUCCESS(status);
-    }
+    //     status = appUdmaInit(&udma_init_prm);
+    //     APP_ASSERT_SUCCESS(status);
+    // }
 
-    #ifdef CPU_mcu2_0
+    // #ifdef CPU_mcu2
     //status = appUdmaCsirxCsitxInit();
     //APP_ASSERT_SUCCESS(status);
-    #endif
-    #endif
+    // #endif
+    // #endif
 
     status = appMemInit(&mem_init_prm);
     APP_ASSERT_SUCCESS(status);
@@ -655,7 +714,7 @@ int32_t appInit()
     status = appEthFwInit();
     APP_ASSERT_SUCCESS(status);
     #endif
-    
+
     #ifdef ENABLE_IPC
     status = appIpcInit(&ipc_init_prm);
     APP_ASSERT_SUCCESS(status);
@@ -1079,7 +1138,7 @@ static void appUnRegisterOpenVXTargetKernels()
 
 void appIdleLoop(void)
 {
-    #if defined(__C7120__)
+    #if defined(__C7604__)
    __asm(" IDLE");
    #endif
 }

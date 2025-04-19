@@ -73,23 +73,27 @@
 #define ENABLE_IPC_MPU1_0
 // #define ENABLE_IPC_DMCU_0_M55
 #define ENABLE_IPC_MCU0_M55
+// #define ENABLE_IPC_MCU1_M55
+// #define ENABLE_IPC_MCU2_M55
+// #define ENABLE_IPC_MCU3_M55
+// #define ENABLE_IPC_MCU4_M55
+// #define ENABLE_IPC_RMCU0_0
+// #define ENABLE_IPC_RMCU0_1
+// #define ENABLE_IPC_RMCU1_0
+// #define ENABLE_IPC_RMCU1_1
+// #define ENABLE_IPC_RMCU2_0
+// #define ENABLE_IPC_RMCU2_1
 #define ENABLE_IPC_C7x_1
 // #define ENABLE_IPC_C7x_2
-// #define ENABLE_IPC_MCU2_0
-// #define ENABLE_IPC_MCU2_1
-//#define ENABLE_IPC_MCU3_0
-//#define ENABLE_IPC_MCU3_1
-//#define ENABLE_IPC_MCU4_0
-//#define ENABLE_IPC_MCU4_1
-//#define ENABLE_IPC_C7x_3
-//#define ENABLE_IPC_C7x_4
+// #define ENABLE_IPC_C7x_3
+// #define ENABLE_IPC_C7x_4
 //
-//#define ENABLE_UDMA
-//#define ENABLE_UDMA_COPY
-//#define ENABLE_SCICLIENT
+// #define ENABLE_UDMA
+// #define ENABLE_UDMA_COPY
+// #define ENABLE_SCICLIENT
 //
-//#define ENABLE_IPC_ECHO_TEST
-//
+// #define ENABLE_IPC_ECHO_TEST
+
 #define APP_ASSERT_SUCCESS(x)  { if((x)!=0) while(1); }
 
 

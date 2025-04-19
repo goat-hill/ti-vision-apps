@@ -65,7 +65,7 @@
 
 #include <app_cfg.h>
 
-#define L1_MEM_SIZE (L1RAM_C7x_1_SIZE)
+// #define L1_MEM_SIZE (L1RAM_C7x_1_SIZE)
 #define L2_MEM_SIZE (L2RAM_C7x_1_SIZE)
 #define L3_MEM_SIZE (MSMC_C7x_1_SIZE)
 

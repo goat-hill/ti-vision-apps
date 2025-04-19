@@ -65,9 +65,9 @@
 
 #include <app_cfg.h>
 
-#define L3_MEM_SIZE (MAIN_OCRAM_MCU2_0_SIZE)
+// #define L3_MEM_SIZE (MAIN_OCRAM_MCU3_SIZE)
 
-#define DDR_HEAP_MEM_SIZE               (DDR_MCU2_0_LOCAL_HEAP_SIZE)
-#define DDR_VISS_HEAP_MEM_SIZE          (DDR_MCU2_0_VISS_CONFIG_HEAP_SIZE)
+// #define DDR_HEAP_MEM_SIZE               (DDR_MCU2_LOCAL_HEAP_SIZE)
+// #define DDR_VISS_HEAP_MEM_SIZE          (DDR_MCU2_VISS_CONFIG_HEAP_SIZE)
 
 #endif /* APP_CFG_MCU2_H_ */

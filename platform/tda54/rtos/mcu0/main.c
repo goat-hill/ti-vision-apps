@@ -165,78 +165,78 @@ uint32_t appGetDdrSharedHeapSize()
      return DDR_SHARED_MEM_SIZE;
 }
 
-uint64_t appTarget2SharedConversion(const uint64_t virtAddr)
-{
-   uint64_t phyAddr = (uint64_t)virtAddr;
-
-   if ( ((uint64_t)virtAddr >= (uint64_t)DDR_SHARED_MEM_ADDR) &&
-        ((uint64_t)virtAddr < ((uint64_t)DDR_SHARED_MEM_ADDR + (uint64_t)DDR_SHARED_MEM_SIZE)) )
-   {
-         if ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR >= (uint64_t)DDR_SHARED_MEM_ADDR)
-         {
-             phyAddr = (uint64_t)virtAddr + ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR - (uint64_t)DDR_SHARED_MEM_ADDR);
-         }
-         else
-         {
-             phyAddr = (uint64_t)virtAddr - ((uint64_t)DDR_SHARED_MEM_ADDR - (uint64_t)DDR_SHARED_MEM_PHYS_ADDR);
-         }
-   }
-   else if ( ((uint64_t)virtAddr >= (uint64_t)MAIN_OCRAM_MCU2_0_ADDR) &&
-        ((uint64_t)virtAddr < ((uint64_t)MAIN_OCRAM_MCU2_0_ADDR + (uint64_t)L3_MEM_SIZE)) )
-   {
-         if ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR >= (uint64_t)MAIN_OCRAM_MCU2_0_ADDR)
-         {
-             phyAddr = (uint64_t)virtAddr + ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR - (uint64_t)MAIN_OCRAM_MCU2_0_ADDR);
-         }
-         else
-         {
-             phyAddr = (uint64_t)virtAddr - ((uint64_t)MAIN_OCRAM_MCU2_0_ADDR - (uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR);
-         }
-   }
- 
-   return phyAddr;
- }
- 
- uint64_t appUdmaVirtToPhyAddrConversion(const void *virtAddr,
-                                       uint32_t chNum,
-                                       void *appData)
- {
-     return appTarget2SharedConversion((uint64_t)virtAddr);
- }
- 
- uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
- {
-     uint64_t target_ptr;
- 
-     /* Note: I think this is correct but needs review */
-     if ( ((uint64_t)shared_ptr >= (uint64_t)DDR_SHARED_MEM_PHYS_ADDR) &&
-          ((uint64_t)shared_ptr < ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR + (uint64_t)DDR_SHARED_MEM_PHYS_SIZE)) )
-     {
-         if ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR >= (uint64_t)DDR_SHARED_MEM_ADDR)
-         {
-             target_ptr = (uint64_t)shared_ptr - ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR - (uint64_t)DDR_SHARED_MEM_ADDR);
-         }
-         else
-         {
-             target_ptr = (uint64_t)shared_ptr + ((uint64_t)DDR_SHARED_MEM_ADDR - (uint64_t)DDR_SHARED_MEM_PHYS_ADDR);
-         }
-     }
-     else if ( ((uint64_t)shared_ptr >= (uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR) &&
-          ((uint64_t)shared_ptr < ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR + (uint64_t)L3_MEM_SIZE)) )
-     {
-         if ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR >= (uint64_t)MAIN_OCRAM_MCU2_0_ADDR)
-         {
-             target_ptr = (uint64_t)shared_ptr - ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR - (uint64_t)MAIN_OCRAM_MCU2_0_ADDR);
-         }
-         else
-         {
-             target_ptr = (uint64_t)shared_ptr + ((uint64_t)MAIN_OCRAM_MCU2_0_ADDR - (uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR);
-         }
-     }
-     else
-     {
-         target_ptr = (uint64_t)shared_ptr;
-     }
- 
-     return target_ptr;
- }
+// uint64_t appTarget2SharedConversion(const uint64_t virtAddr)
+// {
+//    uint64_t phyAddr = (uint64_t)virtAddr;
+// 
+//    if ( ((uint64_t)virtAddr >= (uint64_t)DDR_SHARED_MEM_ADDR) &&
+//         ((uint64_t)virtAddr < ((uint64_t)DDR_SHARED_MEM_ADDR + (uint64_t)DDR_SHARED_MEM_SIZE)) )
+//    {
+//          if ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR >= (uint64_t)DDR_SHARED_MEM_ADDR)
+//          {
+//              phyAddr = (uint64_t)virtAddr + ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR - (uint64_t)DDR_SHARED_MEM_ADDR);
+//          }
+//          else
+//          {
+//              phyAddr = (uint64_t)virtAddr - ((uint64_t)DDR_SHARED_MEM_ADDR - (uint64_t)DDR_SHARED_MEM_PHYS_ADDR);
+//          }
+//    }
+//    else if ( ((uint64_t)virtAddr >= (uint64_t)MAIN_OCRAM_MCU2_ADDR) &&
+//         ((uint64_t)virtAddr < ((uint64_t)MAIN_OCRAM_MCU2_ADDR + (uint64_t)L3_MEM_SIZE)) )
+//    {
+//          if ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR >= (uint64_t)MAIN_OCRAM_MCU2_ADDR)
+//          {
+//              phyAddr = (uint64_t)virtAddr + ((uint64_t)MAIN_OCRAM_MCU2_PHYS_ADDR - (uint64_t)MAIN_OCRAM_MCU2_ADDR);
+//          }
+//          else
+//          {
+//              phyAddr = (uint64_t)virtAddr - ((uint64_t)MAIN_OCRAM_MCU2_ADDR - (uint64_t)MAIN_OCRAM_MCU2_PHYS_ADDR);
+//          }
+//    }
+//  
+//    return phyAddr;
+//  }
+//  
+//  uint64_t appUdmaVirtToPhyAddrConversion(const void *virtAddr,
+//                                        uint32_t chNum,
+//                                        void *appData)
+//  {
+//      return appTarget2SharedConversion((uint64_t)virtAddr);
+//  }
+//  
+//  uint64_t appShared2TargetConversion(const uint64_t shared_ptr)
+//  {
+//      uint64_t target_ptr;
+//  
+//      /* Note: I think this is correct but needs review */
+//      if ( ((uint64_t)shared_ptr >= (uint64_t)DDR_SHARED_MEM_PHYS_ADDR) &&
+//           ((uint64_t)shared_ptr < ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR + (uint64_t)DDR_SHARED_MEM_PHYS_SIZE)) )
+//      {
+//          if ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR >= (uint64_t)DDR_SHARED_MEM_ADDR)
+//          {
+//              target_ptr = (uint64_t)shared_ptr - ((uint64_t)DDR_SHARED_MEM_PHYS_ADDR - (uint64_t)DDR_SHARED_MEM_ADDR);
+//          }
+//          else
+//          {
+//              target_ptr = (uint64_t)shared_ptr + ((uint64_t)DDR_SHARED_MEM_ADDR - (uint64_t)DDR_SHARED_MEM_PHYS_ADDR);
+//          }
+//      }
+//      else if ( ((uint64_t)shared_ptr >= (uint64_t)MAIN_OCRAM_MCU2_PHYS_ADDR) &&
+//           ((uint64_t)shared_ptr < ((uint64_t)MAIN_OCRAM_MCU2_PHYS_ADDR + (uint64_t)L3_MEM_SIZE)) )
+//      {
+//          if ((uint64_t)MAIN_OCRAM_MCU2_0_PHYS_ADDR >= (uint64_t)MAIN_OCRAM_MCU2_0_ADDR)
+//          {
+//              target_ptr = (uint64_t)shared_ptr - ((uint64_t)MAIN_OCRAM_MCU2_PHYS_ADDR - (uint64_t)MAIN_OCRAM_MCU2_ADDR);
+//          }
+//          else
+//          {
+//              target_ptr = (uint64_t)shared_ptr + ((uint64_t)MAIN_OCRAM_MCU2_ADDR - (uint64_t)MAIN_OCRAM_MCU2_PHYS_ADDR);
+//          }
+//      }
+//      else
+//      {
+//          target_ptr = (uint64_t)shared_ptr;
+//      }
+//  
+//      return target_ptr;
+//  }
