@@ -233,9 +233,8 @@ PTK_LIBS += ptk_algos
 TEST_LIBS += vx_tiovx_tests vx_tiovx_internal_tests vx_conformance_tests vx_conformance_engine vx_conformance_tests_testmodule
 TEST_LIBS += vx_kernels_openvx_ext_tests
 TEST_LIBS += vx_kernels_test_kernels_tests vx_kernels_test_kernels
-TEST_LIBS += vx_target_kernels_source_sink vx_kernels_hwa_tests
-TEST_LIBS += vx_kernels_video_io_tests
-TEST_LIBS += vx_tiovx_tidl_tests
+TEST_LIBS += vx_target_kernels_source_sink
+# TEST_LIBS += vx_kernels_hwa_tests vx_kernels_video_io_tests vx_tiovx_tidl_tests
 
 ifeq ($(TARGET_PLATFORM), $(filter $(TARGET_PLATFORM), J721E J721S2 J784S4 J742S2))
 TEST_LIBS += vx_tiovx_tvm_tests

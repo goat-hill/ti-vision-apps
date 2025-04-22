@@ -66,7 +66,7 @@
 #include <stdint.h>
 
 
-//#define ENABLE_TIOVX
+#define ENABLE_TIOVX
 #define ENABLE_IPC
 //#define ENABLE_PRINTF_REDIRECT
 
