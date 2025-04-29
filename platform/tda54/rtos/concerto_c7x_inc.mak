@@ -62,9 +62,9 @@ TIOVX_LIBS += vx_target_kernels_source_sink
 # TIOVX_LIBS += vx_target_kernels_tvm
 # TIOVX_LIBS += vx_target_kernels_tvm_dynload
 # TIOVX_LIBS += vx_target_kernels_ivision_common
-# TIOVX_LIBS += vx_target_kernels_tutorial
-# TIOVX_LIBS += vx_target_kernels_openvx_core
-# TIOVX_LIBS += vx_target_kernels_dsp
+TIOVX_LIBS += vx_target_kernels_tutorial
+TIOVX_LIBS += vx_target_kernels_openvx_core
+TIOVX_LIBS += vx_target_kernels_dsp
 # TIOVX_LIBS += vx_target_kernels_j7_arm
 #
 # TIDL_LIBS =
