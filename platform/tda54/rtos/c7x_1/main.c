@@ -111,6 +111,7 @@ static void appMain(void* arg0, void* arg1)
     while(1)
     {
         //appLogWaitMsecs(100u);
+        asm(" IDLE ");
     }
     #else
     appDeInit();
