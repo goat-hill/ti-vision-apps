@@ -28,7 +28,7 @@ LDIRS += $(APP_UTILS_PATH)/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(T
 # LDIRS += $(TIADALG_PATH)/lib/$(TARGET_CPU)/$(TARGET_BUILD)
 # LDIRS += $(TIDL_PATH)/arm-tidl/tiovx_kernels/lib/$(TARGET_PLATFORM)/$(TARGET_CPU)/$(TARGET_OS)/$(TARGET_BUILD)
 
-# STATIC_LIBS += vx_app_c7x_target_kernel
+STATIC_LIBS += vx_app_c7x_target_kernel
 # STATIC_LIBS += vx_target_kernels_stereo
 # STATIC_LIBS += vx_kernels_common
 #STATIC_LIBS += vx_target_kernels_srv_c66

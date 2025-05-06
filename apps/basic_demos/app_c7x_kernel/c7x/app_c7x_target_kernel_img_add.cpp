@@ -97,7 +97,7 @@
 
 /* #define ENABLE_DMA_KERNEL_PRINT_STATS */
 
-#if defined(x86_64) || defined(SOC_AM62A) || defined(SOC_J722S)
+#if defined(x86_64) || defined(SOC_AM62A) || defined(SOC_J722S) || defined(SOC_TDA54)
 #undef USE_HW_DMA
 #else
 #define USE_HW_DMA

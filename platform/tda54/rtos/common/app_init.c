@@ -1051,16 +1051,18 @@ static void appRegisterOpenVXTargetKernels()
         tivxRegisterVideoIOTargetDisplayKernels();
         tivxRegisterVideoIOTargetDisplayM2MKernels();
         #endif
-        #ifdef C7120
         #if defined(CPU_c7x_1) || defined(CPU_c7x_2) || defined(CPU_c7x_3) || defined(CPU_c7x_4)
         {
             void app_c7x_target_kernel_img_add_register(void);
 
             app_c7x_target_kernel_img_add_register();
         }
+        #if 0
         tivxRegisterTIDLTargetKernels();
         tivxRegisterTVMTargetKernels();
         #endif
+        #endif
+        #if 0
         #ifdef CPU_c7x_1
         tivxRegisterImgProcTargetC71Kernels();
         #endif
@@ -1106,16 +1108,18 @@ static void appUnRegisterOpenVXTargetKernels()
         #ifdef ENABLE_CSI2TX
         tivxUnRegisterVideoIOTargetCsitxKernels();
         #endif
-        #ifdef C7120
         #if defined(CPU_c7x_1) || defined(CPU_c7x_2) || defined(CPU_c7x_3) || defined(CPU_c7x_4)
         {
             void app_c7x_target_kernel_img_add_unregister(void);
 
             app_c7x_target_kernel_img_add_unregister();
         }
+        #if 0
         tivxUnRegisterTIDLTargetKernels();
         tivxUnRegisterTVMTargetKernels();
         #endif
+        #endif
+        #if 0
         #ifdef CPU_c7x_1
         tivxUnRegisterImgProcTargetC71Kernels();
         #endif
