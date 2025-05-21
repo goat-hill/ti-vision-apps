@@ -88,7 +88,7 @@ KB = 1024;
 MB = KB*KB;
 GB = KB*MB;
 
-SHARED_MEM_SIZE = 1024*MB;
+SHARED_MEM_SIZE = 512*MB;
 
 #
 # Notes,
@@ -210,7 +210,7 @@ mcu0_ddr_ipc_addr = dmcu0_ddr_addr + dmcu0_ddr_size;
 mcu0_ddr_resource_table_addr = mcu0_ddr_ipc_addr + linux_ddr_ipc_size;
 mcu0_ddr_ipc_tracebuf_addr = mcu0_ddr_resource_table_addr + linux_ddr_resource_table_size;
 mcu0_ddr_addr = mcu0_ddr_ipc_tracebuf_addr + linux_ddr_ipc_trace_size;
-mcu0_ddr_size = 16*MB - (mcu0_ddr_addr-mcu0_ddr_ipc_addr);
+mcu0_ddr_size = 32*MB - (mcu0_ddr_addr-mcu0_ddr_ipc_addr);
 
 mcu1_ddr_ipc_addr = mcu0_ddr_addr + mcu0_ddr_size;
 mcu1_ddr_resource_table_addr = mcu1_ddr_ipc_addr + linux_ddr_ipc_size;
@@ -378,7 +378,9 @@ tiovx_log_rt_mem_size   = 14*MB - app_fileio_mem_size;
 
 # TODO: Shared Mem should be in high mem need RAT for that
 # Shared memory for DMA Buf FD carveout
-ddr_shared_mem_addr     = tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
+# ddr_shared_mem_addr     = tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
+ddr_shared_mem_addr     = 0xE0000000;
+ddr_shared_mem_addr_phys  = 0xE0000000;
 ddr_shared_mem_size     = SHARED_MEM_SIZE - uboot_reloc_mem_size;
 
 assert ddr_shared_mem_addr & (SHARED_MEM_SIZE - 1) == 0
@@ -531,14 +533,6 @@ c7x_4_1_ddr_scratch_addr = c7x_4_3_ddr_scratch_non_cacheable_addr + c7x_3_ddr_sc
 c7x_4_2_ddr_scratch_addr = c7x_4_1_ddr_scratch_addr + c7x_1_ddr_scratch_size;
 c7x_4_3_ddr_scratch_addr = c7x_4_2_ddr_scratch_addr + c7x_2_ddr_scratch_size;
 
-#TODO:
-# Shared memory for DMA Buf FD carveout (located in high mem)
-# Temporarily placing Shared Mem in Low Mem since RAT is not enabled
-#ddr_shared_mem_addr_phys  = tiovx_log_rt_mem_addr + tiovx_log_rt_mem_size;
-#ddr_shared_mem_size       = SHARED_MEM_SIZE - uboot_reloc_mem_size;
-
-#assert ddr_shared_mem_addr_phys & (SHARED_MEM_SIZE - 1) == 0
-
 #
 # Create memory section based on addr and size defined above, including
 # any CPU specific internal memories
@@ -589,6 +583,8 @@ dmcu0_ddr_total           = MemSection("DDR_DMCU0_DTS", "", 0, 0, "DDR for DMCU0
 dmcu0_ddr_total.concat(dmcu0_ddr);
 dmcu0_ddr_total.setDtsName("vision_apps_dmcu0_memory_region", "vision-apps-m55-memory");
 
+mcu0_tcma_vecs  = MemSection("MCU0_TCMA_VECS" , "X"   , 0x00000000, (KB << 2));
+mcu0_tcma       = MemSection("MCU0_TCMA" , "X"   , 0x00001000, (64*KB) - (KB << 2) - 1);
 mcu0_ddr_ipc             = MemSection("DDR_MCU0_IPC", "RWIX", mcu0_ddr_ipc_addr, linux_ddr_ipc_size, "DDR for MCU0 for Linux IPC");
 mcu0_ddr_ipc.setDtsName("vision_apps_mcu0_dma_memory_region", "vision-apps-m55-dma-memory");
 mcu0_ddr_resource_table  = MemSection("DDR_MCU0_RESOURCE_TABLE", "RWIX", mcu0_ddr_resource_table_addr, linux_ddr_resource_table_size, "DDR for MCU0 for Linux resource table");
@@ -937,12 +933,12 @@ ddr_shared_mem.setCompatibility("dma-heap-carveout");
 ddr_shared_mem.setNoMap(False);
 ddr_shared_mem.setOriginTag(False);
 ddr_shared_mem.splitOrigin(True)
-# ddr_shared_mem_phys  = MemSection("DDR_SHARED_MEM_PHYS"    , "", ddr_shared_mem_addr_phys  , ddr_shared_mem_size    , "Physical address of memory for shared memory buffers in DDR");
-# ddr_shared_mem_phys.setDtsName("vision_apps_shared_region", "vision_apps_shared-memories");
-# ddr_shared_mem_phys.setCompatibility("dma-heap-carveout");
-# ddr_shared_mem_phys.setNoMap(False);
-# ddr_shared_mem_phys.setOriginTag(False);
-# ddr_shared_mem_phys.splitOrigin(True)
+ddr_shared_mem_phys  = MemSection("DDR_SHARED_MEM_PHYS"    , "", ddr_shared_mem_addr_phys  , ddr_shared_mem_size    , "Physical address of memory for shared memory buffers in DDR");
+ddr_shared_mem_phys.setDtsName("vision_apps_shared_region", "vision_apps_shared-memories");
+ddr_shared_mem_phys.setCompatibility("dma-heap-carveout");
+ddr_shared_mem_phys.setNoMap(False);
+ddr_shared_mem_phys.setOriginTag(False);
+ddr_shared_mem_phys.splitOrigin(True)
 
 # TODO: EthFW ?
 # This region is for ethernet firmware, multi-core, multi-cast feature
@@ -967,6 +963,8 @@ ddr_shared_mem.splitOrigin(True)
 # dmcu0_mmap.checkOverlap();
 
 mcu0_mmap = MemoryMap("mcu0");
+mcu0_mmap.addMemSection( mcu0_tcma_vecs     );
+mcu0_mmap.addMemSection( mcu0_tcma     );
 mcu0_mmap.addMemSection( mcu0_ddr_ipc     );
 mcu0_mmap.addMemSection( mcu0_ddr_resource_table  );
 mcu0_mmap.addMemSection( mcu0_ddr_ipc_trace  );
@@ -1454,11 +1452,11 @@ html_mmap.addMemSection( mcu3_main_ocram );
 html_mmap.addMemSection( mcu4_main_ocram );
 #html_mmap.addMemSection( intercore_eth_desc_mem );
 #html_mmap.addMemSection( intercore_eth_data_mem );
-#html_mmap.addMemSection( ddr_shared_mem_phys     );
+html_mmap.addMemSection( ddr_shared_mem_phys     );
 html_mmap.checkOverlap();
 
 c_header_mmap = MemoryMap("Memory Map for C header file");
-# c_header_mmap.addMemSection( c7x_1_l2           );
+c_header_mmap.addMemSection( c7x_1_l2           );
 # c_header_mmap.addMemSection( c7x_1_l1           );
 c_header_mmap.addMemSection( c7x_1_msmc         );
 # c_header_mmap.addMemSection( c7x_2_l2           );
@@ -1606,7 +1604,7 @@ c_header_mmap.addMemSection( tiovx_obj_desc_mem );
 c_header_mmap.addMemSection( app_fileio_mem        );
 c_header_mmap.addMemSection( ipc_vring_mem      );
 c_header_mmap.addMemSection( ddr_shared_mem     );
-# c_header_mmap.addMemSection( ddr_shared_mem_phys     );
+c_header_mmap.addMemSection( ddr_shared_mem_phys     );
 c_header_mmap.addMemSection( uboot_reloc_mem     );
 c_header_mmap.addMemSection( mcu2_main_ocram  );
 c_header_mmap.addMemSection( mcu3_main_ocram  );
@@ -1663,7 +1661,7 @@ dts_mmap.checkOverlap();
 #
 # Generate linker command files containing "MEMORY" definitions
 #
-# LinkerCmdFile(c7x_1_mmap , "./c7x_1/linker_mem_map.cmd" ).export();
+LinkerCmdFile(c7x_1_mmap , "./c7x_1/linker_mem_map.cmd" ).export();
 # LinkerCmdFile(c7x_2_mmap , "./c7x_2/linker_mem_map.cmd" ).export();
 # LinkerCmdFile(c7x_3_mmap , "./c7x_3/linker_mem_map.cmd" ).export();
 # LinkerCmdFile(c7x_4_mmap , "./c7x_4/linker_mem_map.cmd" ).export();
