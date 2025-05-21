@@ -18,7 +18,20 @@
 SECTIONS
 {
     /* This has the M55 entry point and vector table, this MUST be at 0x0 */
-    .vectors:{} palign(8) > DDR_MCU0
+    .vectors:{} palign(8) > MCU0_TCMA_VECS
+
+    /* This has the M55 boot code until MPU is enabled,  this MUST be at a address < 0xA0000000
+     * i.e this cannot be placed in DDR
+     */
+    GROUP {
+        .text:_c_int00: palign(8)
+        .text.cache: palign(8)
+        .text.mpu: palign(8)
+        .text.hwi: palign(8)
+        .text.boot: palign(8)
+        .text:abort: palign(8) /* this helps in loading symbols when using XIP mode */
+    } load = MCU0_TCMA
+
     .text:   {} palign(8) > DDR_MCU0     /* This is where code resides */
 
     .bss:    {} palign(8) > DDR_MCU0     /* This is where uninitialized globals go */
