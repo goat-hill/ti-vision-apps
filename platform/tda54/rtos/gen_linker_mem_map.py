@@ -118,7 +118,7 @@ SHARED_MEM_SIZE = 512*MB;
 ddr_mem_addr  = 0xa0000000;
 ddr_mem_size  = 1*GB + 448*MB; # Last 64MB is used by Linux
 
-ddr_mem_addr_hi_phys = 0x880000000;
+ddr_mem_addr_hi_phys = 0x2080000000;
 ddr_mem_addr_hi = 0x100000000;
 ddr_mem_size_hi = 256*MB;
 

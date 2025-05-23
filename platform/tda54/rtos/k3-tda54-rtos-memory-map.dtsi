@@ -190,9 +190,9 @@
 		compatible = "dma-heap-carveout";
 		reg = <0x00 0xe0000000 0x00 0x1c000000>;
 	};
-	c7x_ddr_heaps_hi: c7x-ddr-heaps-hi@880000000 {
+	c7x_ddr_heaps_hi: c7x-ddr-heaps-hi@2080000000 {
 		compatible = "shared-dma-pool";
-		reg = <0x08 0x80000000 0x00 0x80000000>;
+		reg = <0x20 0x80000000 0x00 0x80000000>;
 		no-map;
 	};
 
