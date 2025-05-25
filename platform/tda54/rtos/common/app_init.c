@@ -145,8 +145,10 @@
 #include <TI/video_io_csitx.h>
 #endif
 
+#if 0
 #ifdef C7604
 #include <TI/dl_kernels.h>
+#endif
 #endif
 
 #endif /* #if defined(ENABLE_TIOVX) */
