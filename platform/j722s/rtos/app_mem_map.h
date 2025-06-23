@@ -100,11 +100,11 @@
 #define DDR_MCU1_0_DTS_SIZE (0x00F00000u)
 
 /* DDR for MCU2_0 for Linux IPC [ size 1024.00 KB ] */
-#define DDR_MCU2_0_IPC_ADDR (0xA3000000u)
+#define DDR_MCU2_0_IPC_ADDR (0xA2000000u)
 #define DDR_MCU2_0_IPC_SIZE (0x00100000u)
 
 /* DDR for MCU2_0 for all sections, used for reserving memory in DTS file [ size 31.00 MB ] */
-#define DDR_MCU2_0_DTS_ADDR (0xA3100000u)
+#define DDR_MCU2_0_DTS_ADDR (0xA2100000u)
 #define DDR_MCU2_0_DTS_SIZE (0x01F00000u)
 
 /* Memory for IPC Vring's. MUST be non-cached or cache-coherent [ size 32.00 MB ] */

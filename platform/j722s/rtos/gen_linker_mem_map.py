@@ -160,7 +160,7 @@ mcu1_0_ddr_ipc_tracebuf_addr = mcu1_0_ddr_resource_table_addr + linux_ddr_resour
 mcu1_0_ddr_addr = mcu1_0_ddr_ipc_tracebuf_addr + linux_ddr_ipc_trace_size;
 mcu1_0_ddr_size = 16*MB - (mcu1_0_ddr_addr-mcu1_0_ddr_ipc_addr);
 
-mcu2_0_ddr_ipc_addr = mcu1_0_ddr_addr + mcu1_0_ddr_size + 16*MB;
+mcu2_0_ddr_ipc_addr = mcu1_0_ddr_addr + mcu1_0_ddr_size;
 mcu2_0_ddr_resource_table_addr = mcu2_0_ddr_ipc_addr + linux_ddr_ipc_size;
 mcu2_0_ddr_ipc_tracebuf_addr = mcu2_0_ddr_resource_table_addr + linux_ddr_resource_table_size;
 mcu2_0_ddr_addr = mcu2_0_ddr_ipc_tracebuf_addr + linux_ddr_ipc_trace_size;
